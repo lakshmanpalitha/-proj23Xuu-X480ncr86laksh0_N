@@ -1,0 +1,17 @@
+
+                ####### BLOCK DIRECTORY LISTING #########
+Options -Indexes
+
+RewriteEngine On
+
+
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-l
+
+
+
+RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+RewriteRule ^admin/$ index.php?url=admin/dashbord [QSA,L]
+RewriteRule ^x/$ index.php?url=reservation [QSA,L]
