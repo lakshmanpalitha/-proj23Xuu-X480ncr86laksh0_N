@@ -1,5 +1,3 @@
-var URL = "http://localhost/lansuwa/branches/develop/";
-
 
 $('#myModal').on('show.bs.modal', function(e) {
     if (document.getElementById('error_msg'))

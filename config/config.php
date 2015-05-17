@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Configuration for: Error reporting
  * Useful to show every little problem during development, but only show hard errors in production
@@ -15,6 +14,14 @@ define('URL', 'http://localhost/lansuwa/branches/develop/');
 define('FILE_URL', '//localhost/lansuwa/branches/develop/');
 define('DOC_PATH', 'D:/xampp/htdocs/lansuwa/branches/develop/');
 
+/*
+ * Configuration for: javascript
+ */
+?>
+<script>
+    var URL = <?php echo URL ?>;
+</script>
+<?php
 /**
  * Configuration for: Folders
  * Here you define where your folders are. Unless you have renamed them, there's no need to change this.
@@ -37,7 +44,7 @@ define('COOKIE_DOMAIN', '.localhost');
  */
 define('DB_TYPE', 'mysql');
 define('DB_HOST', '127.0.0.1');
-define('DB_NAME', 'db_lansuwa');
+define('DB_NAME', 'biotech');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
@@ -61,32 +68,6 @@ define("EMAIL_SMTP_PASSWORD", 'yourpassword');
 define("EMAIL_SMTP_PORT", 465);
 // SMTP encryption, usually SMTP providers use "tls" or "ssl", for details see the PHPMailer manual
 define("EMAIL_SMTP_ENCRYPTION", 'ssl');
-
-
-/* image upload setting */
-define("MAX_UPLOAD_SIZE", 5000 * 1024);
-
-define("CAT_THUMB_WIDTH", 100);
-define("CAT_THUMB_HEIGHT", 70);
-define("CAT_MEDIUM_WIDTH", 300);
-define("CAT_MEDIUM_HEIGHT", 180);
-define("CAT_ORIGINAL_UPLOAD_PATH", DOC_PATH . "public/uploads/product_category/large/");
-define("CAT_THUMB_UPLOAD_PATH", DOC_PATH . "public/uploads/product_category/thumb/");
-define("CAT_MEDIUM_UPLOAD_PATH", DOC_PATH . "public/uploads/product_category/medium/");
-define("CAT_ALLOW_THUMB", true);
-define("CAT_ALLOW_MEDIUM", true);
-
-define("PRODUCT_THUMB_WIDTH", 100);
-define("PRODUCT_THUMB_HEIGHT", 70);
-define("PRODUCT_MEDIUM_WIDTH", 300);
-define("PRODUCT_MEDIUM_HEIGHT", 180);
-define("PRODUCT_ORIGINAL_UPLOAD_PATH", '');
-define("PRODUCT_THUMB_UPLOAD_PATH", '');
-define("PRODUCT_MEDIUM_UPLOAD_PATH", '');
-define("PRODUCT_ALLOW_THUMB", '');
-define("PRODUCT_ALLOW_MEDIUM", '');
-
-
 
 /*
  * include error description file
