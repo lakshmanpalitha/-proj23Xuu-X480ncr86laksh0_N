@@ -78,11 +78,11 @@ class application {
                     $controller->index();
                 } else {
                     //header('location: ' . URL . 'error/index');  
-                    echo"file not exisr";
+                    echo"file not exist";
                 }
             }
         } else {
-            
+             echo "module not exisr";
         }
     }
 

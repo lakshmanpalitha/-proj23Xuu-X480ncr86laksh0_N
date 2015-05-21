@@ -10,26 +10,25 @@ date_default_timezone_set("Asia/Calcutta");
 /**
  * Configuration for: Base URL
  */
-define('URL', 'http://localhost/lansuwa/branches/develop/');
-define('FILE_URL', '//localhost/lansuwa/branches/develop/');
-define('DOC_PATH', 'D:/xampp/htdocs/lansuwa/branches/develop/');
+define('URL', '//127.0.0.1/biotech/');
+define('DOC_PATH', 'D:/xampp/htdocs/biotech/');
+
 
 /*
- * Configuration for: javascript
+ * Define templates path
  */
-?>
-<script>
-    var URL = <?php echo URL ?>;
-</script>
-<?php
+define('CSS_PATH', URL . 'assets/css/');
+define('JS_PATH', URL . 'assets/js/');
+define('IMAGE_PATH', URL . 'assets/images/');
+
 /**
  * Configuration for: Folders
  * Here you define where your folders are. Unless you have renamed them, there's no need to change this.
  */
 define('COMMON_PATH', 'libs/');
-define('CONTROLLER_PATH', 'application/controllers/');
-define('MODELS_PATH', 'application/models/');
-define('VIEWS_PATH', 'application/views/');
+define('CONTROLLER_PATH', 'controllers/');
+define('MODELS_PATH', 'models/');
+define('VIEWS_PATH', 'views/');
 
 
 
@@ -44,7 +43,7 @@ define('COOKIE_DOMAIN', '.localhost');
  */
 define('DB_TYPE', 'mysql');
 define('DB_HOST', '127.0.0.1');
-define('DB_NAME', 'biotech');
+define('DB_NAME', '22biotech');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 

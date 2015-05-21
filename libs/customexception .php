@@ -1,12 +1,12 @@
 <?php
 
-class customexception  extends Exception {
+class customexception extends Exception {
 
-    public function errorMessage() {
+    public function errorMessage($defErrorCode = null) {
         //error message
         $errorMsg = 'Error on line ' . $this->getLine() . ' in ' . $this->getFile()
-                . ': <b>' . $this->getMessage() . '</b> is not a valid E-Mail address';
-        
+                . ': <b>' . $this->getMessage() . '</b>' . FEEDBACK_EMAIL_VALIDATION;
+
         return $errorMsg;
     }
 

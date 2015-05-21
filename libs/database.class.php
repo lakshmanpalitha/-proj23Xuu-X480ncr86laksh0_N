@@ -31,8 +31,25 @@ class database {
         $this->nbQueries = 0;
         $this->lastResult = NULL;
         $this->session = new session();
-        mysql_connect($server, $user, $pass) or die('Server connection not possible.');
-        mysql_select_db($base) or die('Database connection not possible.');
+
+
+        try {
+            if ($db = mysql_connect($server, $user, $pass)) {
+                try {
+                    if (!mysql_select_db($base)) {
+                        throw new Exception(mysql_error());
+                    }
+                } catch (Exception $e) {
+                    $this->session->setError("feedback_negative", $e->getMessage());
+                    return false;
+                }
+            } else {
+                throw new Exception(mysql_error());
+            }
+        } catch (Exception $e) {
+            $this->session->setError("feedback_negative", $e->getMessage());
+            return false;
+        }
     }
 
     /** Query the database.
@@ -42,11 +59,16 @@ class database {
      */
     function query($query, $debug = -1) {
         $this->nbQueries++;
-        $this->lastResult = mysql_query($query) or $this->debugAndDie($query);
-
-        $this->debug($debug, $query, $this->lastResult);
-
-        return $this->lastResult;
+        try {
+            if ($this->lastResult = mysql_query($query)) {
+                return $this->lastResult;
+            } else {
+                throw new Exception(mysql_error());
+            }
+        } catch (Exception $e) {
+            $this->session->setError("feedback_negative", $e->getMessage());
+            return false;
+        }
     }
 
     /** Do the same as query() but do not return nor store result.\n
@@ -56,15 +78,18 @@ class database {
      * @param $debug If true, it output the query and the resulting table.
      */
     function execute($query, $clean = false, $debug = false) {
-        if ($clean) {
-            $this->clean($query);
-        }
-        //echo '<br>'.$query;
+
         $this->nbQueries++;
-        $result = mysql_query($query) or $this->debugAndDie($query);
-        if ($debug)
-            $this->debug($debug, $query);
-        return $result;
+        try {
+            if ($result = mysql_query($query)) {
+                return $result;
+            } else {
+                throw new Exception(mysql_error());
+            }
+        } catch (Exception $e) {
+            $this->session->setError("feedback_negative", $e->getMessage());
+            return false;
+        }
     }
 
     /** Convenient method for mysql_fetch_object().
@@ -105,12 +130,17 @@ class database {
 
         $this->nbQueries++;
         $result = mysql_query($query) or ($res = $this->debugAndDie($query));
-        if ($res) {
-            $this->debug($debug, $query, $result);
 
-            return mysql_fetch_object($result);
+        try {
+            if ($result = mysql_query($query)) {
+                return mysql_fetch_object($result);
+            } else {
+                throw new Exception(mysql_error());
+            }
+        } catch (Exception $e) {
+            $this->session->setError("feedback_negative", $e->getMessage());
+            return false;
         }
-        return false;
     }
 
     /** Fetch Multiple Objects
@@ -121,21 +151,24 @@ class database {
     public function queryMultipleObjects($query, $debug = -1) {
         $res = true;
         $this->nbQueries++;
-        $result = mysql_query($query) or ($res = $this->debugAndDie($query));
-        if ($res) {
-            $i = 0;
-            $objs = null;
-            do {
-                $obj = $this->fetchNextObject($result);
-                if ($obj) {
-                    $objs[$i++] = $obj;
-                }
-            } while ($obj != null);
-            $this->debug($debug, $query, $result);
-            return (($objs[0] != null) ? $objs : false);
+        try {
+            if ($result = mysql_query($query)) {
+                $i = 0;
+                $objs = null;
+                do {
+                    $obj = $this->fetchNextObject($result);
+                    if ($obj) {
+                        $objs[$i++] = $obj;
+                    }
+                } while ($obj != null);
+                return (($objs[0] != null) ? $objs : false);
+            } else {
+                throw new Exception(mysql_error());
+            }
+        } catch (Exception $e) {
+            $this->session->setError("feedback_negative", $e->getMessage());
+            return false;
         }
-
-        return false;
     }
 
     /** Get the result of the query as value. The query should return a unique cell.\n
@@ -150,16 +183,18 @@ class database {
         $query = "$query LIMIT 1";
 
         $this->nbQueries++;
-        $result = mysql_query($query) or ($res = $this->debugAndDie($query));
-        if ($res) {
-            $line = mysql_fetch_row($result);
 
-            $this->debug($debug, $query, $result);
-
-            return $line[0];
+        try {
+            if ($result = mysql_query($query)) {
+                $line = mysql_fetch_row($result);
+                return $line[0];
+            } else {
+                throw new Exception(mysql_error());
+            }
+        } catch (Exception $e) {
+            $this->session->setError("feedback_negative", $e->getMessage());
+            return false;
         }
-
-        return false;
     }
 
     /** Get the maximum value of a column in a table, with a condition.

@@ -26,7 +26,6 @@ class auth {
         // if user is still not logged in, then destroy session, handle user as "not logged in" and
         // redirect user to login page
         if (!isset($_SESSION['user_company_code']) || !$_SESSION['user_company_code']) {
-            session::setError("feedback_negative", FEEDBACK_COMPANY_LOGGED_ERROR);
             header('location: ' . URL . 'admin/user/error/');
         }
     }

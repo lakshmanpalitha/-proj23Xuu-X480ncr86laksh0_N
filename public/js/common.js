@@ -8,7 +8,6 @@ $('#myModal').on('show.bs.modal', function(e) {
 
 function doConfirm(msg)
 {
-    var msg = (msg ? msg : 'Are you sure you want to delete?');
     var x = confirm(msg);
     if (x)
         return true;
@@ -47,7 +46,7 @@ function xmlRequest(URL, param, div, returnFunc)
     try {
         xmlhttp.send(param);//here a xmlhttprequestexception number 101 is thrown 
     } catch (err) {
-        alert('XMLHttprequest error: " + err.description + "');
+        alert('XMLHttprequest error: ' + err.description);
         //this prints "XMLHttprequest error: undefined" in the body.
     }
 }
