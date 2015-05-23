@@ -57,7 +57,7 @@ var neonLogin = neonLogin || {};
                     // Send data to the server
 
                     $.ajax({
-                        url: baseurl + 'login/dologin',
+                        url: baseurl + 'desk/login/dologin',
                         method: 'POST',
                         dataType: 'json',
                         data: {

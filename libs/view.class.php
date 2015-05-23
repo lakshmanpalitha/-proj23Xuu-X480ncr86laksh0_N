@@ -33,7 +33,6 @@ class view {
         } else {
 
             require $this->module . "/" . VIEWS_PATH . '_templates/header.php';
-            ($render_with_menu ? require $this->module . "/" . VIEWS_PATH . '_templates/sidebar.php' : '');
             require $this->module . "/" . VIEWS_PATH . $filename . '.php';
             require $this->module . "/" . VIEWS_PATH . '_templates/footer.php';
         }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Configuration for: Error reporting
  * Useful to show every little problem during development, but only show hard errors in production
@@ -13,6 +14,11 @@ date_default_timezone_set("Asia/Calcutta");
 define('URL', '//127.0.0.1/biotech/');
 define('DOC_PATH', 'D:/xampp/htdocs/biotech/');
 
+/**
+ * Define module path
+ */
+define('MOD_ADMIN_URL', '//127.0.0.1/biotech/desk/');
+define('MOD_ADMIN_DOC', 'D:/xampp/htdocs/biotech/desk/');
 
 /*
  * Define templates path
