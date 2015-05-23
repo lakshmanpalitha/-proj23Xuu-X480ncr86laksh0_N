@@ -7,7 +7,7 @@
             <div class="login-content">
 
                 <a href="index.html" class="logo">
-                    <img src="assets/images/logo@2x.png" width="120" alt="" />
+                    <img src="<?php echo IMAGE_PATH ?>logo@2x.png" width="120" alt="" />
                 </a>
 
                 <p class="description">Dear user, log in to access the admin area!</p>
