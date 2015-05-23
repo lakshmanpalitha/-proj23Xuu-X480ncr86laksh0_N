@@ -8,14 +8,19 @@ class application {
 
     /** @var null The module part of the URL */
     private $url_module;
+
     /** @var null The controller part of the URL */
     private $url_controller;
+
     /** @var null The method part (of the above controller) of the URL */
     private $url_action;
+
     /** @var null Parameter one of the URL */
     private $url_parameter_1;
+
     /** @var null Parameter two of the URL */
     private $url_parameter_2;
+
     /** @var null Parameter three of the URL */
     private $url_parameter_3;
 
@@ -26,11 +31,14 @@ class application {
      * TODO: make the hardcoded locations ("error/index", "index.php", new Index()) dynamic, maybe via config.php
      */
     public function __construct() {
+        
         $this->splitUrl();
         //check for module : is the module NOT empty? backoffice or reservation
         if ($this->url_module) {
             // check for controller: is the url_controller NOT empty ?
+            
             if ($this->url_controller) {
+                
                 // check for controller: does such a controller exist ?
                 if (file_exists($this->url_module . "/" . CONTROLLER_PATH . "/" . $this->url_controller . "/controller_" . $this->url_controller . '.class.php')) {
                     // if so, then load this file and create this controller
@@ -56,7 +64,7 @@ class application {
                         } else {
                             // redirect user to error page (there's a controller for that)
                             // header('location: ' . URL . 'error/index');
-                            echo "No function";
+                           include DOC_PATH . '404.php';
                         }
                     } else {
                         // default/fallback: call the index() method of a selected controller
@@ -66,23 +74,23 @@ class application {
                 } else {
                     // redirect user to error page (there's a controller for that)
                     // header('location: ' . URL . 'error/index');
-                    echo "No class";
+                    include DOC_PATH . '404.php';
                 }
                 // if url_controller is empty, simply show the main page (index/index)
             } else {
                 // invalid URL, so simply show home/index
-                
-                if (file_exists($this->url_module . "/" . CONTROLLER_PATH . 'index/controller_index.class.php')) {
-                    require $this->url_module . "/" . CONTROLLER_PATH . 'index/controller_index.class.php';
+           
+                if (file_exists($this->url_module . "/" . CONTROLLER_PATH . 'home/controller_home.class.php')) {
+                    require $this->url_module . "/" . CONTROLLER_PATH . 'home/controller_home.class.php';
                     $controller = new index($this->url_module);
                     $controller->index();
                 } else {
                     //header('location: ' . URL . 'error/index');  
-                    echo"file not exist";
+                    include DOC_PATH . '404.php';
                 }
             }
         } else {
-             echo "module not exisr";
+            include DOC_PATH . '404.php';
         }
     }
 

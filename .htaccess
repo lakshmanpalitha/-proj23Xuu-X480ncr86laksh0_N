@@ -13,4 +13,4 @@ RewriteCond %{REQUEST_FILENAME} !-l
 
 
 RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
-#RewriteRule ^admin/$ index.php?url=admin/dashbord [QSA,L]
+RewriteRule ^desk/$ index.php?url=desk/home [QSA,L]

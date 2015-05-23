@@ -15,7 +15,7 @@ class auth {
         // redirect user to login page
         if (!isset($_SESSION['user_logged_in'])) {
             session::destroy();
-            header('location: ' . URL . 'admin/login/');
+            header('location: ' . URL . 'desk/login/');
         }
     }
 
@@ -53,6 +53,7 @@ class auth {
             header('location: ' . URL . 'admin/user/error/');
         }
     }
+
     public static function isLevel1User() {
         // initialize the session
         session::init();

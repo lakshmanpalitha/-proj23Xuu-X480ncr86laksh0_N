@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="<?php echo CSS_PATH ?>neon-forms.css">
         <link rel="stylesheet" href="<?php echo CSS_PATH ?>custom.css">
 
-        <script> var URL = <?php echo URL ?>;</script>
+       
         <script src = "<?php echo JS_PATH ?>jquery-1.11.0.min.js"></script>
         <script>$.noConflict();</script>
 
