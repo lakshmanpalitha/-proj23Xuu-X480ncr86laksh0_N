@@ -9,7 +9,7 @@ class login extends controller {
 
     function index() {
 
-        $this->view->render('login/login', false, false, $this->module);
+        $this->view->render('login/login', true, true, $this->module);
     }
 
     function doLogin() {
