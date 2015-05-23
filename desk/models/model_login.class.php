@@ -25,23 +25,23 @@ class loginModel extends model {
             $res = FEEDBACK_FIELD_NOT_VALID;
             return $res;
         }
-        if ($user->user_sataus === 'I') {
+        if ($user->USER_STATUS === 'I') {
             $res = FEEDBACK_FIELD_USER_INACTIVE;
             return $res;
         }
         session::set('user_logged_in', true);
-        session::set('user_email', $user->user_email);
-        session::set('user_type', $user->user_type);
-        session::set('user_id', $user->user_id);
-        session::set('user_last_log', $user->user_last_log);
+        session::set('user_email', $user->USER_EMAIL);
+        //session::set('user_type', $user->user_type);
+        session::set('user_id', $user->USER_ID);
+        session::set('user_last_log', $user->USER_LAST_LOG);
 
         $updateQuery = "
             UPDATE 
-                tbl_sys_users 
+                tbl_users 
             SET
                 user_last_log='" . date("Y-m-d H:i:s") . "'
             WHERE
-                user_id='" . $user->user_id . "'";
+                user_id='" . $user->USER_ID . "'";
         $result = $this->db->execute($updateQuery);
         return $res;
     }
