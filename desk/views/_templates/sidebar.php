@@ -35,7 +35,7 @@
             <li class="active opened active">
                 <a href="index.html">
                     <i class="entypo-gauge"></i>
-                    <span class="title">Dashboard</span>
+                    <span class="title">Grn</span>
                 </a>
                 <ul>
                     <li class="active">
@@ -117,7 +117,7 @@
             <li>
                 <a href="layout-api.html">
                     <i class="entypo-layout"></i>
-                    <span class="title">Layouts</span>
+                    <span class="title">Recipe</span>
                 </a>
                 <ul>
                     <li>
@@ -202,13 +202,13 @@
             <li>
                 <a href="index.html" target="_blank">
                     <i class="entypo-monitor"></i>
-                    <span class="title">Frontend</span>
+                    <span class="title">Products</span>
                 </a>
             </li>
             <li>
                 <a href="ui-panels.html">
                     <i class="entypo-newspaper"></i>
-                    <span class="title">UI Elements</span>
+                    <span class="title">Reports</span>
                 </a>
                 <ul>
                     <li>
@@ -286,7 +286,7 @@
             <li>
                 <a href="mailbox.html">
                     <i class="entypo-mail"></i>
-                    <span class="title">Mailbox</span>
+                    <span class="title">Users</span>
                     <span class="badge badge-secondary">8</span>
                 </a>
                 <ul>
