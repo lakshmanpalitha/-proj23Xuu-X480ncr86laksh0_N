@@ -20,6 +20,13 @@ define('DOC_PATH', 'D:/xampp/htdocs/biotech/');
 define('MOD_ADMIN_URL', '//127.0.0.1/biotech/desk/');
 define('MOD_ADMIN_DOC', 'D:/xampp/htdocs/biotech/desk/');
 
+
+/**
+ * Define log path
+ */
+define('LOG_PATH', DOC_PATH . 'logs/error.log');
+
+
 /*
  * Define templates path
  */
