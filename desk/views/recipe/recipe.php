@@ -21,7 +21,7 @@
                 </li>
             </ol>
 
-            <h3>GRN</h3>
+            <h3>Recipes</h3>
             <br />
 
             <table class="table table-bordered datatable" id="table-1">

@@ -1,6 +1,6 @@
 <?php
 
-class grn extends controller {
+class product extends controller {
 
     function __construct($module) {
         auth::handleLogin();
@@ -13,13 +13,13 @@ class grn extends controller {
     function index() {
         $login_model = $this->loadModel('grn');
         $this->view->users = $login_model->getUsers();
-        $this->view->render('grn/grn', true, true, $this->module);
+        $this->view->render('product/product', true, true, $this->module);
     }
 
-    function newGrn() {
+    function newProduct() {
         $login_model = $this->loadModel('grn');
         $this->view->users = $login_model->getUsers();
-        $this->view->render('grn/add_grn', true, true, $this->module);
+        $this->view->render('product/add_product', true, true, $this->module);
     }
 
 }
