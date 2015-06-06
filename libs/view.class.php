@@ -34,7 +34,7 @@ class view {
 
             require $this->module . "/" . VIEWS_PATH . '_templates/header.php';
             require $this->module . "/" . VIEWS_PATH . $filename . '.php';
-            require $this->module . "/" . VIEWS_PATH . '_templates/footer.php';
+            require $this->module . "/" . VIEWS_PATH . '_templates/main_footer.php';
         }
     }
 

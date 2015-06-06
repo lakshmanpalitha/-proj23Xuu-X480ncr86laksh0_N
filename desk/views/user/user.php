@@ -21,7 +21,16 @@
                 </li>
             </ol>
 
-            <h3>GRN</h3>
+            <h3>Users</h3>
+            <br />
+            <div class="row">
+                <div class="col-md-6 col-sm-8 clearfix">
+                    <a class="btn btn-blue" href="javascript:;" onclick="jQuery('#modal-6').modal('show', {backdrop: 'static'});">
+                        <i class="entypo-plus"></i>
+                        Add New
+                    </a>
+                </div>
+            </div>
             <br />
 
             <table class="table table-bordered datatable" id="table-1">
@@ -139,6 +148,78 @@
             <!--Add footer-->
             <?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
             <!--############-->
+        </div>
+    </div>
+
+    <!-- Modal 6 (Long Modal)-->
+    <div class="modal fade" id="modal-6">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">New User</h4>
+                </div>
+                <form role="form" id="form1" method="post" class="validate">
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+                                    <label class="control-label">User Name</label>
+
+                                    <input type="text" class="form-control" name="name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
+                                </div>	
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+                                    <label class="control-label">Email</label>
+
+                                    <input type="text" class="form-control" name="email" data-validate="required,email" placeholder="Email Field" />
+                                </div>	
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="field-6" class="control-label">Password</label>
+
+                                    <input type="text" class="form-control" name="pwd" data-validate="required" placeholder="Numeric Field" />
+                                </div>	
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="field-6" class="control-label">Re-Password</label>
+                                    <input type="text" class="form-control" name="re-pwd" data-validate="required" placeholder="Numeric Field" />
+                                </div>	
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="field-5" class="control-label">Level</label>
+                                    <select class="form-control">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                </div>	
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Save changes</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
