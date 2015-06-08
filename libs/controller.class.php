@@ -10,6 +10,8 @@
  */
 class controller extends common {
 
+    public $user_active_module = array();
+
     function __construct($module) {
 
         //intilize module (backoffice or reservation)
@@ -22,15 +24,17 @@ class controller extends common {
 
         $this->view = new view($this->module);
         $this->read = new read();
+        $this->model = new model();
+
+        $this->userActiveModule();
     }
 
     /**
      * loads the model with the given name.
      * @param $name string name of the model
      */
-    public function loadModel($name,$module=null) {
-
-        $this->module=($module?$module:$this->module);
+    public function loadModel($name, $module = null) {
+        $this->module = ($module ? $module : $this->module);
         $path = $this->module . "/" . MODELS_PATH . "model_" . strtolower($name) . '.class.php';
         if (file_exists($path)) {
             require $this->module . "/" . MODELS_PATH . "model_" . strtolower($name) . '.class.php';
@@ -40,6 +44,32 @@ class controller extends common {
             return new $modelName();
         }
         return false;
+    }
+
+    public function userActiveModule() {
+        /* Get user's modules,document type and permission */
+        $loc_user_active_modules = $this->model->selectUserModule(session::get('user_id'));
+        $this->user_active_module = $this->view->user_active_module = $loc_user_active_modules;
+
+        /* Set display module array */
+        if (!empty($loc_user_active_modules)) {
+            $currunt_mod = '';
+            $m = 0;
+            $n = 0;
+            foreach ($loc_user_active_modules as $mod) {
+                if (empty($currunt_mod) OR $currunt_mod != $mod->MODULE_NAME) {
+                    $currunt_mod = $mod->MODULE_NAME;
+                    $mod_arrange_array[$m]['MOD'] = $currunt_mod;
+                    $n = $m;
+                    $i = 0;
+                    $m++;
+                }
+                $mod_arrange_array[$n]['DOC'][$i] = $mod->DOC_TYPE_NAME;
+                $i++;
+            }
+        }
+
+        $this->view->display_user_module_array = $mod_arrange_array;
     }
 
 }

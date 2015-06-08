@@ -12,11 +12,12 @@ class loginModel extends model {
             SELECT 
                 * 
             FROM 
-                tbl_users 
+                tbl_user 
             WHERE 
                 user_email='" . mysql_real_escape_string($userEmail) . "' 
                 AND user_password='" . md5($userPassword) . "'
                 AND user_status NOT IN('D')";
+        
 
         $user = $this->db->queryUniqueObject($query);
 
