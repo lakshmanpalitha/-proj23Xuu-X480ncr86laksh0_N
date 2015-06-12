@@ -53,7 +53,7 @@
                                 foreach ($mod['DOC'] as $doc) {
                                     ?>
                                     <li class="active">
-                                        <a href="<?php echo MOD_ADMIN_URL . $doc ?>">
+                                        <a href="<?php echo MOD_ADMIN_URL . strtolower($doc) ?>">
                                             <span class="title"><?php echo $doc ?></span>
                                         </a>
                                     </li>

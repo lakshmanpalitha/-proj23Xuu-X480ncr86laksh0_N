@@ -25,6 +25,7 @@ define('MOD_ADMIN_DOC', 'D:/xampp/htdocs/biotech/desk/');
  * Define log path
  */
 define('LOG_PATH', DOC_PATH . 'logs/error.log');
+define('RUNTIME_LOG_PATH', DOC_PATH . 'logs/runtime/');
 
 
 /*

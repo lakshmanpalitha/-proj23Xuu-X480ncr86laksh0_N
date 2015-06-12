@@ -23,6 +23,15 @@
 
             <h3>Recipes</h3>
             <br />
+            <div class="row">
+                <div class="col-md-6 col-sm-8 clearfix">
+                    <a class="btn btn-blue" href="<?php echo MOD_ADMIN_URL ?>recipe/newRecipe">
+                        <i class="entypo-plus"></i>
+                        Add New
+                    </a>
+                </div>
+            </div>
+            <br />
 
             <table class="table table-bordered datatable" id="table-1">
                 <thead>

@@ -187,30 +187,43 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Password</label>
 
                                     <input type="text" class="form-control" name="pwd" data-validate="required" placeholder="Numeric Field" />
                                 </div>	
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Re-Password</label>
                                     <input type="text" class="form-control" name="re-pwd" data-validate="required" placeholder="Numeric Field" />
                                 </div>	
                             </div>
-                            <div class="col-md-4">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="field-5" class="control-label">Level</label>
-                                    <select class="form-control">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                    </select>
-                                </div>	
-                            </div>
+                                    <label class="col-sm-0 control-label">Role</label>
 
+                                    <div>
+
+                                        <select style="border-radius:0 !important " name="test" class="select2" multiple>
+                                            <option value="3" >Ohaio</option>
+                                            <option value="2" >Boston</option>
+                                            <option value="5" >Washington</option>
+                                            <option value="1" >Alabama</option>
+                                            <option value="4" >New York</option>
+                                            <option value="12" >Bostons</option>
+                                            <option value="11" >Alabama</option>
+                                            <option value="13" >Ohaio</option>
+                                            <option value="14" >New York</option>
+                                            <option value="15" >Washington II</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

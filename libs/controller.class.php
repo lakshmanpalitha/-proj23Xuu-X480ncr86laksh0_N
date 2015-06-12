@@ -48,6 +48,7 @@ class controller extends common {
 
     public function userActiveModule() {
         /* Get user's modules,document type and permission */
+        $mod_arrange_array = array();
         $loc_user_active_modules = $this->model->selectUserModule(session::get('user_id'));
         $this->user_active_module = $this->view->user_active_module = $loc_user_active_modules;
 

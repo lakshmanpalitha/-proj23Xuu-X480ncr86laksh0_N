@@ -13,7 +13,7 @@ class model extends common {
 
         $this->read = new read();
         $this->session = new session();
-        $this->email = new PHPMailer();
+        //$this->email = new PHPMailer();
         $this->arr = array();
     }
 

@@ -24,6 +24,7 @@
 
 
         <script src = "<?php echo JS_PATH ?>jquery-1.11.0.min.js"></script>
+        <script src = "<?php echo JS_PATH ?>common.js"></script>
         <script>$.noConflict();</script>
 
         <!--[if lt IE 9]><script src="<?php echo JS_PATH ?>ie8-responsive-file-warning.js"></script><![endif]-->

@@ -21,11 +21,11 @@
                 </li>
             </ol>
 
-            <h3>Products</h3>
+            <h3>Role</h3>
             <br />
             <div class="row">
                 <div class="col-md-6 col-sm-8 clearfix">
-                    <a class="btn btn-blue" href="<?php echo MOD_ADMIN_URL ?>product/newProduct">
+                    <a class="btn btn-blue" href="javascript:;" onclick="jQuery('#modal-6').modal('show', {backdrop: 'static'});">
                         <i class="entypo-plus"></i>
                         Add New
                     </a>
@@ -151,12 +151,116 @@
         </div>
     </div>
 
+    <!-- Modal 6 (Long Modal)-->
+    <div class="modal fade" id="modal-6">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">New Role</h4>
+                </div>
+                <form  role="form" id="form1" method="post" action="<?php echo MOD_ADMIN_URL ?>" class="validate">
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group">
+                                    <label class="control-label">Name</label>
+                                    <input type="text" class="form-control" name="name" data-validate="required" placeholder="Role name Field" />
+                                </div>	
+
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="control-label">Document type & Privileges</label>
+                                <table class="table table-bordered" id="table-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Document Type</th>
+                                            <th>Privileges</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="odd gradeX">
+                                            <td>	
+                                                <div style="margin:0 !important;" class="checkbox">
+                                                    <label>
+                                                        <input onclick="selectAllRol(this);" type="checkbox">All
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <select onchange="selectAllPrv(this);" style="border-radius: 0 !important;font-size: 10px !important;height: 23px !important;padding: 0 !important;width: 54px !important;" class="form-control">
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                        if (!empty($this->sys_doc_types)) {
+                                            foreach ($this->sys_doc_types as $doc_typ) {
+                                                ?>
+                                                <tr class="odd gradeX">
+                                                    <td>	
+                                                        <div style="margin:0 !important;" class="checkbox">
+                                                            <label>
+                                                                <input class="role-doc" name="role-doc-typ[]" value="<?php echo $doc_typ->DOC_TYPE_ID ?>" type="checkbox"><?php echo $doc_typ->DOC_TYPE_NAME ?>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <select class="role-doc-prv" name="role-doc-prv[]" style="border-radius: 0 !important;font-size: 10px !important;height: 23px !important;padding: 0 !important;width: 54px !important;" class="form-control">
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Save changes</button>
+                        <input type="hidden" id="data-save-success-submit" name="" value="<?php echo MOD_ADMIN_URL ?>role"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+                function selectAllRol(e) {
+                    if (e.checked) {
+                        jQuery('.role-doc').prop('checked', true);
+                    } else {
+                        jQuery('.role-doc').prop('checked', false);
+                    }
+                }
+                function selectAllPrv(e) {
+                    jQuery('.role-doc-prv').val(e.value);
+
+                }
+                function saveRole() {
+                    alert("zxczc");
+                }
+    </script>
     <!-- Imported styles on this page -->
     <link rel="stylesheet" href="<?php echo JS_PATH ?>datatables/responsive/css/datatables.responsive.css">
     <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">
     <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2.css">
 
     <!-- Bottom scripts (common) -->
+
     <script src="<?php echo JS_PATH ?>gsap/main-gsap.js"></script>
     <script src="<?php echo JS_PATH ?>jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>
     <script src="<?php echo JS_PATH ?>bootstrap.js"></script>
@@ -180,3 +284,6 @@
 
     <!-- Demo Settings -->
     <script src="<?php echo JS_PATH ?>neon-demo.js"></script>
+
+
+
