@@ -10,8 +10,9 @@ define("FEEDBACK_FIELD_USER_INACTIVE", "Your account temprely deactivated,Please
 /**
  * Configuration for: Error messages and notices
  */
-define("FEEDBACK_FIELD_REQUIRED", "is required field");
-define("FEEDBACK_INT_VALIDATION", "is not valid number!");
+define("FEEDBACK_REQUIRED_FIELDS", "Enter all required fields");
+define("FEEDBACK_USER_ROLE", "User role is required!");
+define("FEEDBACK_NEW_USER_PASSWORD", "Password not match!");
 define("FEEDBACK_STRING_VALIDATION", "is not valid string!");
 define("FEEDBACK_NUMERIC_VALIDATION", "is not valid numeric!");
 define("FEEDBACK_EMAIL_VALIDATION", "is not valid email!");
@@ -19,6 +20,8 @@ define("FEEDBACK_DECIMAL_VALIDATION", "is not valid decimal number!");
 define("FEEDBACK_DATE_VALIDATION", "is not valid date");
 define("FEEDBACK_LENGTH_VALIDATION", "is exced max length");
 define("FEEDBACK_MAX_LENGTH", "(max charcter length should be )");
+define("FEEDBACK_GRN_ITEMS", "GRN items can't be empty!");
+define("FEEDBACK_PRODUCT_RECIPE", "Product recipe can't be empty!");
 
 /*
  * Shop 

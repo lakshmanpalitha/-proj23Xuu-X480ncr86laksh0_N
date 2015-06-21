@@ -9,16 +9,12 @@
             <!--############-->
             <ol class="breadcrumb bc-3" >
                 <li>
-                    <a href="index.html"><i class="fa-home"></i>Home</a>
+                    <a href="<?php echo MOD_ADMIN_URL ?>"><i class="fa-home"></i>Home</a>
                 </li>
                 <li>
 
-                    <a href="forms-main.html">Forms</a>
-                </li>
-                <li class="active">
-
-                    <strong>Data Validation</strong>
-                </li>
+                    <a href="<?php echo MOD_ADMIN_URL ?>role/">Role</a>
+                </li>              
             </ol>
 
             <h3>Role</h3>
@@ -36,62 +32,33 @@
             <table class="table table-bordered datatable" id="table-1">
                 <thead>
                     <tr>
-                        <th data-hide="phone">Rendering engine</th>
-                        <th>Browser</th>
-                        <th data-hide="phone">Platform(s)</th>
-                        <th data-hide="phone,tablet">Engine version</th>
-                        <th>CSS grade</th>
+                        <th data-hide="phone">Role Name</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="odd gradeX">
-                        <td>Trident</td>
-                        <td>Internet Explorer 4.0</td>
-                        <td>Win 95+</td>
-                        <td class="center">4</td>
-                        <td class="center">X</td>
-                        <td class="center">
-                            <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-sm btn-icon icon-left">
-                                <i class="entypo-pencil"></i>
-                                Edit
-                            </a>
-
-                            <a href="#" class="btn btn-danger btn-sm btn-icon icon-left">
-                                <i class="entypo-cancel"></i>
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="even gradeC">
-                        <td>Trident</td>
-                        <td>Internet Explorer 5.0</td>
-                        <td>Win 95+</td>
-                        <td class="center">5</td>
-                        <td class="center">C</td>
-                        <td class="center">
-                            <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-sm btn-icon icon-left">
-                                <i class="entypo-pencil"></i>
-                                Edit
-                            </a>
-
-                            <a href="#" class="btn btn-danger btn-sm btn-icon icon-left">
-                                <i class="entypo-cancel"></i>
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
+                    <?php
+                    if (!empty($this->role)) {
+                        foreach ($this->role as $rol) {
+                            ?>
+                            <tr class="odd gradeX">
+                                <td><?php echo $rol->ROLE_NAME ?></td>
+                                <td class="center">
+                                    <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-xs btn-icon icon-left">
+                                        <i class="entypo-pencil"></i>
+                                        Edit
+                                    </a>
+                                    <a href="#" class="btn btn-danger btn-xs btn-icon icon-left">
+                                        <i class="entypo-cancel"></i>
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                    }
+                    ?>
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Rendering engine</th>
-                        <th>Browser</th>
-                        <th>Platform(s)</th>
-                        <th>Engine version</th>
-                        <th>CSS grade</th>
-                        <th>Action</th>
-                    </tr>
-                </tfoot>
             </table>
 
             <script type="text/javascript">
@@ -160,7 +127,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">New Role</h4>
                 </div>
-                <form  role="form" id="form1" method="post" action="<?php echo MOD_ADMIN_URL ?>" class="validate">
+                <form  role="form" id="form1" method="post" action="<?php echo MOD_ADMIN_URL ?>role/addNewRole" class="validate_sp_form">
                     <div class="modal-body">
 
                         <div class="row">
@@ -168,7 +135,7 @@
 
                                 <div class="form-group">
                                     <label class="control-label">Name</label>
-                                    <input type="text" class="form-control" name="name" data-validate="required" placeholder="Role name Field" />
+                                    <input type="text" class="form-control" name="role-name" data-validate="required" placeholder="Role name Field" />
                                 </div>	
 
                             </div>
@@ -231,8 +198,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Save changes</button>
-                        <input type="hidden" id="data-save-success-submit" name="" value="<?php echo MOD_ADMIN_URL ?>role"/>
+                        <button type="submit" class="btn btn-success">Save changes</button>                       
                     </div>
                 </form>
             </div>
@@ -250,8 +216,24 @@
                     jQuery('.role-doc-prv').val(e.value);
 
                 }
-                function saveRole() {
-                    alert("zxczc");
+
+                function submitFrom(form) {
+                    try {
+                        ajaxRequest(form.action, jQuery('#' + form.id).serialize(), function(jsonData) {
+                            if (jsonData) {
+                                if (jsonData.success == true) {
+                                    jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>role');
+                                } else {
+                                    alert(jsonData.error)
+                                    return false;
+                                }
+                            }
+                        });
+                    }
+                    catch (err) {
+                        alert(err.message);
+                        return false;
+                    }
                 }
     </script>
     <!-- Imported styles on this page -->

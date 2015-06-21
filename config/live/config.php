@@ -31,14 +31,14 @@ if (get_magic_quotes_gpc()) {
 /**
  * Configuration for: Base URL
  */
-define('URL', '//127.0.0.1/biotech/');
-define('DOC_PATH', 'D:/xampp/htdocs/biotech/');
+define('URL', 'http://microsola.com/preview/biotech/');
+define('DOC_PATH', '/home2/microsq0/public_html/preview/biotech/');
 
 /**
  * Define module path
  */
-define('MOD_ADMIN_URL', '//127.0.0.1/biotech/desk/');
-define('MOD_ADMIN_DOC', 'D:/xampp/htdocs/biotech/desk/');
+define('MOD_ADMIN_URL', 'http://microsola.com/preview/biotech/desk/');
+define('MOD_ADMIN_DOC', '/home2/microsq0/public_html/preview/biotech/desk/');
 
 
 /**
@@ -76,10 +76,10 @@ define('COOKIE_DOMAIN', '.localhost');
  * Configuration for: Database
  */
 define('DB_TYPE', 'mysql');
-define('DB_HOST', '127.0.0.1');
-define('DB_NAME', 'biotech');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'microsq0_biotech');
+define('DB_USER', 'microsq0_preview');
+define('DB_PASS', 'lanka1234');
 
 
 

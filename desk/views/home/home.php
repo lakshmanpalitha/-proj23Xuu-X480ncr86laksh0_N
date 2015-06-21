@@ -7,9 +7,9 @@
             <!--Add profile bar-->
             <?php require_once MOD_ADMIN_DOC . 'views/_templates/profile.php'; ?>
             <!--############-->
-        
+
             <hr />
-            <script type="text/javascript">
+<!--            <script type="text/javascript">
                 jQuery(document).ready(function($)
                 {
                     // Sample Toastr Notification
@@ -579,16 +579,12 @@
 
                 </div>
 
-            </div>
-
-            <!-- Footer -->
-            <footer class="main">
-
-                &copy; 2014 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co" target="_blank">Laborator</a>
-
-            </footer>
+            </div>-->
+            <!--Add footer-->
+            <?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
+            <!--############-->
         </div>
-        <div id="chat" class="fixed" data-current-user="Art Ramadani" data-order-by-status="1" data-max-chat-history="25">
+<!--        <div id="chat" class="fixed" data-current-user="Art Ramadani" data-order-by-status="1" data-max-chat-history="25">
 
             <div class="chat-inner">
 
@@ -633,7 +629,7 @@
 
             </div>
 
-            <!-- conversation template -->
+             conversation template 
             <div class="chat-conversation">
 
                 <div class="conversation-header">
@@ -656,7 +652,7 @@
         </div>
 
 
-        <!-- Chat Histories -->
+         Chat Histories 
         <ul class="chat-history" id="sample_history">
             <li>
                 <span class="user">Art Ramadani</span>
@@ -686,7 +682,7 @@
 
 
 
-        <!-- Chat Histories -->
+         Chat Histories 
         <ul class="chat-history" id="sample_history_2">
             <li class="opponent unread">
                 <span class="user">Daniel A. Pena</span>
@@ -700,7 +696,7 @@
                 <span class="time">08:27</span>
             </li>
         </ul>
-    </div>
+    </div>-->
     <!-- Imported styles on this page -->
     <link rel="stylesheet" href="<?php echo JS_PATH ?>jvectormap/jquery-jvectormap-1.2.2.css">
     <link rel="stylesheet" href="<?php echo JS_PATH ?>rickshaw/rickshaw.min.css">

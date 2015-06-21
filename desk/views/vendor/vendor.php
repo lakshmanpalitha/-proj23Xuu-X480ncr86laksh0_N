@@ -9,16 +9,12 @@
             <!--############-->
             <ol class="breadcrumb bc-3" >
                 <li>
-                    <a href="index.html"><i class="fa-home"></i>Home</a>
+                    <a href="<?php echo MOD_ADMIN_URL ?>"><i class="fa-home"></i>Home</a>
                 </li>
                 <li>
 
-                    <a href="forms-main.html">Forms</a>
-                </li>
-                <li class="active">
-
-                    <strong>Data Validation</strong>
-                </li>
+                    <a href="<?php echo MOD_ADMIN_URL ?>vendor/">Vendors</a>
+                </li>                
             </ol>
 
             <h3>Vendors</h3>
@@ -36,62 +32,62 @@
             <table class="table table-bordered datatable" id="table-1">
                 <thead>
                     <tr>
-                        <th data-hide="phone">Rendering engine</th>
-                        <th>Browser</th>
-                        <th data-hide="phone">Platform(s)</th>
-                        <th data-hide="phone,tablet">Engine version</th>
-                        <th>CSS grade</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Contact No:</th>
+                        <th>Type</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="odd gradeX">
-                        <td>Trident</td>
-                        <td>Internet Explorer 4.0</td>
-                        <td>Win 95+</td>
-                        <td class="center">4</td>
-                        <td class="center">X</td>
-                        <td class="center">
-                            <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-sm btn-icon icon-left">
-                                <i class="entypo-pencil"></i>
-                                Edit
-                            </a>
+                    <?php
+                    if (!empty($this->vendors)) {
+                        foreach ($this->vendors as $vendor) {
+                            ?>
+                            <tr class="odd gradeX">
+                                <td><?php echo $vendor->VENDOR_NAME ?></td>
+                                <td><?php echo $vendor->VENDOR_EMAIL ?></td>
+                                <td><?php echo $vendor->VENDOR_ADDRESS ?></td>
+                                <td><?php echo $vendor->VENDOR_CONTACT_NO ?></td>
+                                <td><?php
+                                    echo ($vendor->VENDOR_TYPE == 'S' ? '
+                                        <button class="btn btn-default btn-icon btn-xs icon-left" type="button">
+                                            Supplier
+                                            <i class="entypo-user-add"></i>
+                                        </button>' :
+                                            '<button class="btn btn-default btn-icon btn-xs icon-left" type="button">
+                                            Buyer
+                                            <i class="entypo-user-add"></i>
+                                        </button>')
+                                    ?></td>
+                                <td><?php
+                                    echo ($vendor->VENDOR_STATUS == 'A' ? '
+                                        <button class="btn btn-green btn-icon icon-left  btn-xs" type="button">
+                                            Active<i class="entypo-check"></i>
+                                        </button>' :
+                                            '<button class="btn btn-gold btn-icon icon-left  btn-xs" type="button">
+                                                Inactive<i class="entypo-cancel"></i>
+                                         </button>')
+                                    ?></td>
+                                <td class="center">
+                                    <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-xs btn-icon icon-left">
+                                        <i class="entypo-pencil"></i>
+                                        Edit
+                                    </a>
 
-                            <a href="#" class="btn btn-danger btn-sm btn-icon icon-left">
-                                <i class="entypo-cancel"></i>
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="even gradeC">
-                        <td>Trident</td>
-                        <td>Internet Explorer 5.0</td>
-                        <td>Win 95+</td>
-                        <td class="center">5</td>
-                        <td class="center">C</td>
-                        <td class="center">
-                            <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-sm btn-icon icon-left">
-                                <i class="entypo-pencil"></i>
-                                Edit
-                            </a>
-
-                            <a href="#" class="btn btn-danger btn-sm btn-icon icon-left">
-                                <i class="entypo-cancel"></i>
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
+                                    <a href="#" class="btn btn-danger btn-xs btn-icon icon-left">
+                                        <i class="entypo-cancel"></i>
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                    }
+                    ?>
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Rendering engine</th>
-                        <th>Browser</th>
-                        <th>Platform(s)</th>
-                        <th>Engine version</th>
-                        <th>CSS grade</th>
-                        <th>Action</th>
-                    </tr>
-                </tfoot>
             </table>
 
             <script type="text/javascript">
@@ -160,91 +156,97 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">New Vendor</h4>
                 </div>
-                <form role="form" id="form1" method="post" class="validate">
+                <form  role="form" id="form1" method="post" action="<?php echo MOD_ADMIN_URL ?>vendor/addNewVendor" class="validate_sp_form">
                     <div class="modal-body">
-
                         <div class="row">
                             <div class="col-md-6">
-
                                 <div class="form-group">
                                     <label class="control-label">Name</label>
-
-                                    <input type="text" class="form-control" name="name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
+                                    <input type="text" class="form-control" name="vendor_name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
                                 </div>	
-
                             </div>
-
                             <div class="col-md-6">
-
                                 <div class="form-group">
                                     <label class="control-label">Email</label>
-
-                                    <input type="text" class="form-control" name="email" data-validate="required,email" placeholder="Email Field" />
+                                    <input type="text" class="form-control" name="vendor_email" data-validate="required,email" placeholder="Email Field" />
                                 </div>	
-
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-12">
-
                                 <div class="form-group">
                                     <label for="field-3" class="control-label">Address</label>
 
-                                    <input type="text" class="form-control" name="address" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
+                                    <input type="text" class="form-control" name="vendor_address" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
                                 </div>	
-
                             </div>
                         </div>
-
                         <div class="row">
-                            <div class="col-md-6">
-
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Contact No:</label>
 
-                                    <input type="text" class="form-control" name="number" data-validate="required,number" placeholder="Numeric Field" />
+                                    <input type="text" class="form-control" name="vendor_cno" data-validate="required,number" placeholder="Numeric Field" />
                                 </div>	
-
                             </div>
-
-                            <div class="col-md-6">
-
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="field-5" class="control-label">Vendor Type</label>
-                                    <select class="form-control">
-                                        <option>Supplier</option>
-                                        <option>Buyer</option>
+                                    <select name="vendor_typ" class="form-control">
+                                        <option value="S">Supplier</option>
+                                        <option value="B">Buyer</option>
                                     </select>
                                 </div>	
-
                             </div>
-
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-0 control-label">Status</label>
+                                    <div>
+                                        <select name="status" class="form-control">
+                                            <option value="A">Active</option>
+                                            <option value="I">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-12">
-
                                 <div class="form-group no-margin">
                                     <label for="field-7" class="control-label">Remark</label>
-
-                                    <textarea class="form-control autogrow" id="field-7" placeholder="Write something about vendor"></textarea>
+                                    <textarea name="vendor_remark" class="form-control autogrow" id="field-7" placeholder="Write something about vendor"></textarea>
                                 </div>	
-
                             </div>
                         </div>
-
                     </div>
-
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Save changes</button>
+                        <button type="submit" class="btn btn-success">Save changes</button>      
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
+    <script>
+        function submitFrom(form) {
+            try {
+                ajaxRequest(form.action, jQuery('#' + form.id).serialize(), function(jsonData) {
+                    if (jsonData) {
+                        if (jsonData.success == true) {
+                            jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>vendor');
+                        } else {
+                            alert(jsonData.error)
+                            return false;
+                        }
+                    }
+                });
+            }
+            catch (err) {
+                alert(err.message);
+                return false;
+            }
+        }
+    </script>
     <!-- Imported styles on this page -->
     <link rel="stylesheet" href="<?php echo JS_PATH ?>datatables/responsive/css/datatables.responsive.css">
     <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">

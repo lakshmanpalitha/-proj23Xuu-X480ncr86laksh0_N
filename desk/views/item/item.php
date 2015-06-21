@@ -13,49 +13,46 @@
                 </li>
                 <li>
 
-                    <a href="<?php echo MOD_ADMIN_URL ?>grn/">Grn</a>
+                    <a href="<?php echo MOD_ADMIN_URL ?>item/">Items</a>
                 </li>
             </ol>
 
-            <h3>GRN</h3>
+            <h3>Items</h3>
             <br />
             <div class="row">
                 <div class="col-md-6 col-sm-8 clearfix">
-                    <a class="btn btn-blue" href="<?php echo MOD_ADMIN_URL ?>grn/newGrn">
+                    <a class="btn btn-blue" href="<?php echo MOD_ADMIN_URL ?>item/newItem">
                         <i class="entypo-plus"></i>
                         Add New
                     </a>
                 </div>
             </div>
             <br />
-
             <table class="table table-bordered datatable" id="table-1">
                 <thead>
                     <tr>
-                        <th>GRN Id</th>
-                        <th>GRN Invoice Id</th>
-                        <th>GRN Title</th>
-                        <th>GRN Vendor</th>
-                        <th>GRN Created</th>
-                        <th>GRN Status</th>
-                        <th>GRN Mode</th>
-                        <th>GRN Action</th>
+                        <th>Item code</th>
+                        <th>Item name</th>
+                        <th>Item location</th>
+                        <th>Item date</th>
+                        <th>Item status</th>
+                        <th>Item mode</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    if (!empty($this->grns)) {
-                        foreach ($this->grns as $grn) {
+                    if (!empty($this->items)) {
+                        foreach ($this->items as $item) {
                             ?>
                             <tr class="odd gradeX">
-                                <td><?php echo $grn->GRN_ID ?></td>
-                                <td><?php echo $grn->INVOICE_ID ?></td>
-                                <td><?php echo $grn->GRN_TITLE ?></td>
-                                <td><?php echo $grn->VENDOR_NAME ?></td>
-                                <td><?php echo $grn->GRN_CREATE_DATE ?></td>
+                                <td><?php echo $item->ITEM_CODE ?></td>
+                                <td><?php echo $item->ITEM_NAME ?></td>
+                                <td><?php echo $item->ITEM_LOCATION ?></td>
+                                <td><?php echo $item->ITEM_ADD_DATE ?></td>
                                 <td>
                                     <?php
-                                    echo ($grn->GRN_STATUS == 'A' ? '
+                                    echo ($item->ITEM_STATUS == 'A' ? '
                                         <button class="btn btn-green btn-icon icon-left  btn-xs" type="button">
                                             Active<i class="entypo-check"></i>
                                         </button>' :
@@ -66,12 +63,12 @@
                                 </td>
                                 <td>
                                     <?php
-                                    if ($grn->GRN_MODE == 'S') {
+                                    if ($item->ITEM_MODE == 'S') {
                                         echo '
                                             <button class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">
                                             Draft<i class="entypo-check"></i>
                                             </button>';
-                                    } else if ($grn->GRN_MODE == 'o') {
+                                    } else if ($item->ITEM_MODE == 'o') {
                                         echo '
                                             <button class="btn btn-blue btn-icon icon-left  btn-xs" type="button">
                                                 Submit<i class="entypo-cancel"></i>
@@ -87,16 +84,11 @@
                                 <td>
                                     <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-xs btn-icon icon-left">
                                         <i class="entypo-pencil"></i>
-                                        Edit
-                                    </a>
-
-                                    <a href="#" class="btn btn-danger btn-xs btn-icon icon-left">
-                                        <i class="entypo-cancel"></i>
-                                        Delete
+                                        View
                                     </a>
                                 </td>
                             </tr>
-                        <?php
+                            <?php
                         }
                     }
                     ?>
@@ -140,26 +132,11 @@
                                     });
                                 });
             </script>
-            <script type="text/javascript">
-                function showAjaxModal()
-                {
-                    jQuery('#modal-6').modal('show', {backdrop: 'static'});
-
-                    jQuery.ajax({
-                        url: "data/ajax-content.txt",
-                        success: function(response)
-                        {
-                            jQuery('#modal-7 .modal-body').html(response);
-                        }
-                    });
-                }
-            </script>
             <!--Add footer-->
-<?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
+            <?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
             <!--############-->
         </div>
     </div>
-
     <!-- Imported styles on this page -->
     <link rel="stylesheet" href="<?php echo JS_PATH ?>datatables/responsive/css/datatables.responsive.css">
     <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">

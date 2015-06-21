@@ -46,11 +46,15 @@ function ajaxRequest(URL, param, returnFunc)
         url: URL,
         data: param,
         type: 'POST',
-        processData: false,
-        contentType: false,
+        timeout: 10000,
+        async: true,
         success: function(data) {
             if (typeof returnFunc === 'function') {
-                returnFunc(data);
+                if (data) {
+                    returnFunc(JSON.parse(data));
+                } else {
+                    returnFunc();
+                }
             }
         },
         error: function(request, status, error) {

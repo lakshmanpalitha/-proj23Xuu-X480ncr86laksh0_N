@@ -9,15 +9,11 @@
             <!--############-->
             <ol class="breadcrumb bc-3" >
                 <li>
-                    <a href="index.html"><i class="fa-home"></i>Home</a>
+                    <a href="<?php echo MOD_ADMIN_URL ?>"><i class="fa-home"></i>Home</a>
                 </li>
                 <li>
 
-                    <a href="forms-main.html">Forms</a>
-                </li>
-                <li class="active">
-
-                    <strong>Data Validation</strong>
+                    <a href="<?php echo MOD_ADMIN_URL ?>user/">Users</a>
                 </li>
             </ol>
 
@@ -36,62 +32,48 @@
             <table class="table table-bordered datatable" id="table-1">
                 <thead>
                     <tr>
-                        <th data-hide="phone">Rendering engine</th>
-                        <th>Browser</th>
-                        <th data-hide="phone">Platform(s)</th>
-                        <th data-hide="phone,tablet">Engine version</th>
-                        <th>CSS grade</th>
+                        <th data-hide="phone">Name</th>
+                        <th>Email</th>
+                        <th data-hide="phone">Status</th>
+                        <th data-hide="phone,tablet">Last Login</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="odd gradeX">
-                        <td>Trident</td>
-                        <td>Internet Explorer 4.0</td>
-                        <td>Win 95+</td>
-                        <td class="center">4</td>
-                        <td class="center">X</td>
-                        <td class="center">
-                            <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-sm btn-icon icon-left">
-                                <i class="entypo-pencil"></i>
-                                Edit
-                            </a>
+                    <?php
+                    if (!empty($this->users)) {
+                        foreach ($this->users as $users) {
+                            ?>
+                            <tr class="odd gradeX">
+                                <td><?php echo $users->USER_NAME ?></td>
+                                <td><?php echo $users->USER_EMAIL ?></td>
+                                <td><?php
+                                    echo ($users->USER_STATUS == 'A' ? '
+                                        <button class="btn btn-green btn-icon icon-left  btn-xs" type="button">
+                                            Active<i class="entypo-check"></i>
+                                        </button>' :
+                                            '<button class="btn btn-gold btn-icon icon-left  btn-xs" type="button">
+                                                Inactive<i class="entypo-cancel"></i>
+                                         </button>')
+                                    ?></td>
+                                <td><?php echo $users->USER_LAST_LOG ?></td>
+                                <td class="center">
+                                    <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-xs btn-icon icon-left">
+                                        <i class="entypo-pencil"></i>
+                                        Edit
+                                    </a>
 
-                            <a href="#" class="btn btn-danger btn-sm btn-icon icon-left">
-                                <i class="entypo-cancel"></i>
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="even gradeC">
-                        <td>Trident</td>
-                        <td>Internet Explorer 5.0</td>
-                        <td>Win 95+</td>
-                        <td class="center">5</td>
-                        <td class="center">C</td>
-                        <td class="center">
-                            <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-sm btn-icon icon-left">
-                                <i class="entypo-pencil"></i>
-                                Edit
-                            </a>
-
-                            <a href="#" class="btn btn-danger btn-sm btn-icon icon-left">
-                                <i class="entypo-cancel"></i>
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
+                                    <a href="#" class="btn btn-danger btn-xs btn-icon icon-left">
+                                        <i class="entypo-cancel"></i>
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                    }
+                    ?>
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Rendering engine</th>
-                        <th>Browser</th>
-                        <th>Platform(s)</th>
-                        <th>Engine version</th>
-                        <th>CSS grade</th>
-                        <th>Action</th>
-                    </tr>
-                </tfoot>
             </table>
 
             <script type="text/javascript">
@@ -160,7 +142,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">New User</h4>
                 </div>
-                <form role="form" id="form1" method="post" class="validate">
+                <form  role="form" id="form1" method="post" action="<?php echo MOD_ADMIN_URL ?>user/addNewUser" class="validate_sp_form">
                     <div class="modal-body">
 
                         <div class="row">
@@ -169,7 +151,7 @@
                                 <div class="form-group">
                                     <label class="control-label">User Name</label>
 
-                                    <input type="text" class="form-control" name="name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
+                                    <input type="text" class="form-control" name="user_name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
                                 </div>	
 
                             </div>
@@ -179,7 +161,7 @@
                                 <div class="form-group">
                                     <label class="control-label">Email</label>
 
-                                    <input type="text" class="form-control" name="email" data-validate="required,email" placeholder="Email Field" />
+                                    <input type="text" class="form-control" name="user_email" data-validate="required,email" placeholder="Email Field" />
                                 </div>	
 
                             </div>
@@ -187,44 +169,53 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Password</label>
 
-                                    <input type="text" class="form-control" name="pwd" data-validate="required" placeholder="Numeric Field" />
+                                    <input type="password" class="form-control" name="pwd" data-validate="required" placeholder="Numeric Field" />
                                 </div>	
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Re-Password</label>
-                                    <input type="text" class="form-control" name="re-pwd" data-validate="required" placeholder="Numeric Field" />
+                                    <input type="password" class="form-control" name="re_pwd" data-validate="required" placeholder="Numeric Field" />
                                 </div>	
                             </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-sm-0 control-label">Status</label>
+
+                                    <div>
+                                        <select name="status" class="form-control">
+                                            <option value="A">Active</option>
+                                            <option value="I">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="col-sm-0 control-label">Role</label>
-
-                                    <div>
-
-                                        <select style="border-radius:0 !important " name="test" class="select2" multiple>
-                                            <option value="3" >Ohaio</option>
-                                            <option value="2" >Boston</option>
-                                            <option value="5" >Washington</option>
-                                            <option value="1" >Alabama</option>
-                                            <option value="4" >New York</option>
-                                            <option value="12" >Bostons</option>
-                                            <option value="11" >Alabama</option>
-                                            <option value="13" >Ohaio</option>
-                                            <option value="14" >New York</option>
-                                            <option value="15" >Washington II</option>
-                                        </select>
-
-                                    </div>
+                                    <label class="control-label">Role</label>
+                                    <select multiple="multiple" name="user_role[]" class="form-control multi-select">
+                                        <?php
+                                        if (!empty($this->role)) {
+                                            foreach ($this->role as $rol) {
+                                                ?>
+                                                <option value="<?php echo $rol->ROLE_ID ?>" ><?php echo $rol->ROLE_NAME ?></option>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="modal-footer">
@@ -235,33 +226,54 @@
             </div>
         </div>
     </div>
+    <script>
+        function submitFrom(form) {
+            try {
+                ajaxRequest(form.action, jQuery('#' + form.id).serialize(), function(jsonData) {
+                    if (jsonData) {
+                        if (jsonData.success == true) {
+                            jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>user');
+                        } else {
+                            alert(jsonData.error)
+                            return false;
+                        }
+                    }
+                });
+            }
+            catch (err) {
+                alert(err.message);
+                return false;
+            }
+        }
+    </script>
+<!-- Imported styles on this page -->
+<link rel="stylesheet" href="<?php echo JS_PATH ?>datatables/responsive/css/datatables.responsive.css">
+<link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">
+<link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2.css">
 
-    <!-- Imported styles on this page -->
-    <link rel="stylesheet" href="<?php echo JS_PATH ?>datatables/responsive/css/datatables.responsive.css">
-    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">
-    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2.css">
+<!-- Bottom scripts (common) -->
+<script src="<?php echo JS_PATH ?>gsap/main-gsap.js"></script>
+<script src="<?php echo JS_PATH ?>jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>
+<script src="<?php echo JS_PATH ?>bootstrap.js"></script>
+<script src="<?php echo JS_PATH ?>joinable.js"></script>
+<script src="<?php echo JS_PATH ?>resizeable.js"></script>
+<script src="<?php echo JS_PATH ?>neon-api.js"></script>
+<script src="<?php echo JS_PATH ?>jquery.dataTables.min.js"></script>
+<script src="<?php echo JS_PATH ?>datatables/TableTools.min.js"></script>
 
-    <!-- Bottom scripts (common) -->
-    <script src="<?php echo JS_PATH ?>gsap/main-gsap.js"></script>
-    <script src="<?php echo JS_PATH ?>jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>
-    <script src="<?php echo JS_PATH ?>bootstrap.js"></script>
-    <script src="<?php echo JS_PATH ?>joinable.js"></script>
-    <script src="<?php echo JS_PATH ?>resizeable.js"></script>
-    <script src="<?php echo JS_PATH ?>neon-api.js"></script>
-    <script src="<?php echo JS_PATH ?>jquery.dataTables.min.js"></script>
-    <script src="<?php echo JS_PATH ?>datatables/TableTools.min.js"></script>
+<!-- Imported scripts on this page -->
+<script src="<?php echo JS_PATH ?>jquery.validate.min.js"></script>
+<script src="<?php echo JS_PATH ?>neon-chat.js"></script>
+<script src="<?php echo JS_PATH ?>dataTables.bootstrap.js"></script>
+<script src="<?php echo JS_PATH ?>datatables/jquery.dataTables.columnFilter.js"></script>
+<script src="<?php echo JS_PATH ?>datatables/lodash.min.js"></script>
+<script src="<?php echo JS_PATH ?>datatables/responsive/js/datatables.responsive.js"></script>
+<script src="<?php echo JS_PATH ?>select2/select2.min.js"></script>
+<script src="<?php echo JS_PATH ?>selectboxit/jquery.selectBoxIt.min.js"></script>
+<script src="<?php echo JS_PATH ?>jquery.multi-select.js"></script>
 
-    <!-- Imported scripts on this page -->
-    <script src="<?php echo JS_PATH ?>jquery.validate.min.js"></script>
-    <script src="<?php echo JS_PATH ?>neon-chat.js"></script>
-    <script src="<?php echo JS_PATH ?>dataTables.bootstrap.js"></script>
-    <script src="<?php echo JS_PATH ?>datatables/jquery.dataTables.columnFilter.js"></script>
-    <script src="<?php echo JS_PATH ?>datatables/lodash.min.js"></script>
-    <script src="<?php echo JS_PATH ?>datatables/responsive/js/datatables.responsive.js"></script>
-    <script src="<?php echo JS_PATH ?>select2/select2.min.js"></script>
+<!-- JavaScripts initializations and stuff -->
+<script src="<?php echo JS_PATH ?>neon-custom.js"></script>
 
-    <!-- JavaScripts initializations and stuff -->
-    <script src="<?php echo JS_PATH ?>neon-custom.js"></script>
-
-    <!-- Demo Settings -->
-    <script src="<?php echo JS_PATH ?>neon-demo.js"></script>
+<!-- Demo Settings -->
+<script src="<?php echo JS_PATH ?>neon-demo.js"></script>

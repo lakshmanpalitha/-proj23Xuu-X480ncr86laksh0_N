@@ -43,7 +43,7 @@
 
                     <li>
                         <a href="index.html">
-                            <i class="entypo-gauge"></i>
+                            <i class="<?php echo $mod['MOD_ICON'] ?>"></i>
                             <span class="title"><?php echo $mod['MOD'] ?></span>
                         </a>
 

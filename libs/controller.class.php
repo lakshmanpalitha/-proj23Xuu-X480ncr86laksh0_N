@@ -61,6 +61,7 @@ class controller extends common {
                 if (empty($currunt_mod) OR $currunt_mod != $mod->MODULE_NAME) {
                     $currunt_mod = $mod->MODULE_NAME;
                     $mod_arrange_array[$m]['MOD'] = $currunt_mod;
+                    $mod_arrange_array[$m]['MOD_ICON'] = $mod->MODULE_ICON;
                     $n = $m;
                     $i = 0;
                     $m++;

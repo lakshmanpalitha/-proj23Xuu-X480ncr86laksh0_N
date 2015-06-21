@@ -17,7 +17,7 @@ class loginModel extends model {
                 user_email='" . mysql_real_escape_string($userEmail) . "' 
                 AND user_password='" . md5($userPassword) . "'
                 AND user_status NOT IN('D')";
-        
+
 
         $user = $this->db->queryUniqueObject($query);
 
@@ -32,6 +32,7 @@ class loginModel extends model {
         }
         session::set('user_logged_in', true);
         session::set('user_email', $user->USER_EMAIL);
+        session::set('user_name', $user->USER_NAME);
         //session::set('user_type', $user->user_type);
         session::set('user_id', $user->USER_ID);
         session::set('user_last_log', $user->USER_LAST_LOG);
