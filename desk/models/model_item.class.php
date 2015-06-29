@@ -42,6 +42,21 @@ class itemModel extends model {
         return ($result ? $result : false);
     }
 
+    function getSelectItem($item_id) {
+        if (empty($item_id))
+            return false;
+        $query = "
+            SELECT 
+                * 
+            FROM 
+                tbl_item_master
+            WHERE
+                ITEM_ID='" . mysql_real_escape_string($item_id) . "'
+                AND ITEM_MODE NOT IN ('D')";
+        $result = $this->db->queryUniqueObject($query);
+        return ($result ? $result : false);
+    }
+
     function getAllActiveItem() {
         $query = "
             SELECT 

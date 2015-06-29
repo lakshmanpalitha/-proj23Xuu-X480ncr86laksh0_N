@@ -25,6 +25,21 @@ class grn extends controller {
         $this->view->render('grn/add_grn', true, true, $this->module);
     }
 
+    function viewGrn($grn_id) {
+        if (!empty($grn_id)) {
+            $login_model = $this->loadModel('grn');
+            $login_model_item = $this->loadModel('item');
+            $login_model_vendor = $this->loadModel('vendor');
+            $this->view->items = $login_model_item->getAllActiveItem();
+            $this->view->vendors = $login_model_vendor->getAllActiveVendors();
+            $this->view->grn = $login_model->getSelectGrn(base64_decode($grn_id));
+            $this->view->grn_items = $login_model->getItemsSelectedGrn(base64_decode($grn_id));
+            $this->view->render('grn/view_grn', true, true, $this->module);
+        } else {
+            header('Location: ' . MOD_ADMIN_URL . "grn");
+        }
+    }
+
     function addNewGrn() {
 
         $valid = true;

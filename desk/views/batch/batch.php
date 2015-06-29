@@ -13,62 +13,57 @@
                 </li>
                 <li>
 
-                    <a href="<?php echo MOD_ADMIN_URL ?>item/">Items</a>
+                    <a href="<?php echo MOD_ADMIN_URL ?>batch/">Batch</a>
                 </li>
             </ol>
 
-            <h3>Items</h3>
+            <h3>Batch</h3>
             <br />
             <div class="row">
                 <div class="col-md-6 col-sm-8 clearfix">
-                    <a class="btn btn-blue" href="<?php echo MOD_ADMIN_URL ?>item/newItem">
+                    <a class="btn btn-blue" href="<?php echo MOD_ADMIN_URL ?>batch/newBatch">
                         <i class="entypo-plus"></i>
                         Add New
                     </a>
                 </div>
             </div>
             <br />
+
             <table class="table table-bordered datatable" id="table-1">
                 <thead>
                     <tr>
-                        <th>Item code</th>
-                        <th>Item name</th>
-                        <th>Item location</th>
-                        <th>Item date</th>
-                        <th>Item status</th>
-                        <th>Item mode</th>
-                        <th>Action</th>
+                        <th>Batch Id</th>
+                        <th>Batch Code</th>
+                        <th>Batch Name</th>
+                        <th>Batch Product</th>
+                        <th>Batch Quantity</th>
+                        <th>Quantity Unit</th>
+                        <th>Batch Date</th>
+                        <th>Batch Mode</th>
+                        <th>Batch Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    if (!empty($this->items)) {
-                        foreach ($this->items as $item) {
+                    if (!empty($this->batchs)) {
+                        foreach ($this->batchs as $batch) {
                             ?>
                             <tr class="odd gradeX">
-                                <td><?php echo $item->ITEM_CODE ?></td>
-                                <td><?php echo $item->ITEM_NAME ?></td>
-                                <td><?php echo $item->ITEM_LOCATION ?></td>
-                                <td><?php echo $item->ITEM_ADD_DATE ?></td>
+                                <td><?php echo $batch->BATCH_ID ?></td>
+                                <td><?php echo $batch->BATCH_CODE ?></td>
+                                <td><?php echo $batch->BATCH_NAME ?></td>
+                                <td>(<?php echo $batch->PRODUCT_ID ?>) <?php echo $batch->PRODUCT_NAME ?></td>
+                                <td><?php echo $batch->BATCH_QUANTITY ?></td>
+                                <td><?php echo $batch->UNIT_NAME ?></td>
+                                <td><?php echo $batch->BATCH_CREATE_DATE ?></td>
                                 <td>
                                     <?php
-                                    echo ($item->ITEM_STATUS == 'A' ? '
-                                        <button class="btn btn-green btn-icon icon-left  btn-xs" type="button">
-                                            Active<i class="entypo-check"></i>
-                                        </button>' :
-                                            '<button class="btn btn-gold btn-icon icon-left  btn-xs" type="button">
-                                                Inactive<i class="entypo-cancel"></i>
-                                         </button>')
-                                    ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    if ($item->ITEM_MODE == 'S') {
+                                    if ($batch->BATCH_MODE == 'S') {
                                         echo '
                                             <button class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">
                                             Draft<i class="entypo-check"></i>
                                             </button>';
-                                    } else if ($item->ITEM_MODE == 'o') {
+                                    } else if ($batch->BATCH_MODE == 'o') {
                                         echo '
                                             <button class="btn btn-blue btn-icon icon-left  btn-xs" type="button">
                                                 Submit<i class="entypo-cancel"></i>
@@ -82,7 +77,7 @@
                                     ?>
                                 </td>
                                 <td>
-                                    <a href="<?php echo MOD_ADMIN_URL ?>item/viewItem/<?php echo base64_encode($item->ITEM_ID) ?>" class="btn btn-default btn-xs btn-icon icon-left">
+                                    <a href="<?php echo MOD_ADMIN_URL ?>batch/viewBatch/<?php echo base64_encode($batch->BATCH_ID) ?>" class="btn btn-default btn-xs btn-icon icon-left">
                                         <i class="entypo-pencil"></i>
                                         View
                                     </a>
@@ -132,11 +127,26 @@
                                     });
                                 });
             </script>
+            <script type="text/javascript">
+                function showAjaxModal()
+                {
+                    jQuery('#modal-6').modal('show', {backdrop: 'static'});
+
+                    jQuery.ajax({
+                        url: "data/ajax-content.txt",
+                        success: function(response)
+                        {
+                            jQuery('#modal-7 .modal-body').html(response);
+                        }
+                    });
+                }
+            </script>
             <!--Add footer-->
             <?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
             <!--############-->
         </div>
     </div>
+
     <!-- Imported styles on this page -->
     <link rel="stylesheet" href="<?php echo JS_PATH ?>datatables/responsive/css/datatables.responsive.css">
     <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">

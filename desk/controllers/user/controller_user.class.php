@@ -3,7 +3,7 @@
 class user extends controller {
 
     function __construct($module) {
-        //auth::handleLogin();
+        auth::handleLogin();
         parent::__construct($module);
     }
 

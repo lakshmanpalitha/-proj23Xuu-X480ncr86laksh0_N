@@ -7,10 +7,91 @@ class productModel extends model {
             SELECT 
                 * 
             FROM 
-                tbl_product_master
+                tbl_product_master pm,
+                tbl_unit u
              WHERE
-                PRODUCT_MODE NOT IN ('D')";
+                pm.PRODUCT_MODE NOT IN ('D')
+                AND u.UNIT_CODE=pm.UNIT_CODE";
+
         $result = $this->db->queryMultipleObjects($query);
+        return ($result ? $result : false);
+    }
+
+    function getAllActiveProduct() {
+        $query = "
+            SELECT 
+                * 
+            FROM 
+                tbl_product_master pm,
+                tbl_unit u
+             WHERE
+                pm.PRODUCT_MODE NOT IN ('D')
+                AND pm.PRODUCT_STATUS IN ('A')
+                AND u.UNIT_CODE=pm.UNIT_CODE";
+        $result = $this->db->queryMultipleObjects($query);
+        return ($result ? $result : false);
+    }
+
+    function getSelectProduct($product_id) {
+        if (empty($product_id))
+            return false;
+        $query = "
+            SELECT 
+                * 
+            FROM 
+                tbl_product_master pm,
+                tbl_unit u
+             WHERE
+                pm.PRODUCT_ID='" . mysql_real_escape_string($product_id) . "'
+                AND pm.PRODUCT_MODE NOT IN ('D')
+                AND pm.PRODUCT_STATUS IN ('A')
+                AND u.UNIT_CODE=pm.UNIT_CODE";
+        $result = $this->db->queryUniqueObject($query);
+        return ($result ? $result : false);
+    }
+
+    function getRecipeSelectProduct($product_id) {
+        $query = "
+            SELECT 
+                pr.RECIPE_ID,
+                rm.RECIPE_NAME,
+                pr.PRODUCT_RECIPE_REMARK
+            FROM 
+                tbl_product_recipe pr,
+                tbl_recipe_master rm
+             WHERE
+                pr.PRODUCT_ID ='" . mysql_real_escape_string($product_id) . "'
+                AND pr.RECIPE_ID=rm.RECIPE_ID";
+        $result = $this->db->queryMultipleObjects($query);
+        return ($result ? $result : false);
+    }
+    function getRecipeSelectMaterial($product_id) {
+        $query = "
+            SELECT 
+                pm.ITEM_ID,
+                im.ITEM_NAME,
+                pm.PRODUCT_ITEM_QUANTITY
+            FROM 
+                tbl_product_mat_item pm,
+                tbl_item_master im
+             WHERE
+                pm.PRODUCT_ID ='" . mysql_real_escape_string($product_id) . "'
+                AND pm.ITEM_ID=im.ITEM_ID";
+        $result = $this->db->queryMultipleObjects($query);
+        return ($result ? $result : false);
+    }
+
+    function getProductUnit($product_id) {
+        $query = "
+            SELECT 
+                u.UNIT_NAME 
+            FROM 
+                tbl_unit u,
+                tbl_product_master pm
+             WHERE
+                pm.PRODUCT_ID='" . mysql_real_escape_string($product_id) . "'
+                AND pm.UNIT_CODE=u.UNIT_CODE";
+        $result = $this->db->queryUniqueValue($query);
         return ($result ? $result : false);
     }
 
@@ -28,7 +109,10 @@ class productModel extends model {
                         '" . mysql_real_escape_string($product[2]) . "',
                             '" . mysql_real_escape_string($product[1]) . "',
                              '" . session::get('user_email') . "',                  
-                        'S'                                          
+                        'S',
+                     '" . $product[5] . "',                  
+                  '" . $product[6] . "'                  
+
             )";
             $result = $this->db->execute($query);
             if ($result) {

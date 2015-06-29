@@ -37,7 +37,6 @@
                         <th>GRN Title</th>
                         <th>GRN Vendor</th>
                         <th>GRN Created</th>
-                        <th>GRN Status</th>
                         <th>GRN Mode</th>
                         <th>GRN Action</th>
                     </tr>
@@ -53,17 +52,6 @@
                                 <td><?php echo $grn->GRN_TITLE ?></td>
                                 <td><?php echo $grn->VENDOR_NAME ?></td>
                                 <td><?php echo $grn->GRN_CREATE_DATE ?></td>
-                                <td>
-                                    <?php
-                                    echo ($grn->GRN_STATUS == 'A' ? '
-                                        <button class="btn btn-green btn-icon icon-left  btn-xs" type="button">
-                                            Active<i class="entypo-check"></i>
-                                        </button>' :
-                                            '<button class="btn btn-gold btn-icon icon-left  btn-xs" type="button">
-                                                Inactive<i class="entypo-cancel"></i>
-                                         </button>')
-                                    ?>
-                                </td>
                                 <td>
                                     <?php
                                     if ($grn->GRN_MODE == 'S') {
@@ -85,14 +73,9 @@
                                     ?>
                                 </td>
                                 <td>
-                                    <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-xs btn-icon icon-left">
+                                    <a href="<?php echo MOD_ADMIN_URL ?>grn/viewGrn/<?php echo base64_encode($grn->GRN_ID) ?>" class="btn btn-default btn-xs btn-icon icon-left">
                                         <i class="entypo-pencil"></i>
-                                        Edit
-                                    </a>
-
-                                    <a href="#" class="btn btn-danger btn-xs btn-icon icon-left">
-                                        <i class="entypo-cancel"></i>
-                                        Delete
+                                        View
                                     </a>
                                 </td>
                             </tr>

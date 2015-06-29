@@ -27,6 +27,40 @@ class recipeModel extends model {
         return ($result ? $result : false);
     }
 
+    function getSpecificRecipe($recipe_id) {
+        if (empty($recipe_id))
+            return false;
+        $query = "
+            SELECT 
+                * 
+            FROM 
+                tbl_recipe_master
+             WHERE
+                RECIPE_ID='" . mysql_real_escape_string($recipe_id) . "'
+                AND RECIPE_MODE NOT IN ('D')";
+        $result = $this->db->queryUniqueObject($query);
+        return ($result ? $result : false);
+    }
+
+    function getItemsSpecificrecipe($recipe_id) {
+        if (empty($recipe_id))
+            return false;
+        $query = "
+            SELECT 
+                im.ITEM_NAME, 
+                ri.ITEM_ID, 
+                ri.RECIPE_ITEM_QUANTITY, 
+                ri.RECIPE_ITEM_REMARK 
+            FROM 
+                tbl_recipe_item ri, 
+                tbl_item_master im 
+            WHERE 
+                ri.RECIPE_ID='".mysql_real_escape_string($recipe_id)."'  
+                AND ri.ITEM_ID=im.ITEM_ID";
+        $result = $this->db->queryMultipleObjects($query);
+        return ($result ? $result : false);
+    }
+
     function saveNewRecipe($recipe) {
         $primaryKey = $this->primaryKeyGenarator('tbl_recipe_master', 'RECIPE_ID');
         if ($primaryKey) {

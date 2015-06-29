@@ -49,12 +49,18 @@ function ajaxRequest(URL, param, returnFunc)
         timeout: 10000,
         async: true,
         success: function(data) {
-            if (typeof returnFunc === 'function') {
-                if (data) {
-                    returnFunc(JSON.parse(data));
-                } else {
-                    returnFunc();
+            try {
+                if (typeof returnFunc === 'function') {
+                    if (data) {
+                        returnFunc(JSON.parse(data));
+                    } else {
+                        returnFunc();
+                    }
                 }
+            }
+            catch (err) {
+                alert(err.message);
+                return false;
             }
         },
         error: function(request, status, error) {

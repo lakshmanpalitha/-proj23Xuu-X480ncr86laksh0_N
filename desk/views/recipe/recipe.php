@@ -24,7 +24,7 @@
                         <i class="entypo-plus"></i>
                         Add New
                     </a>
-                    <a class="btn btn-blue" href="<?php echo MOD_ADMIN_URL ?>recipe/newRecipe">
+                    <a class="btn btn-blue" href="javascript:;" onclick="jQuery('#modal-7').modal('show', {backdrop: 'static'});">
                         <i class="entypo-plus"></i>
                         Import Recipe
                     </a>
@@ -84,58 +84,55 @@
                                     ?>
                                 </td>
                                 <td class="center">
-                                    <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-xs btn-icon icon-left">
+                                    <a href="<?php echo MOD_ADMIN_URL ?>recipe/viewRecipe/<?php echo base64_encode($recipe->RECIPE_ID) ?>"  class="btn btn-default btn-xs btn-icon icon-left">
                                         <i class="entypo-pencil"></i>
-                                        Edit
-                                    </a>
-
-                                    <a href="#" class="btn btn-danger btn-xs btn-icon icon-left">
-                                        <i class="entypo-cancel"></i>
-                                        Delete
+                                        View
                                     </a>
                                 </td>
                             </tr>
-                        <?php }
-                    } ?>
+                            <?php
+                        }
+                    }
+                    ?>
                 </tbody>
             </table>
 
             <script type="text/javascript">
-                                var responsiveHelper;
-                                var breakpointDefinition = {
-                                    tablet: 1024,
-                                    phone: 480
-                                };
-                                var tableContainer;
+                        var responsiveHelper;
+                        var breakpointDefinition = {
+                            tablet: 1024,
+                            phone: 480
+                        };
+                        var tableContainer;
 
-                                jQuery(document).ready(function($)
-                                {
-                                    tableContainer = $("#table-1");
+                        jQuery(document).ready(function($)
+                        {
+                            tableContainer = $("#table-1");
 
-                                    tableContainer.dataTable({
-                                        "sPaginationType": "bootstrap",
-                                        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                                        "bStateSave": true,
-                                        // Responsive Settings
-                                        bAutoWidth: false,
-                                        fnPreDrawCallback: function() {
-                                            // Initialize the responsive datatables helper once.
-                                            if (!responsiveHelper) {
-                                                responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
-                                            }
-                                        },
-                                        fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                                            responsiveHelper.createExpandIcon(nRow);
-                                        },
-                                        fnDrawCallback: function(oSettings) {
-                                            responsiveHelper.respond();
-                                        }
-                                    });
+                            tableContainer.dataTable({
+                                "sPaginationType": "bootstrap",
+                                "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                                "bStateSave": true,
+                                // Responsive Settings
+                                bAutoWidth: false,
+                                fnPreDrawCallback: function() {
+                                    // Initialize the responsive datatables helper once.
+                                    if (!responsiveHelper) {
+                                        responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+                                    }
+                                },
+                                fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                                    responsiveHelper.createExpandIcon(nRow);
+                                },
+                                fnDrawCallback: function(oSettings) {
+                                    responsiveHelper.respond();
+                                }
+                            });
 
-                                    $(".dataTables_wrapper select").select2({
-                                        minimumResultsForSearch: -1
-                                    });
-                                });
+                            $(".dataTables_wrapper select").select2({
+                                minimumResultsForSearch: -1
+                            });
+                        });
             </script>
             <script type="text/javascript">
                 function showAjaxModal()
@@ -152,10 +149,63 @@
                 }
             </script>
             <!--Add footer-->
-<?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
+            <?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
             <!--############-->
         </div>
     </div>
+    <!-- Modal 7 (Long Modal)-->
+    <div class="modal fade" id="modal-7">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Import Existing Recipe</h4>
+                </div>
+                <form role="form" action="<?php echo MOD_ADMIN_URL ?>recipe/importRecipe" id="form_import_recipe" method="GET" class="validate_sp_form">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Recipe Code</label>
+                                    <select name="recipe_id" id="recipe_id"  class="form-control">
+                                        <option value="">-Select-</option>
+                                        <?php
+                                        if (!empty($this->recipes)) {
+                                            foreach ($this->recipes as $recipe) {
+                                                ?>
+                                                <option value="<?php echo base64_encode($recipe->RECIPE_ID) ?>" > <?php echo $recipe->RECIPE_NAME ?></option>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                    </select>                                   
+                                </div>	
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Import</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function submitFrom(form) {
+            try {
+                jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>recipe/importRecipe/' + form.recipe_id.value + '/');
+                return false;
+            }
+            catch (err) {
+                alert(err.message);
+                return false;
+            }
+            return false;
+        }
+    </script>
 
     <!-- Imported styles on this page -->
     <link rel="stylesheet" href="<?php echo JS_PATH ?>datatables/responsive/css/datatables.responsive.css">

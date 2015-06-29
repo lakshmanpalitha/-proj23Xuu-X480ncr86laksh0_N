@@ -24,6 +24,16 @@ class item extends controller {
         $this->view->render('item/add_item', true, true, $this->module);
     }
 
+    function viewItem($item_id) {
+        $login_model = $this->loadModel('item');
+        $login_model_setting = $this->loadModel('setting');
+        $this->view->cat = $login_model_setting->getAllActiveCat();
+        $this->view->sub_cat = $login_model_setting->getAllSubCat();
+        $this->view->unit = $login_model->getAllActiveUnit();
+        $this->view->item=$login_model->getSelectItem(base64_decode($item_id));
+        $this->view->render('item/view_item', true, true, $this->module);
+    }
+
     function addNewItem() {
 
         $valid = true;

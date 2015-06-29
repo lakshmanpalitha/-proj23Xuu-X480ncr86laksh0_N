@@ -1,3 +1,4 @@
+
 <body class="page-body  page-fade">
     <div class="page-container">
         <!--Add side bar-->
@@ -33,6 +34,8 @@
                     <tr>
                         <th>Product Id</th>
                         <th>Product Name</th>
+                        <th>Product Quantity</th>
+                        <th>Product Quantity Unit</th>
                         <th>Product Created Date</th>
                         <th>Product Status</th>
                         <th>Product Mode</th>
@@ -47,6 +50,8 @@
                             <tr class="odd gradeX">
                                 <td><?php echo $product->PRODUCT_ID ?></td>
                                 <td><?php echo $product->PRODUCT_NAME ?></td>
+                                <td><?php echo $product->PRODUCT_QUANTITY ?></td>
+                                <td><?php echo $product->UNIT_NAME ?></td>
                                 <td><?php echo $product->PRODUCT_CREATE_DATE ?></td>
                                 <td>
                                     <?php
@@ -80,14 +85,9 @@
                                     ?>
                                 </td>
                                 <td>
-                                    <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-xs btn-icon icon-left">
+                                    <a href="<?php echo MOD_ADMIN_URL ?>product/viewProduct/<?php echo base64_encode($product->PRODUCT_ID) ?>" class="btn btn-default btn-xs btn-icon icon-left">
                                         <i class="entypo-pencil"></i>
-                                        Edit
-                                    </a>
-
-                                    <a href="#" class="btn btn-danger btn-xs btn-icon icon-left">
-                                        <i class="entypo-cancel"></i>
-                                        Delete
+                                        View
                                     </a>
                                 </td>
                             </tr>

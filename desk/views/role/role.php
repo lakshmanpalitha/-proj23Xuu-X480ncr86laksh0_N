@@ -46,11 +46,7 @@
                                 <td class="center">
                                     <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-xs btn-icon icon-left">
                                         <i class="entypo-pencil"></i>
-                                        Edit
-                                    </a>
-                                    <a href="#" class="btn btn-danger btn-xs btn-icon icon-left">
-                                        <i class="entypo-cancel"></i>
-                                        Delete
+                                        View
                                     </a>
                                 </td>
                             </tr>
