@@ -14,6 +14,6 @@ if (file_exists('vendor/autoload.php')) {
 error::SetLogFile(LOG_PATH);
 //error::SetLogLevel(E_ALL | E_STRICT, true);
 error::SetLogLevel(E_ALL, true);
-error::SetDebug(false, true); //echo debug data and do it between <pre></pre> tags
+error::SetDebug(true, true); //echo debug data and do it between <pre></pre> tags
 // Start our application
 $app = new application();

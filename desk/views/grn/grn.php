@@ -9,118 +9,119 @@
             <!--############-->
             <ol class="breadcrumb bc-3" >
                 <li>
-                    <a href="index.html"><i class="fa-home"></i>Home</a>
+                    <a href="<?php echo MOD_ADMIN_URL ?>"><i class="fa-home"></i>Home</a>
                 </li>
                 <li>
 
-                    <a href="forms-main.html">Forms</a>
-                </li>
-                <li class="active">
-
-                    <strong>Data Validation</strong>
+                    <a href="<?php echo MOD_ADMIN_URL ?>grn/">Grn</a>
                 </li>
             </ol>
 
             <h3>GRN</h3>
             <br />
+            <div class="row">
+                <div class="col-md-6 col-sm-8 clearfix">
+                    <a class="btn btn-blue" href="<?php echo MOD_ADMIN_URL ?>grn/newGrn">
+                        <i class="entypo-plus"></i>
+                        Add New
+                    </a>
+                </div>
+            </div>
+            <br />
 
             <table class="table table-bordered datatable" id="table-1">
                 <thead>
                     <tr>
-                        <th data-hide="phone">Rendering engine</th>
-                        <th>Browser</th>
-                        <th data-hide="phone">Platform(s)</th>
-                        <th data-hide="phone,tablet">Engine version</th>
-                        <th>CSS grade</th>
-                        <th>Action</th>
+                        <th>GRN Id</th>
+                        <th>GRN Invoice Id</th>
+                        <th>GRN Title</th>
+                        <th>GRN Vendor</th>
+                        <th>GRN Created</th>
+                        <th>GRN Mode</th>
+                        <th>GRN Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="odd gradeX">
-                        <td>Trident</td>
-                        <td>Internet Explorer 4.0</td>
-                        <td>Win 95+</td>
-                        <td class="center">4</td>
-                        <td class="center">X</td>
-                        <td class="center">
-                            <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-sm btn-icon icon-left">
-                                <i class="entypo-pencil"></i>
-                                Edit
-                            </a>
-
-                            <a href="#" class="btn btn-danger btn-sm btn-icon icon-left">
-                                <i class="entypo-cancel"></i>
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="even gradeC">
-                        <td>Trident</td>
-                        <td>Internet Explorer 5.0</td>
-                        <td>Win 95+</td>
-                        <td class="center">5</td>
-                        <td class="center">C</td>
-                        <td class="center">
-                            <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-sm btn-icon icon-left">
-                                <i class="entypo-pencil"></i>
-                                Edit
-                            </a>
-
-                            <a href="#" class="btn btn-danger btn-sm btn-icon icon-left">
-                                <i class="entypo-cancel"></i>
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
+                    <?php
+                    if (!empty($this->grns)) {
+                        foreach ($this->grns as $grn) {
+                            ?>
+                            <tr class="odd gradeX">
+                                <td><?php echo $grn->GRN_ID ?></td>
+                                <td><?php echo $grn->INVOICE_ID ?></td>
+                                <td><?php echo $grn->GRN_TITLE ?></td>
+                                <td><?php echo $grn->VENDOR_NAME ?></td>
+                                <td><?php echo $grn->GRN_CREATE_DATE ?></td>
+                                <td>
+                                    <?php
+                                    if ($grn->GRN_MODE == 'S') {
+                                        echo '
+                                            <button class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">
+                                            Draft<i class="entypo-check"></i>
+                                            </button>';
+                                    } else if ($grn->GRN_MODE == 'o') {
+                                        echo '
+                                            <button class="btn btn-blue btn-icon icon-left  btn-xs" type="button">
+                                                Submit<i class="entypo-cancel"></i>
+                                            </button>';
+                                    } else {
+                                        echo '
+                                            <button class="btn btn-green  btn-icon icon-left  btn-xs" type="button">
+                                                Accept<i class="entypo-cancel"></i>
+                                            </button>';
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <a href="<?php echo MOD_ADMIN_URL ?>grn/viewGrn/<?php echo base64_encode($grn->GRN_ID) ?>" class="btn btn-default btn-xs btn-icon icon-left">
+                                        <i class="entypo-pencil"></i>
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php
+                        }
+                    }
+                    ?>
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Rendering engine</th>
-                        <th>Browser</th>
-                        <th>Platform(s)</th>
-                        <th>Engine version</th>
-                        <th>CSS grade</th>
-                        <th>Action</th>
-                    </tr>
-                </tfoot>
             </table>
 
             <script type="text/javascript">
-                        var responsiveHelper;
-                        var breakpointDefinition = {
-                            tablet: 1024,
-                            phone: 480
-                        };
-                        var tableContainer;
+                                var responsiveHelper;
+                                var breakpointDefinition = {
+                                    tablet: 1024,
+                                    phone: 480
+                                };
+                                var tableContainer;
 
-                        jQuery(document).ready(function($)
-                        {
-                            tableContainer = $("#table-1");
+                                jQuery(document).ready(function($)
+                                {
+                                    tableContainer = $("#table-1");
 
-                            tableContainer.dataTable({
-                                "sPaginationType": "bootstrap",
-                                "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                                "bStateSave": true,
-                                // Responsive Settings
-                                bAutoWidth: false,
-                                fnPreDrawCallback: function() {
-                                    // Initialize the responsive datatables helper once.
-                                    if (!responsiveHelper) {
-                                        responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
-                                    }
-                                },
-                                fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                                    responsiveHelper.createExpandIcon(nRow);
-                                },
-                                fnDrawCallback: function(oSettings) {
-                                    responsiveHelper.respond();
-                                }
-                            });
+                                    tableContainer.dataTable({
+                                        "sPaginationType": "bootstrap",
+                                        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                                        "bStateSave": true,
+                                        // Responsive Settings
+                                        bAutoWidth: false,
+                                        fnPreDrawCallback: function() {
+                                            // Initialize the responsive datatables helper once.
+                                            if (!responsiveHelper) {
+                                                responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+                                            }
+                                        },
+                                        fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                                            responsiveHelper.createExpandIcon(nRow);
+                                        },
+                                        fnDrawCallback: function(oSettings) {
+                                            responsiveHelper.respond();
+                                        }
+                                    });
 
-                            $(".dataTables_wrapper select").select2({
-                                minimumResultsForSearch: -1
-                            });
-                        });
+                                    $(".dataTables_wrapper select").select2({
+                                        minimumResultsForSearch: -1
+                                    });
+                                });
             </script>
             <script type="text/javascript">
                 function showAjaxModal()
@@ -137,7 +138,7 @@
                 }
             </script>
             <!--Add footer-->
-            <?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
+<?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
             <!--############-->
         </div>
     </div>

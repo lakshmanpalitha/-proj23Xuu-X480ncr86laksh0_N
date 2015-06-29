@@ -43,7 +43,7 @@
 
                     <li>
                         <a href="index.html">
-                            <i class="entypo-gauge"></i>
+                            <i class="<?php echo $mod['MOD_ICON'] ?>"></i>
                             <span class="title"><?php echo $mod['MOD'] ?></span>
                         </a>
 
@@ -53,7 +53,7 @@
                                 foreach ($mod['DOC'] as $doc) {
                                     ?>
                                     <li class="active">
-                                        <a href="<?php echo MOD_ADMIN_URL . $doc ?>">
+                                        <a href="<?php echo MOD_ADMIN_URL . strtolower($doc) ?>">
                                             <span class="title"><?php echo $doc ?></span>
                                         </a>
                                     </li>

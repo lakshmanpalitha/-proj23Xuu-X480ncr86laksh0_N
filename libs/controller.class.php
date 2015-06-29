@@ -48,6 +48,7 @@ class controller extends common {
 
     public function userActiveModule() {
         /* Get user's modules,document type and permission */
+        $mod_arrange_array = array();
         $loc_user_active_modules = $this->model->selectUserModule(session::get('user_id'));
         $this->user_active_module = $this->view->user_active_module = $loc_user_active_modules;
 
@@ -60,6 +61,7 @@ class controller extends common {
                 if (empty($currunt_mod) OR $currunt_mod != $mod->MODULE_NAME) {
                     $currunt_mod = $mod->MODULE_NAME;
                     $mod_arrange_array[$m]['MOD'] = $currunt_mod;
+                    $mod_arrange_array[$m]['MOD_ICON'] = $mod->MODULE_ICON;
                     $n = $m;
                     $i = 0;
                     $m++;

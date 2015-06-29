@@ -39,7 +39,7 @@ class database {
                     if (!mysql_select_db($base)) {
                         throw new Exception(mysql_error());
                     }
-                } catch (Exception $e) {
+                } catch (Exception $e) {                    
                     $this->session->setError("feedback_negative", $e->getMessage());
                     return false;
                 }
