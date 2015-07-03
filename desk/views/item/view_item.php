@@ -81,8 +81,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="field-6" class="control-label">Category</label>
-                                        <select name="item_cat" onchange="getSubCat(this)" class="form-control">
-                                            <option value="">-Select-</option>
+                                        <select name="item_cat" onchange="getSubCat(this)" class="select2" data-allow-clear="true" data-placeholder="Select category">
                                             <?php
                                             if (!empty($this->cat)) {
                                                 foreach ($this->cat as $cat) {
@@ -98,8 +97,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="field-6" class="control-label">Sub category</label>
-                                        <select name="item_sub_cat" id="sub_category" class="form-control">
-                                            <option value="">-Select-</option>
+                                        <select name="item_sub_cat" id="sub_category" class="select2" data-allow-clear="true" data-placeholder="Select sub category">
                                             <?php
                                             if (!empty($this->sub_cat)) {
                                                 foreach ($this->sub_cat as $sub_cat) {
@@ -240,6 +238,8 @@
                                                 }
                                             }
     </script>
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2.css">
     <!-- Bottom scripts (common) -->
     <script src="<?php echo JS_PATH ?>gsap/main-gsap.js"></script>
     <script src="<?php echo JS_PATH ?>jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>
@@ -250,6 +250,7 @@
 
 
     <!-- Imported scripts on this page -->
+    <script src="<?php echo JS_PATH ?>select2/select2.min.js"></script>
     <script src="<?php echo JS_PATH ?>jquery.validate.min.js"></script>
     <script src="<?php echo JS_PATH ?>neon-chat.js"></script>
     <script src="<?php echo JS_PATH ?>bootstrap-datepicker.js"></script>

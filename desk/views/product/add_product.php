@@ -286,8 +286,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Recipe Name</label>
-                                    <select name="recipe_id" id="recipe_id" class="form-control">
-                                        <option value="">-Select-</option>
+                                    <select name="recipe_id" id="recipe_id" class="select2" data-allow-clear="true" data-placeholder="Select recipe">                                     
                                         <?php
                                         if (!empty($this->recipes)) {
                                             foreach ($this->recipes as $recipe) {
@@ -334,8 +333,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="control-label">Material Name</label>
-                                    <select onchange="getItemStockUnit(this)" name="mat_id" id="mat_id" class="form-control">
-                                        <option value="">-Select-</option>
+                                    <select onchange="getItemStockUnit(this)" name="mat_id" id="mat_id" class="select2" data-allow-clear="true" data-placeholder="Select material">
                                         <?php
                                         if (!empty($this->items)) {
                                             foreach ($this->items as $item) {
@@ -527,6 +525,8 @@
         return false;
     }
     </script>
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2.css">
     <!-- Bottom scripts (common) -->
     <script src="<?php echo JS_PATH ?>gsap/main-gsap.js"></script>
     <script src="<?php echo JS_PATH ?>jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>
@@ -537,6 +537,7 @@
 
 
     <!-- Imported scripts on this page -->
+    <script src="<?php echo JS_PATH ?>select2/select2.min.js"></script>
     <script src="<?php echo JS_PATH ?>jquery.validate.min.js"></script>
     <script src="<?php echo JS_PATH ?>neon-chat.js"></script>
     <script src="<?php echo JS_PATH ?>bootstrap-datepicker.js"></script>

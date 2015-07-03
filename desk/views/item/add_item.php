@@ -53,8 +53,8 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label class="control-label">Item Code</label>
-                                    <input type="text" class="form-control" name="itm_code"  placeholder="Item code" />
+                                    <label class="control-label">Item Reference No</label>
+                                    <input type="text" class="form-control" name="itm_code"  placeholder="Item reference no" />
                                 </div>	
                             </div>
                             <div class="col-md-6">
@@ -80,8 +80,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Category</label>
-                                    <select name="item_cat" onchange="getSubCat(this)" class="form-control">
-                                        <option value="">-Select-</option>
+                                    <select name="item_cat" onchange="getSubCat(this)" class="select2" data-allow-clear="true" data-placeholder="Select category">
                                         <?php
                                         if (!empty($this->cat)) {
                                             foreach ($this->cat as $cat) {
@@ -123,12 +122,6 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="field-6" class="control-label">Ratio</label>
-                                    <input type="text" class="form-control" name="item_ratio" data-validate="required,number" placeholder="Numeric Field" />
-                                </div>	
-                            </div>  
-                            <div class="col-md-4">
-                                <div class="form-group">
                                     <label for="field-6" class="control-label">Issue Unit</label>
                                     <select name="issue_unit"  class="form-control">
                                         <option value="">-Select-</option>
@@ -144,6 +137,12 @@
                                     </select>
                                 </div>	
                             </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="field-6" class="control-label">Ratio</label>
+                                    <input type="text" class="form-control" name="item_ratio" data-validate="required,number" placeholder="Numeric Field" />
+                                </div>	
+                            </div>              
                         </div>
                         <div class="row">
                             <div class="col-md-4">
@@ -223,6 +222,8 @@
                                             }
                                         }
     </script>
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2.css">
     <!-- Bottom scripts (common) -->
     <script src="<?php echo JS_PATH ?>gsap/main-gsap.js"></script>
     <script src="<?php echo JS_PATH ?>jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>
@@ -233,6 +234,7 @@
 
 
     <!-- Imported scripts on this page -->
+    <script src="<?php echo JS_PATH ?>select2/select2.min.js"></script>
     <script src="<?php echo JS_PATH ?>jquery.validate.min.js"></script>
     <script src="<?php echo JS_PATH ?>neon-chat.js"></script>
     <script src="<?php echo JS_PATH ?>bootstrap-datepicker.js"></script>

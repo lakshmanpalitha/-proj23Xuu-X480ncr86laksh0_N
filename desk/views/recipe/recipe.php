@@ -168,8 +168,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="control-label">Recipe Code</label>
-                                    <select name="recipe_id" id="recipe_id"  class="form-control">
-                                        <option value="">-Select-</option>
+                                    <select name="recipe_id" id="recipe_id"  class="select2" data-allow-clear="true" data-placeholder="Select recipe">
                                         <?php
                                         if (!empty($this->recipes)) {
                                             foreach ($this->recipes as $recipe) {
@@ -206,11 +205,11 @@
             return false;
         }
     </script>
-
-    <!-- Imported styles on this page -->
-    <link rel="stylesheet" href="<?php echo JS_PATH ?>datatables/responsive/css/datatables.responsive.css">
     <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">
     <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2.css">
+    <!-- Imported styles on this page -->
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>datatables/responsive/css/datatables.responsive.css">
+
 
     <!-- Bottom scripts (common) -->
     <script src="<?php echo JS_PATH ?>gsap/main-gsap.js"></script>
@@ -223,13 +222,14 @@
     <script src="<?php echo JS_PATH ?>datatables/TableTools.min.js"></script>
 
     <!-- Imported scripts on this page -->
+    <script src="<?php echo JS_PATH ?>select2/select2.min.js"></script>
     <script src="<?php echo JS_PATH ?>jquery.validate.min.js"></script>
     <script src="<?php echo JS_PATH ?>neon-chat.js"></script>
     <script src="<?php echo JS_PATH ?>dataTables.bootstrap.js"></script>
     <script src="<?php echo JS_PATH ?>datatables/jquery.dataTables.columnFilter.js"></script>
     <script src="<?php echo JS_PATH ?>datatables/lodash.min.js"></script>
     <script src="<?php echo JS_PATH ?>datatables/responsive/js/datatables.responsive.js"></script>
-    <script src="<?php echo JS_PATH ?>select2/select2.min.js"></script>
+ 
 
     <!-- JavaScripts initializations and stuff -->
     <script src="<?php echo JS_PATH ?>neon-custom.js"></script>

@@ -20,7 +20,7 @@ class vendor extends controller {
         $vendor = array();
         $login_model = $this->loadModel('vendor');
 
-        if (!$vendor_name = $this->read->get("vendor_name", "POST", 'STRING', 250, true))
+        if (!$vendor_name = $this->read->get("vendor_name", "POST", 'NUMERIC', 250, true))
             $valid = false;
         if (!$vendor_email = $this->read->get("vendor_email", "POST", 'EMAIL', 150, true))
             $valid = false;

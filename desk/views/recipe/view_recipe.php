@@ -233,8 +233,7 @@
 
                                 <div class="form-group">
                                     <label class="control-label">Item Code</label>
-                                    <select name="recipe_item" id="recipe_item" onchange="getItemStockUnit(this)" class="form-control">
-                                        <option value="">-Select-</option>
+                                    <select name="recipe_item" id="recipe_item" onchange="getItemStockUnit(this)" class="select2" data-allow-clear="true" data-placeholder="Select item">
                                         <?php
                                         if (!empty($this->items)) {
                                             foreach ($this->items as $item) {
@@ -380,6 +379,8 @@
         return false;
     }
     </script>
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2.css">
     <!-- Bottom scripts (common) -->
     <script src="<?php echo JS_PATH ?>gsap/main-gsap.js"></script>
     <script src="<?php echo JS_PATH ?>jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>
@@ -390,6 +391,7 @@
 
 
     <!-- Imported scripts on this page -->
+    <script src="<?php echo JS_PATH ?>select2/select2.min.js"></script>
     <script src="<?php echo JS_PATH ?>jquery.validate.min.js"></script>
     <script src="<?php echo JS_PATH ?>neon-chat.js"></script>
     <script src="<?php echo JS_PATH ?>bootstrap-datepicker.js"></script>
