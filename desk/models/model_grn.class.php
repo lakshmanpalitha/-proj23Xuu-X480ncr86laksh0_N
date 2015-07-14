@@ -33,9 +33,17 @@ class grnModel extends model {
         return ($result ? $result : false);
     }
 
-    function getItemsSelectedGrn($grn_id) {
-        if (empty($grn_id))
+    function getItemsSelectedGrn($grn_id = null, $item_id = null) {
+        $where = '';
+        if ($grn_id && $item_id) {
+            $where = "gi.GRN_ID='" . mysql_real_escape_string($grn_id) . "' AND gi.ITEM_ID='" . mysql_real_escape_string($item_id) . "'";
+        } else if ($grn_id) {
+            $where = "gi.GRN_ID='" . mysql_real_escape_string($grn_id) . "'";
+        } else if ($item_id) {
+            $where = "gi.ITEM_ID='" . mysql_real_escape_string($item_id) . "'";
+        } else {
             return false;
+        }
         $query = "
             SELECT 
                 im.ITEM_NAME, 
@@ -43,14 +51,14 @@ class grnModel extends model {
                 gi.ITEM_QUANTITY, 
                 gi.ITEM_AMOUNT,
                 gi.ITEM_EXP_DATE,
-                gi.ITEM_REMARK
+                gi.ITEM_REMARK,
+                (SELECT UNIT_NAME FROM tbl_unit WHERE UNIT_CODE=im.ITEM_STOCK_UNIT) AS UNIT_NAME
             FROM 
                 tbl_grn_item gi, 
                 tbl_item_master im 
             WHERE 
-                gi.GRN_ID='" . mysql_real_escape_string($grn_id) . "'  
+                " . ($where ? $where : '') . "
                 AND gi.ITEM_ID=im.ITEM_ID";
-
         $result = $this->db->queryMultipleObjects($query);
         return ($result ? $result : false);
     }

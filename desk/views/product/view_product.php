@@ -360,8 +360,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Recipe Name</label>
-                                    <select name="recipe_id" id="recipe_id" class="form-control">
-                                        <option value="">-Select-</option>
+                                    <select name="recipe_id" id="recipe_id" class="select2" data-allow-clear="true" data-placeholder="Select recipe">
                                         <?php
                                         if (!empty($this->recipes)) {
                                             foreach ($this->recipes as $recipe) {
@@ -408,8 +407,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="control-label">Material Name</label>
-                                    <select onchange="getItemStockUnit(this)" name="mat_id" id="mat_id" class="form-control">
-                                        <option value="">-Select-</option>
+                                    <select onchange="getItemStockUnit(this)" name="mat_id" id="mat_id" class="select2" data-allow-clear="true" data-placeholder="Select material">
                                         <?php
                                         if (!empty($this->items)) {
                                             foreach ($this->items as $item) {
@@ -448,159 +446,161 @@
         </div>
     </div>
     <script type="text/javascript">
-                                                        function getItemStockUnit(e)
-                                                        {
-                                                            try {
-                                                                var param = "item_id=" + e.value;
-                                                                ajaxRequest('<?php echo MOD_ADMIN_URL ?>item/jsonGetItemStockUnit', param, function(jsonData) {
+                                                                    function getItemStockUnit(e)
+                                                                    {
+                                                                        try {
+                                                                            var param = "item_id=" + e.value;
+                                                                            ajaxRequest('<?php echo MOD_ADMIN_URL ?>item/jsonGetItemStockUnit', param, function(jsonData) {
 
-                                                                    if (jsonData) {
-                                                                        if (jsonData.success == true) {
-                                                                            document.getElementById('stock_unit').innerHTML = "<b>" + jsonData.data + "</b>";
+                                                                                if (jsonData) {
+                                                                                    if (jsonData.success == true) {
+                                                                                        document.getElementById('stock_unit').innerHTML = "<b>" + jsonData.data + "</b>";
 
-                                                                        } else {
-                                                                            alert(jsonData.error)
+                                                                                    } else {
+                                                                                        alert(jsonData.error)
+                                                                                        return false;
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                        catch (err) {
+                                                                            alert(err.message);
+                                                                            return false;
+                                                                        }
+
+                                                                    }
+                                                                    function recall(form) {
+
+                                                                        try {
+                                                                            if (form.id === 'form_recipe') {
+                                                                                var item_id = jQuery('#recipe_id').val();
+                                                                                if (typeof product_recipes[item_id] === 'undefined') {
+                                                                                    product_recipes[item_id] = new Array();
+                                                                                    product_recipes[item_id] = {
+                                                                                        recipe_id: item_id,
+                                                                                        recipe_remark: jQuery('#recipe_remark').val()
+                                                                                    };
+                                                                                    var row = '<tr>';
+                                                                                    row = row + '<td>' + jQuery('#recipe_id option:selected').text() + '</td>';
+                                                                                    row = row + '<td><a href="javascript:;" onclick=viewRecipe("' + item_id + '",this) class="btn btn-gold btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>View</a> &nbsp <a href="javascript:;" onclick=deleteRecipeRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
+                                                                                    row = row + '</tr>';
+                                                                                    jQuery("#table-recipe tbody").prepend(row);
+                                                                                }
+                                                                                else {
+                                                                                    alert("Item is allredy exist!");
+                                                                                }
+                                                                            } else {
+                                                                                var item_id = jQuery('#mat_id').val();
+                                                                                if (typeof product_items[item_id] === 'undefined') {
+                                                                                    product_items[item_id] = new Array();
+                                                                                    product_items[item_id] = {
+                                                                                        item_id: item_id,
+                                                                                        item_qty: jQuery('#mat_qty').val(),
+                                                                                        item_remark: jQuery('#mat_remark').val()
+                                                                                    };
+                                                                                    var row = '<tr>';
+                                                                                    row = row + '<td>' + jQuery('#mat_id option:selected').text() + '</td>';
+                                                                                    row = row + '<td>' + jQuery('#mat_qty').val() + '</td>';
+                                                                                    row = row + '<td><a href="javascript:;" onclick=viewItem("' + item_id + '",this) class="btn btn-gold btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>View</a> &nbsp <a href="javascript:;" onclick=deleteItemRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
+                                                                                    row = row + '</tr>';
+                                                                                    jQuery("#table-item tbody").prepend(row);
+                                                                                }
+                                                                                else {
+                                                                                    alert("Item is allredy exist!");
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        catch (err) {
+                                                                            alert(err.message);
+                                                                            return false;
+
+                                                                        }
+
+                                                                        return false;
+                                                                    }
+                                                                    function deleteItemRow(id, e) {
+                                                                        try {
+                                                                            if (typeof product_items[id] === 'undefined') {
+
+                                                                            } else {
+                                                                                delete product_items[id];
+                                                                                var tr = jQuery(e).closest('tr');
+                                                                                tr.remove();
+                                                                            }
+                                                                        }
+                                                                        catch (err) {
+                                                                            alert(err.message);
                                                                             return false;
                                                                         }
                                                                     }
-                                                                });
-                                                            }
-                                                            catch (err) {
-                                                                alert(err.message);
-                                                                return false;
-                                                            }
+                                                                    function deleteRecipeRow(id, e) {
+                                                                        try {
+                                                                            if (typeof product_recipes[id] === 'undefined') {
 
-                                                        }
-                                                        function recall(form) {
-
-                                                            try {
-                                                                if (form.id === 'form_recipe') {
-                                                                    var item_id = jQuery('#recipe_id').val();
-                                                                    if (typeof product_recipes[item_id] === 'undefined') {
-                                                                        product_recipes[item_id] = new Array();
-                                                                        product_recipes[item_id] = {
-                                                                            recipe_id: item_id,
-                                                                            recipe_remark: jQuery('#recipe_remark').val()
-                                                                        };
-                                                                        var row = '<tr>';
-                                                                        row = row + '<td>' + jQuery('#recipe_id option:selected').text() + '</td>';
-                                                                        row = row + '<td><a href="javascript:;" onclick=viewRecipe("' + item_id + '",this) class="btn btn-gold btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>View</a> &nbsp <a href="javascript:;" onclick=deleteRecipeRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
-                                                                        row = row + '</tr>';
-                                                                        jQuery("#table-recipe tbody").prepend(row);
-                                                                    }
-                                                                    else {
-                                                                        alert("Item is allredy exist!");
-                                                                    }
-                                                                } else {
-                                                                    var item_id = jQuery('#mat_id').val();
-                                                                    if (typeof product_items[item_id] === 'undefined') {
-                                                                        product_items[item_id] = new Array();
-                                                                        product_items[item_id] = {
-                                                                            item_id: item_id,
-                                                                            item_qty: jQuery('#mat_qty').val(),
-                                                                            item_remark: jQuery('#mat_remark').val()
-                                                                        };
-                                                                        var row = '<tr>';
-                                                                        row = row + '<td>' + jQuery('#mat_id option:selected').text() + '</td>';
-                                                                        row = row + '<td>' + jQuery('#mat_qty').val() + '</td>';
-                                                                        row = row + '<td><a href="javascript:;" onclick=viewItem("' + item_id + '",this) class="btn btn-gold btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>View</a> &nbsp <a href="javascript:;" onclick=deleteItemRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
-                                                                        row = row + '</tr>';
-                                                                        jQuery("#table-item tbody").prepend(row);
-                                                                    }
-                                                                    else {
-                                                                        alert("Item is allredy exist!");
-                                                                    }
-                                                                }
-                                                            }
-                                                            catch (err) {
-                                                                alert(err.message);
-                                                                return false;
-
-                                                            }
-
-                                                            return false;
-                                                        }
-                                                        function deleteItemRow(id, e) {
-                                                            try {
-                                                                if (typeof product_items[id] === 'undefined') {
-
-                                                                } else {
-                                                                    delete product_items[id];
-                                                                    var tr = jQuery(e).closest('tr');
-                                                                    tr.remove();
-                                                                }
-                                                            }
-                                                            catch (err) {
-                                                                alert(err.message);
-                                                                return false;
-                                                            }
-                                                        }
-                                                        function deleteRecipeRow(id, e) {
-                                                            try {
-                                                                if (typeof product_recipes[id] === 'undefined') {
-
-                                                                } else {
-                                                                    delete product_recipes[id];
-                                                                    var tr = jQuery(e).closest('tr');
-                                                                    tr.remove();
-                                                                }
-                                                            }
-                                                            catch (err) {
-                                                                alert(err.message);
-                                                                return false;
-                                                            }
-                                                        }
-                                                        function viewItem() {
-                                                            try {
-                                                                jQuery('#modal-7').modal('show', {backdrop: 'static'});
-                                                            }
-                                                            catch (err) {
-                                                                alert(err.message);
-                                                                return false;
-                                                            }
-
-                                                        }
-                                                        function viewRecipe() {
-                                                            try {
-                                                                jQuery('#modal-6').modal('show', {backdrop: 'static'});
-                                                            }
-                                                            catch (err) {
-                                                                alert(err.message);
-                                                                return false;
-                                                            }
-
-                                                        }
-                                                        function submitFrom(form) {
-                                                            try {
-                                                                var data = new Array();
-                                                                var data_2 = new Array();
-                                                                for (var key in product_recipes) {
-                                                                    var value = product_recipes[key];
-                                                                    data.push(value);
-                                                                }
-                                                                for (var key in product_items) {
-                                                                    var value = product_items[key];
-                                                                    data_2.push(value);
-                                                                }
-                                                                var param = jQuery('#' + form.id).serialize() + "&items=" + (JSON.stringify(data_2)) + "&recipes=" + (JSON.stringify(data));
-                                                                ajaxRequest(form.action, param, function(jsonData) {
-                                                                    if (jsonData) {
-                                                                        if (jsonData.success == true) {
-                                                                            jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>product');
-                                                                        } else {
-                                                                            alert(jsonData.error)
+                                                                            } else {
+                                                                                delete product_recipes[id];
+                                                                                var tr = jQuery(e).closest('tr');
+                                                                                tr.remove();
+                                                                            }
+                                                                        }
+                                                                        catch (err) {
+                                                                            alert(err.message);
                                                                             return false;
                                                                         }
                                                                     }
-                                                                });
-                                                            }
-                                                            catch (err) {
-                                                                alert(err.message);
-                                                                return false;
-                                                            }
-                                                            return false;
-                                                        }
+                                                                    function viewItem() {
+                                                                        try {
+                                                                            jQuery('#modal-7').modal('show', {backdrop: 'static'});
+                                                                        }
+                                                                        catch (err) {
+                                                                            alert(err.message);
+                                                                            return false;
+                                                                        }
+
+                                                                    }
+                                                                    function viewRecipe() {
+                                                                        try {
+                                                                            jQuery('#modal-6').modal('show', {backdrop: 'static'});
+                                                                        }
+                                                                        catch (err) {
+                                                                            alert(err.message);
+                                                                            return false;
+                                                                        }
+
+                                                                    }
+                                                                    function submitFrom(form) {
+                                                                        try {
+                                                                            var data = new Array();
+                                                                            var data_2 = new Array();
+                                                                            for (var key in product_recipes) {
+                                                                                var value = product_recipes[key];
+                                                                                data.push(value);
+                                                                            }
+                                                                            for (var key in product_items) {
+                                                                                var value = product_items[key];
+                                                                                data_2.push(value);
+                                                                            }
+                                                                            var param = jQuery('#' + form.id).serialize() + "&items=" + (JSON.stringify(data_2)) + "&recipes=" + (JSON.stringify(data));
+                                                                            ajaxRequest(form.action, param, function(jsonData) {
+                                                                                if (jsonData) {
+                                                                                    if (jsonData.success == true) {
+                                                                                        jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>product');
+                                                                                    } else {
+                                                                                        alert(jsonData.error)
+                                                                                        return false;
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                        catch (err) {
+                                                                            alert(err.message);
+                                                                            return false;
+                                                                        }
+                                                                        return false;
+                                                                    }
     </script>
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2.css">
     <!-- Bottom scripts (common) -->
     <script src="<?php echo JS_PATH ?>gsap/main-gsap.js"></script>
     <script src="<?php echo JS_PATH ?>jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>
@@ -611,6 +611,7 @@
 
 
     <!-- Imported scripts on this page -->
+    <script src="<?php echo JS_PATH ?>select2/select2.min.js"></script>
     <script src="<?php echo JS_PATH ?>jquery.validate.min.js"></script>
     <script src="<?php echo JS_PATH ?>neon-chat.js"></script>
     <script src="<?php echo JS_PATH ?>bootstrap-datepicker.js"></script>

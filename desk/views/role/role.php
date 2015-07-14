@@ -137,57 +137,71 @@
                             </div>
 
                         </div>
+
                         <div class="row">
                             <div class="col-md-12">
-                                <label class="control-label">Document type & Privileges</label>
-                                <table class="table table-bordered" id="table-1">
-                                    <thead>
-                                        <tr>
-                                            <th>Document Type</th>
-                                            <th>Privileges</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="odd gradeX">
-                                            <td>	
-                                                <div style="margin:0 !important;" class="checkbox">
-                                                    <label>
-                                                        <input onclick="selectAllRol(this);" type="checkbox">All
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <select onchange="selectAllPrv(this);" style="border-radius: 0 !important;font-size: 10px !important;height: 23px !important;padding: 0 !important;width: 54px !important;" class="form-control">
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                        if (!empty($this->sys_doc_types)) {
-                                            foreach ($this->sys_doc_types as $doc_typ) {
-                                                ?>
-                                                <tr class="odd gradeX">
-                                                    <td>	
-                                                        <div style="margin:0 !important;" class="checkbox">
-                                                            <label>
-                                                                <input class="role-doc" name="role-doc-typ[]" value="<?php echo $doc_typ->DOC_TYPE_ID ?>" type="checkbox"><?php echo $doc_typ->DOC_TYPE_NAME ?>
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <select class="role-doc-prv" name="role-doc-prv[]" style="border-radius: 0 !important;font-size: 10px !important;height: 23px !important;padding: 0 !important;width: 54px !important;" class="form-control">
-                                                            <option value="1">1</option>
-                                                            <option value="2">2</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-                                                <?php
-                                            }
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
+                                <div class="panel panel-invert" data-collapsed="0"><!-- setting the attribute data-collapsed="1" will collapse the panel -->
+
+                                    <!-- panel head -->
+                                    <div class="panel-heading">
+                                        <div class="panel-title">Document type & Privileges</div>
+                                    </div>
+
+                                    <!-- panel body -->
+                                    <div id="panel_privileges" class="panel-body">
+                                        <div class="scrollable" data-height="200" data-scroll-position="right" data-rail-color="#fff" data-rail-opacity=".9" data-rail-width="8" data-rail-radius="10" data-autohide="0">
+                                            <table class="table table-bordered" id="table-1">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Document Type</th>
+                                                        <th>Privileges</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="odd gradeX">
+                                                        <td>	
+                                                            <div style="margin:0 !important;" class="checkbox">
+                                                                <label>
+                                                                    <input onclick="selectAllRol(this);" type="checkbox">All
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <select onchange="selectAllPrv(this);" style="border-radius: 0 !important;font-size: 10px !important;height: 23px !important;padding: 0 !important;width: 54px !important;" class="form-control">
+                                                                <option value="1">1</option>
+                                                                <option value="2">2</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                    if (!empty($this->sys_doc_types)) {
+                                                        foreach ($this->sys_doc_types as $doc_typ) {
+                                                            ?>
+                                                            <tr class="odd gradeX">
+                                                                <td>	
+                                                                    <div style="margin:0 !important;" class="checkbox">
+                                                                        <label>
+                                                                            <input class="role-doc" name="role-doc-typ[]" value="<?php echo $doc_typ->DOC_TYPE_ID ?>" type="checkbox"><?php echo $doc_typ->DOC_TYPE_NAME ?>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <select class="role-doc-prv" name="role-doc-prv[]" style="border-radius: 0 !important;font-size: 10px !important;height: 23px !important;padding: 0 !important;width: 54px !important;" class="form-control">
+                                                                        <option value="1">1</option>
+                                                                        <option value="2">2</option>
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>		
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>

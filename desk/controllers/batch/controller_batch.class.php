@@ -50,7 +50,7 @@ class batch extends controller {
             $valid = false;
         if (!$batch_status = $this->read->get("batch_status", "POST", 'STRING', 1, true))
             $valid = false;
-        if (!$batch_name = $this->read->get("batch_name", "POST", '', 250, true))
+        if (!$batch_name = $this->read->get("batch_name", "POST", 'NUMERIC', 250, true))
             $valid = false;
         if (!$batch_product = $this->read->get("batch_product", "POST", 'NUMERIC', 6, true))
             $valid = false;
