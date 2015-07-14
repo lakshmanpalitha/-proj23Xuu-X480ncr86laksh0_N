@@ -82,6 +82,20 @@ class grn extends controller {
         echo json_encode($data);
     }
 
+    function jsonItem($item_code = null) {
+        $data = '';
+        if ($item_code) {
+            $login_model = $this->loadModel('grn');
+            $item = $login_model->getItemsSelectedGrn(null, $item_code);
+            if ($item) {
+                $data = array('success' => true, 'data' => $item, 'error' => '');
+            } else {
+                $data = array('success' => false, 'data' => '', 'error' => $this->view->renderFeedbackMessagesForJson());
+            }
+        }
+        echo json_encode($data);
+    }
+
 }
 
 ?>

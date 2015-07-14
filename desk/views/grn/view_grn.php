@@ -160,7 +160,7 @@
                                                                 </script>
                                                                 <tr>
                                                                     <td><?php echo $grn_item->ITEM_NAME ?></td>
-                                                                    <td><?php echo $grn_item->ITEM_QUANTITY ?></td>
+                                                                    <td><?php echo $grn_item->ITEM_QUANTITY ?>&nbsp(<?php echo $grn_item->UNIT_NAME ?>)</td>
                                                                     <td><?php echo $grn_item->ITEM_AMOUNT ?></td>
                                                                     <td><?php echo $grn_item->ITEM_EXP_DATE ?></td>
                                                                     <td>
@@ -420,7 +420,7 @@
                                                                             return false;
                                                                         }
                                                                     }
-                                                                    function viewItem() {
+                                                                    function viewItem(val) {
                                                                         try {
                                                                             jQuery('#modal-6').modal('show', {backdrop: 'static'});
                                                                         }

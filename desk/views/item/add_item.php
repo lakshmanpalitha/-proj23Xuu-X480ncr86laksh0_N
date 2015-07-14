@@ -160,7 +160,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Location</label>
-                                    <input type="text" class="form-control" name="item_loc" data-validate="required,number" placeholder="Numeric Field" />
+                                    <input type="text" class="form-control" name="item_loc" data-validate="required" placeholder="Numeric Field" />
                                 </div>	
                             </div>
                         </div>

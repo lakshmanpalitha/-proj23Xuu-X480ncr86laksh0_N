@@ -43,7 +43,7 @@ class item extends controller {
 
         if (!$item_code = $this->read->get("itm_code", "POST", 'NUMERIC', 50, false))
             $valid = false;
-        if (!$item_name = $this->read->get("item_name", "POST", 'NUMERIC', 250, true))
+        if (!$item_name = $this->read->get("item_name", "POST", '', 250, true))
             $valid = false;
         if (!$item_status = $this->read->get("item_status", "POST", 'STRING', 1, true))
             $valid = false;
@@ -61,7 +61,7 @@ class item extends controller {
             $valid = false;
         if (!$item_n_ord_lvl = $this->read->get("item_n_ord_lvl", "POST", 'DOUBLE', '', true))
             $valid = false;
-        if (!$item_loc = $this->read->get("item_loc", "POST", 'NUMERIC', 20, true))
+        if (!$item_loc = $this->read->get("item_loc", "POST", '', 50, true))
             $valid = false;
         if (!$item_remark = $this->read->get("item_remark", "POST", '', 1500, true))
             $valid = false;
