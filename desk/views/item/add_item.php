@@ -81,6 +81,7 @@
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Category</label>
                                     <select name="item_cat" onchange="getSubCat(this)" class="select2" data-allow-clear="true" data-placeholder="Select category">
+                                        <option></option>
                                         <?php
                                         if (!empty($this->cat)) {
                                             foreach ($this->cat as $cat) {
@@ -160,7 +161,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Location</label>
-                                    <input type="text" class="form-control" name="item_loc" data-validate="required" placeholder="Numeric Field" />
+                                    <input type="text" class="form-control" name="item_loc" data-validate="required" placeholder="" />
                                 </div>	
                             </div>
                         </div>

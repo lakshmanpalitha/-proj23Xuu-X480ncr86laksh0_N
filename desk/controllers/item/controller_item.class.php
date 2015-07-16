@@ -49,7 +49,7 @@ class item extends controller {
             $valid = false;
         if (!$item_cat = $this->read->get("item_cat", "POST", 'NUMERIC', 6, true))
             $valid = false;
-        if (!$item_sub_cat = $this->read->get("item_sub_cat", "POST", 'NUMERIC', 6, true))
+        if (!$item_sub_cat = $this->read->get("item_sub_cat", "POST", 'NUMERIC', 6, false))
             $valid = false;
         if (!$item_stock_unit = $this->read->get("item_stock_unit", "POST", 'NUMERIC', 6, true))
             $valid = false;
@@ -63,7 +63,7 @@ class item extends controller {
             $valid = false;
         if (!$item_loc = $this->read->get("item_loc", "POST", '', 50, true))
             $valid = false;
-        if (!$item_remark = $this->read->get("item_remark", "POST", '', 1500, true))
+        if (!$item_remark = $this->read->get("item_remark", "POST", '', 1500, false))
             $valid = false;
         if ($valid) {
             array_push($item, $item_code);
