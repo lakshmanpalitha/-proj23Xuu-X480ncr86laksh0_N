@@ -39,7 +39,7 @@
                         <th>Batch Quantity</th>
                         <th>Quantity Unit</th>
                         <th>Batch Date</th>
-                        <th>Batch Mode</th>
+                        <th>Batch Status</th>
                         <th>Batch Action</th>
                     </tr>
                 </thead>
@@ -63,12 +63,12 @@
                                             <button class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">
                                             Draft<i class="entypo-check"></i>
                                             </button>';
-                                    } else if ($batch->BATCH_MODE == 'o') {
+                                    } else if ($batch->BATCH_MODE == 'P') {
                                         echo '
                                             <button class="btn btn-blue btn-icon icon-left  btn-xs" type="button">
                                                 Submit<i class="entypo-cancel"></i>
                                             </button>';
-                                    } else {
+                                    } else if ($batch->BATCH_MODE == 'A') {
                                         echo '
                                             <button class="btn btn-green  btn-icon icon-left  btn-xs" type="button">
                                                 Accept<i class="entypo-cancel"></i>
@@ -91,41 +91,41 @@
             </table>
 
             <script type="text/javascript">
-                                var responsiveHelper;
-                                var breakpointDefinition = {
-                                    tablet: 1024,
-                                    phone: 480
-                                };
-                                var tableContainer;
+                var responsiveHelper;
+                var breakpointDefinition = {
+                    tablet: 1024,
+                    phone: 480
+                };
+                var tableContainer;
 
-                                jQuery(document).ready(function($)
-                                {
-                                    tableContainer = $("#table-1");
+                jQuery(document).ready(function($)
+                {
+                    tableContainer = $("#table-1");
 
-                                    tableContainer.dataTable({
-                                        "sPaginationType": "bootstrap",
-                                        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                                        "bStateSave": true,
-                                        // Responsive Settings
-                                        bAutoWidth: false,
-                                        fnPreDrawCallback: function() {
-                                            // Initialize the responsive datatables helper once.
-                                            if (!responsiveHelper) {
-                                                responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
-                                            }
-                                        },
-                                        fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                                            responsiveHelper.createExpandIcon(nRow);
-                                        },
-                                        fnDrawCallback: function(oSettings) {
-                                            responsiveHelper.respond();
-                                        }
-                                    });
+                    tableContainer.dataTable({
+                        "sPaginationType": "bootstrap",
+                        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                        "bStateSave": true,
+                        // Responsive Settings
+                        bAutoWidth: false,
+                        fnPreDrawCallback: function() {
+                            // Initialize the responsive datatables helper once.
+                            if (!responsiveHelper) {
+                                responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+                            }
+                        },
+                        fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                            responsiveHelper.createExpandIcon(nRow);
+                        },
+                        fnDrawCallback: function(oSettings) {
+                            responsiveHelper.respond();
+                        }
+                    });
 
-                                    $(".dataTables_wrapper select").select2({
-                                        minimumResultsForSearch: -1
-                                    });
-                                });
+                    $(".dataTables_wrapper select").select2({
+                        minimumResultsForSearch: -1
+                    });
+                });
             </script>
             <script type="text/javascript">
                 function showAjaxModal()

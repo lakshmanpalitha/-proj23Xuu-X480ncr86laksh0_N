@@ -35,9 +35,10 @@
                                     Pending
                                     <i class="entypo-info"></i>
                                 </button>
-                                <button class="btn btn-green btn-sm" type="submit" type="button">Save</button>          
+                                <button class="btn btn-green btn-sm" type="submit" type="button">Modify</button>          
                                 <button class="btn btn-blue btn-sm" type="button">Submit</button>
-                                <button class="btn btn-danger btn-sm" type="button">Cancel</button>
+                                <button class="btn btn-danger btn-sm" type="button">Accept</button>
+                                <input type="hidden" name="old_batch_id" value="<?php echo ($this->batch->BATCH_ID) ?>" name=""/>
                             </div>
                         </div>
                     </div>
@@ -147,18 +148,18 @@
                                                                 foreach ($this->batch_mats as $batch_mat) {
                                                                     ?>
                                                                 <script>
-                                                                    try {
-                                                                    var item_id = '<?php echo $batch_mat->ITEM_ID ?>';
-                                                                    batch_items[item_id] = new Array();
-                                                                            batch_items[item_id] = {
-                                                                                item_id: '<?php echo $batch_mat->ITEM_ID ?>',
-                                                                                item_qty: '<?php echo $batch_mat->BATCH_ITEM_QUANTITY ?>',
-                                                                                item_remark: '<?php echo $batch_mat->BATCH_ITEM_REMARK ?>',
-                                                                                };
-                                                                         }
-                                                                            catch (err) {
-                                                                                alert(err.message);
-                                                                          }
+            try {
+            var item_id = '<?php echo $batch_mat->ITEM_ID ?>';
+            batch_items[item_id] = new Array();
+            batch_items[item_id] = {
+            item_id: '<?php echo $batch_mat->ITEM_ID ?>',
+            item_qty: '<?php echo $batch_mat->BATCH_ITEM_QUANTITY ?>',
+            item_remark: '<?php echo $batch_mat->BATCH_ITEM_REMARK ?>',
+            };
+            }
+            catch (err) {
+            alert(err.message);
+            }
                                                                 </script>
                                                                 <tr>
                                                                     <td><?php echo $batch_mat->ITEM_NAME ?></td>

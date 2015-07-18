@@ -21,7 +21,7 @@
             <br />
             <div class="row">
                 <div class="col-md-6 col-sm-8 clearfix">
-                    <a class="btn btn-blue" href="javascript:;" onclick="jQuery('#modal-6').modal('show', {backdrop: 'static'});">
+                    <a class="btn btn-blue" href="javascript:;" onclick="showAjaxAddModal()">
                         <i class="entypo-plus"></i>
                         Add New
                     </a>
@@ -44,7 +44,7 @@
                             <tr class="odd gradeX">
                                 <td><?php echo $rol->ROLE_NAME ?></td>
                                 <td class="center">
-                                    <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-xs btn-icon icon-left">
+                                    <a href="javascript:;" onclick="showAjaxViewModal('<?php echo $rol->ROLE_ID ?>');" class="btn btn-default btn-xs btn-icon icon-left">
                                         <i class="entypo-pencil"></i>
                                         View
                                     </a>
@@ -95,18 +95,47 @@
                         });
             </script>
             <script type="text/javascript">
-                function showAjaxModal()
+                function showAjaxViewModal(val)
                 {
-                    jQuery('#modal-6').modal('show', {backdrop: 'static'});
-
-                    jQuery.ajax({
-                        url: "data/ajax-content.txt",
-                        success: function(response)
-                        {
-                            jQuery('#modal-7 .modal-body').html(response);
-                        }
-                    });
+                    try {
+                        document.getElementById("form1").reset();
+                        jQuery('#role_id').val(val);
+                        jQuery('#modal-6').modal('show', {backdrop: 'static'});
+                        ajaxRequest('<?php echo MOD_ADMIN_URL ?>role/jsonRole/' + val + '/', '', function(jsonData) {
+                            try {
+                                if (jsonData) {
+                                    if (jsonData.success == true) {
+                                        jQuery('#role-name').val(jsonData.data.ROLE_NAME);
+                                        var doc_typ = jsonData.data.doc_typ.split(",");
+                                        if (doc_typ) {
+                                            for (var i = 0; i < doc_typ.length; i++) {
+                                                var doc_prv = doc_typ[i].split("#");
+                                                var input = doc_prv[0].replace(/\s/g, '');
+                                                jQuery('#doc_' + input).prop('checked', true);
+                                                jQuery('#doc_prv_' + input).val(doc_prv[1]);
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (err) {
+                                alert(err.message);
+                            }
+                        });
+                    } catch (err) {
+                        alert(err.message);
+                    }
                 }
+                function showAjaxAddModal(val)
+                {
+                    try {
+                        document.getElementById("form1").reset();
+                        jQuery('#role_id').val('');
+                        jQuery('#modal-6').modal('show', {backdrop: 'static'});
+                    } catch (err) {
+                        alert(err.message);
+                    }
+                }
+
             </script>
             <!--Add footer-->
             <?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
@@ -131,7 +160,7 @@
 
                                 <div class="form-group">
                                     <label class="control-label">Name</label>
-                                    <input type="text" class="form-control" name="role-name" data-validate="required" placeholder="Role name Field" />
+                                    <input type="text" class="form-control" id="role-name" name="role-name" data-validate="required" placeholder="Role name Field" />
                                 </div>	
 
                             </div>
@@ -181,12 +210,12 @@
                                                                 <td>	
                                                                     <div style="margin:0 !important;" class="checkbox">
                                                                         <label>
-                                                                            <input class="role-doc" name="role-doc-typ[]" value="<?php echo $doc_typ->DOC_TYPE_ID ?>" type="checkbox"><?php echo $doc_typ->DOC_TYPE_NAME ?>
+                                                                            <input class="role-doc" id="doc_<?php echo $doc_typ->DOC_TYPE_ID ?>" name="role-doc-typ[]" value="<?php echo $doc_typ->DOC_TYPE_ID ?>" type="checkbox"><?php echo $doc_typ->DOC_TYPE_NAME ?>
                                                                         </label>
                                                                     </div>
                                                                 </td>
                                                                 <td>
-                                                                    <select class="role-doc-prv" name="role-doc-prv[]" style="border-radius: 0 !important;font-size: 10px !important;height: 23px !important;padding: 0 !important;width: 54px !important;" class="form-control">
+                                                                    <select class="role-doc-prv" id="doc_prv_<?php echo $doc_typ->DOC_TYPE_ID ?>" name="role-doc-prv[]" style="border-radius: 0 !important;font-size: 10px !important;height: 23px !important;padding: 0 !important;width: 54px !important;" class="form-control">
                                                                         <option value="1">1</option>
                                                                         <option value="2">2</option>
                                                                     </select>
@@ -208,7 +237,8 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Save changes</button>                       
+                        <button type="submit" class="btn btn-success">Save changes</button>
+                        <input type="hidden" id="role_id" name="role_id" value="" name=""/>
                     </div>
                 </form>
             </div>

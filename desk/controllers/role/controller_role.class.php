@@ -21,7 +21,9 @@ class role extends controller {
 
         if (!$role_name = $this->read->get("role-name", "POST", 'STRING', 250, true))
             $valid = false;
-
+        if (!$role_id = $this->read->get("role_id", "POST", '', 20, false))
+            $valid = false;
+        $role_id = (is_bool($role_id) ? '' : ($role_id));
         if ($valid) {
             $doc_types = isset($_POST['role-doc-typ']) ? $_POST['role-doc-typ'] : null;
             $doc_types_privileges = isset($_POST['role-doc-prv']) ? $_POST['role-doc-prv'] : null;
@@ -35,9 +37,15 @@ class role extends controller {
                     $i++;
                 }
             }
-
+            $role = array();
             if (!empty($role_doc_types)) {
-                $res = $login_model->saveNewRole($role_name, $role_doc_types);
+                array_push($role, $role_name);
+                array_push($role, $role_doc_types);
+                if ($role_id) {
+                    $res = $login_model->modifyRole($role_id, $role);
+                } else {
+                    $res = $login_model->saveNewRole($role);
+                }
                 if ($res) {
                     $data = array('success' => true, 'data' => '', 'error' => '');
                 } else {
@@ -46,6 +54,21 @@ class role extends controller {
             }
             echo json_encode($data);
         }
+    }
+
+    function jsonRole($role_id = null) {
+        if ($role_id) {
+            $login_model = $this->loadModel('role');
+            $res = $login_model->getEachRole($role_id);
+            if ($res) {
+                $data = array('success' => true, 'data' => $res, 'error' => '');
+            } else {
+                $data = array('success' => false, 'data' => '', 'error' => $this->view->renderFeedbackMessagesForJson());
+            }
+        } else {
+            $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_EMPTY_ROLE_ID);
+        }
+        echo json_encode($data);
     }
 
 }

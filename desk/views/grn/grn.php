@@ -54,17 +54,17 @@
                                 <td><?php echo $grn->GRN_CREATE_DATE ?></td>
                                 <td>
                                     <?php
-                                    if ($grn->GRN_MODE == 'S') {
+                                    if ($grn->GRN_STATUS == 'S') {
                                         echo '
                                             <button class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">
                                             Draft<i class="entypo-check"></i>
                                             </button>';
-                                    } else if ($grn->GRN_MODE == 'o') {
+                                    } else if ($grn->GRN_STATUS == 'P') {
                                         echo '
                                             <button class="btn btn-blue btn-icon icon-left  btn-xs" type="button">
                                                 Submit<i class="entypo-cancel"></i>
                                             </button>';
-                                    } else {
+                                    } else if($grn->GRN_STATUS == 'A') {
                                         echo '
                                             <button class="btn btn-green  btn-icon icon-left  btn-xs" type="button">
                                                 Accept<i class="entypo-cancel"></i>

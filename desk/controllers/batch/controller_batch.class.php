@@ -60,6 +60,10 @@ class batch extends controller {
             $valid = false;
         if (!$batch_items = $this->read->get("items", "POST", '', '', false))
             $valid = false;
+        if (!$old_batch_id = $this->read->get("old_batch_id", "POST", '', '', false))
+            $valid = false;
+        $old_batch_id = (is_bool($old_batch_id) ? '' : ($old_batch_id));
+
         $item_array = (array) json_decode($batch_items);
         if ($valid) {
             array_push($batch, $batch_code);
@@ -67,9 +71,19 @@ class batch extends controller {
             array_push($batch, $batch_name);
             array_push($batch, $batch_product);
             array_push($batch, $batch_qty);
-            array_push($batch, $batch_remark);
+            array_push($batch, is_bool($batch_remark) ? '' : $batch_remark);
             array_push($batch, $item_array);
-            $res = $login_model->saveNewBatch($batch);
+            if ($old_batch_id) {
+                $status = $login_model->getSelectBatch($old_batch_id);
+                if ($status->BATCH_MODE == 'S' OR $status->BATCH_MODE == 'P') {//Status save  or submit 
+                    $res = $login_model->modifyBatch($old_batch_id, $batch);
+                } else {
+                    $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_BATCH_UPDATE_FAILED);
+                    exit(json_encode($data));
+                }
+            } else {
+                $res = $login_model->saveNewBatch($batch);
+            }
             if ($res) {
                 $data = array('success' => true, 'data' => '', 'error' => '');
             } else {

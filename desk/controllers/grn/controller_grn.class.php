@@ -58,16 +58,30 @@ class grn extends controller {
             $valid = false;
         if (!$grn_items = $this->read->get("items", "POST", '', '', true))
             $valid = false;
+        if (!$old_grn_id = $this->read->get("old_grn_id", "POST", '', '', false))
+            $valid = false;
+
+        $old_grn_id = (is_bool($old_grn_id) ? '' : ($old_grn_id));
         $item_array = (array) json_decode($grn_items);
         if ($valid) {
             if (!empty($item_array)) {
-                array_push($grn, $grn_inv_id);
+                array_push($grn, is_bool($grn_inv_id) ? '' : $grn_inv_id);
                 array_push($grn, $grn_vendor);
                 array_push($grn, $grn_inc_date);
                 array_push($grn, $grn_title);
-                array_push($grn, $grn_remark);
+                array_push($grn, is_bool($grn_remark) ? '' : $grn_remark);
                 array_push($grn, $item_array);
-                $res = $login_model->saveNewGrn($grn);
+                if ($old_grn_id) {
+                    $status = $login_model->getSelectGrn($old_grn_id);
+                    if ($status->GRN_STATUS == 'S' OR $status->GRN_STATUS == 'P') {//Status save  or submit 
+                        $res = $login_model->modifyGrn($old_grn_id, $grn);
+                    } else {
+                        $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_GRN_UPDATE_FAILED);
+                        exit(json_encode($data));
+                    }
+                } else {
+                    $res = $login_model->saveNewGrn($grn);
+                }
                 if ($res) {
                     $data = array('success' => true, 'data' => '', 'error' => '');
                 } else {

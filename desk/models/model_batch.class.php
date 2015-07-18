@@ -99,6 +99,47 @@ class batchModel extends model {
         return false;
     }
 
+    function modifyBatch($batch_id = null, $batch) {
+        if (!$batch_id)
+            return false;
+        $query = "UPDATE tbl_batch SET
+                        BATCH_CODE= '" . mysql_real_escape_string($batch[0]) . "',
+                        BATCH_NAME= '" . mysql_real_escape_string($batch[2]) . "',
+                        PRODUCT_ID= '" . mysql_real_escape_string($batch[3]) . "',  
+                        BATCH_QUANTITY= '" . mysql_real_escape_string($batch[4]) . "',  
+                        BATCH_REMARK= '" . mysql_real_escape_string($batch[5]) . "',  
+                        BATCH_CREATE_BY= '" . mysql_real_escape_string(session::get('user_email')) . "',  
+                        BATCH_CREATE_DATE= NOW()
+                 WHERE BATCH_ID='" . mysql_real_escape_string($batch_id) . "'";
+        $result = $this->db->execute($query);
+        if ($result) {
+            $del_query = "DELETE FROM tbl_batch_item WHERE BATCH_ID='" . mysql_real_escape_string($batch_id) . "'";
+            $del_result = $this->db->execute($del_query);
+            if ($del_result) {
+                $result_2 = true;
+                if (!empty($batch[6])) {
+                    $values = null;
+                    foreach ($batch[6] as $items) {
+                        $values.= "(
+                        '" . $batch_id . "',
+                            '" . $items->item_id . "',
+                                '" . $items->item_qty . "',
+                         '" . $items->item_remark . "'),";
+                    }
+                    if ($values) {
+                        $query_2 = "
+                            INSERT INTO 
+                            tbl_batch_item
+                                 VALUES " . rtrim($values, ',');
+                        $result_2 = $this->db->execute($query_2);
+                    }
+                }
+                return $result_2 ? true : false;
+            }
+        }
+        return false;
+    }
+
 }
 
 ?>

@@ -31,6 +31,10 @@ class user extends controller {
             $valid = false;
         if (!$user_status = $this->read->get("status", "POST", 'STRING', 1, true))
             $valid = false;
+        if (!$user_id = $this->read->get("user_id", "POST", '', 20, false))
+            $valid = false;
+        $user_id = (is_bool($user_id) ? '' : ($user_id));
+
         if ($valid) {
             $user_role = isset($_POST['user_role']) ? $_POST['user_role'] : null;
             if (empty($user_role)) {
@@ -43,7 +47,11 @@ class user extends controller {
                 array_push($user, $user_pwd);
                 array_push($user, $user_status);
                 array_push($user, $user_role);
-                $res = $login_model->saveNewUser($user);
+                if ($user_id) {
+                    $res = $login_model->modifyUser($user_id, $user);
+                } else {
+                    $res = $login_model->saveNewUser($user);
+                }
                 if ($res) {
                     $data = array('success' => true, 'data' => '', 'error' => '');
                 } else {
@@ -54,6 +62,21 @@ class user extends controller {
             $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_REQUIRED_FIELDS);
         }
 
+        echo json_encode($data);
+    }
+
+    function jsonUsers($user_id = null) {
+        if ($user_id) {
+            $login_model = $this->loadModel('user');
+            $res = $login_model->getEachUser($user_id);
+            if ($res) {
+                $data = array('success' => true, 'data' => $res, 'error' => '');
+            } else {
+                $data = array('success' => false, 'data' => '', 'error' => $this->view->renderFeedbackMessagesForJson());
+            }
+        } else {
+            $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_EMPTY_VENDOR_ID);
+        }
         echo json_encode($data);
     }
 

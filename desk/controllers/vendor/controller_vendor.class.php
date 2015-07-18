@@ -34,6 +34,11 @@ class vendor extends controller {
             $valid = false;
         if (!$vendor_remark = $this->read->get("vendor_remark", "POST", '', 1500, false))
             $valid = false;
+        if (!$vendor_id = $this->read->get("vendor_id", "POST", '', 20, false))
+            $valid = false;
+        $vendor_id = (is_bool($vendor_id) ? '' : ($vendor_id));
+
+
         if ($valid) {
             array_push($vendor, $vendor_name);
             array_push($vendor, $vendor_email);
@@ -41,8 +46,12 @@ class vendor extends controller {
             array_push($vendor, $vendor_cno);
             array_push($vendor, $vendor_typ);
             array_push($vendor, $status);
-            array_push($vendor, $vendor_remark);
-            $res = $login_model->saveNewVendor($vendor);
+            array_push($vendor, is_bool($vendor_remark) ? '' : $vendor_remark);
+            if ($vendor_id) {
+                $res = $login_model->modifyVendor($vendor_id, $vendor);
+            } else {
+                $res = $login_model->saveNewVendor($vendor);
+            }
             if ($res) {
                 $data = array('success' => true, 'data' => '', 'error' => '');
             } else {
@@ -52,6 +61,21 @@ class vendor extends controller {
             $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_REQUIRED_FIELDS);
         }
 
+        echo json_encode($data);
+    }
+
+    function jsonVendor($vendor = null) {
+        if ($vendor) {
+            $login_model = $this->loadModel('vendor');
+            $res = $login_model->getEachVendor($vendor);
+            if ($res) {
+                $data = array('success' => true, 'data' => $res, 'error' => '');
+            } else {
+                $data = array('success' => false, 'data' => '', 'error' => $this->view->renderFeedbackMessagesForJson());
+            }
+        } else {
+            $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_EMPTY_VENDOR_ID);
+        }
         echo json_encode($data);
     }
 

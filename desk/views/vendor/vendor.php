@@ -21,7 +21,7 @@
             <br />
             <div class="row">
                 <div class="col-md-6 col-sm-8 clearfix">
-                    <a class="btn btn-blue" href="javascript:;" onclick="jQuery('#modal-6').modal('show', {backdrop: 'static'});">
+                    <a class="btn btn-blue" href="javascript:;" onclick="showAjaxAddModal()">
                         <i class="entypo-plus"></i>
                         Add New
                     </a>
@@ -72,7 +72,7 @@
                                          </button>')
                                     ?></td>
                                 <td class="center">
-                                    <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-xs btn-icon icon-left">
+                                    <a href="javascript:;" onclick="showAjaxViewModal('<?php echo $vendor->VENDOR_ID ?>');" class="btn btn-default btn-xs btn-icon icon-left">
                                         <i class="entypo-pencil"></i>
                                         View
                                     </a>
@@ -123,18 +123,40 @@
                         });
             </script>
             <script type="text/javascript">
-                function showAjaxModal()
+                function showAjaxViewModal(val)
                 {
-                    jQuery('#modal-6').modal('show', {backdrop: 'static'});
-
-                    jQuery.ajax({
-                        url: "data/ajax-content.txt",
-                        success: function(response)
-                        {
-                            jQuery('#modal-7 .modal-body').html(response);
-                        }
-                    });
+                    try {
+                        document.getElementById("form1").reset();
+                        jQuery('#vendor_id').val(val);
+                        jQuery('#modal-6').modal('show', {backdrop: 'static'});
+                        ajaxRequest('<?php echo MOD_ADMIN_URL ?>vendor/jsonVendor/' + val + '/', '', function(jsonData) {
+                            if (jsonData) {
+                                if (jsonData.success == true) {
+                                    jQuery('#vendor_name').val(jsonData.data.VENDOR_NAME);
+                                    jQuery('#vendor_email').val(jsonData.data.VENDOR_EMAIL);
+                                    jQuery('#vendor_address').val(jsonData.data.VENDOR_ADDRESS);
+                                    jQuery('#vendor_cno').val(jsonData.data.VENDOR_CONTACT_NO);
+                                    jQuery('#vendor_typ').val(jsonData.data.VENDOR_TYPE);
+                                    jQuery('#status').val(jsonData.data.VENDOR_STATUS);
+                                    jQuery('#vendor_remark').val(jsonData.data.VENDOR_REMARK);
+                                }
+                            }
+                        });
+                    } catch (err) {
+                        alert(err.message);
+                    }
                 }
+                function showAjaxAddModal()
+                {
+                    try {
+                        document.getElementById("form1").reset();
+                        jQuery('#vendor_id').val('');
+                        jQuery('#modal-6').modal('show', {backdrop: 'static'});
+                    } catch (err) {
+                        alert(err.message);
+                    }
+                }
+
             </script>
             <!--Add footer-->
             <?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
@@ -157,13 +179,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="control-label">Name</label>
-                                    <input type="text" class="form-control" name="vendor_name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
+                                    <input type="text" class="form-control" id="vendor_name" name="vendor_name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
                                 </div>	
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="control-label">Email</label>
-                                    <input type="text" class="form-control" name="vendor_email" data-validate="required,email" placeholder="Email Field" />
+                                    <input type="text" class="form-control" id="vendor_email" name="vendor_email" data-validate="required,email" placeholder="Email Field" />
                                 </div>	
                             </div>
                         </div>
@@ -172,7 +194,7 @@
                                 <div class="form-group">
                                     <label for="field-3" class="control-label">Address</label>
 
-                                    <input type="text" class="form-control" name="vendor_address" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
+                                    <input type="text" class="form-control" id="vendor_address" name="vendor_address" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
                                 </div>	
                             </div>
                         </div>
@@ -180,14 +202,14 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Contact No:</label>
-
-                                    <input type="text" class="form-control" name="vendor_cno" data-validate="required,number" placeholder="Numeric Field" />
+                                    <input type="text" class="form-control" id="vendor_cno" name="vendor_cno" data-validate="required,number" placeholder="Numeric Field" />
                                 </div>	
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="field-5" class="control-label">Vendor Type</label>
-                                    <select name="vendor_typ" class="form-control">
+                                    <select id="vendor_typ" name="vendor_typ" class="form-control">
+                                        <option></option>
                                         <option value="S">Supplier</option>
                                         <option value="B">Buyer</option>
                                     </select>
@@ -197,7 +219,8 @@
                                 <div class="form-group">
                                     <label class="col-sm-0 control-label">Status</label>
                                     <div>
-                                        <select name="status" class="form-control">
+                                        <select id="status"  name="status" class="form-control">
+                                            <option></option>
                                             <option value="A">Active</option>
                                             <option value="I">Inactive</option>
                                         </select>
@@ -209,14 +232,15 @@
                             <div class="col-md-12">
                                 <div class="form-group no-margin">
                                     <label for="field-7" class="control-label">Remark</label>
-                                    <textarea name="vendor_remark" class="form-control autogrow" id="field-7" placeholder="Write something about vendor"></textarea>
+                                    <textarea id="vendor_remark" name="vendor_remark" class="form-control autogrow" id="field-7" placeholder="Write something about vendor"></textarea>
                                 </div>	
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Save changes</button>      
+                        <button type="submit" class="btn btn-success">Save changes</button>
+                        <input type="hidden" id="vendor_id" name="vendor_id" value=""/>
                     </div>
                 </form>
             </div>

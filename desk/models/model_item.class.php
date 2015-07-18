@@ -116,6 +116,26 @@ class itemModel extends model {
         return false;
     }
 
+    function modifyItem($item_id = null, $item) {
+        if (!$item_id)
+            return false;
+        $query = "UPDATE tbl_item_master SET
+                        ITEM_CODE= '" . mysql_real_escape_string($item[0]) . "',
+                        ITEM_CATEGORY_ID= '" . mysql_real_escape_string($item[2]) . "',
+                        ITEM_SUB_CATEGORY_ID= '" . mysql_real_escape_string($item[3]) . "',
+                        ITEM_NAME= '" . mysql_real_escape_string($item[1]) . "',
+                        ITEM_STOCK_UNIT= '" . mysql_real_escape_string($item[4]) . "',
+                        ITEM_RATIO= '" . mysql_real_escape_string($item[5]) . "',
+                        ITEM_ISSUE_UNIT= '" . mysql_real_escape_string($item[6]) . "',
+                        ITEM_RE_ORDER_LEVEL= '" . mysql_real_escape_string($item[7]) . "',
+                        ITEM_NEAR_RE_ORDER_LEVEL= '" . mysql_real_escape_string($item[8]) . "',
+                        ITEM_LOCATION= '" . mysql_real_escape_string($item[9]) . "',
+                        ITEM_REMARK= '" . mysql_real_escape_string($item[10]) . "'
+                 WHERE ITEM_ID='" . mysql_real_escape_string($item_id) . "'";
+        $result = $this->db->execute($query);
+        return $result ? true : false;
+    }
+
 }
 
 ?>

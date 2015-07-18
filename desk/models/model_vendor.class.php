@@ -26,6 +26,22 @@ class vendorModel extends model {
         return ($result ? $result : false);
     }
 
+    function getEachVendor($vendor_id = null) {
+        if (!$vendor_id)
+            return false;
+        $query = "
+            SELECT 
+                * 
+            FROM 
+                tbl_vendor
+            WHERE
+               VENDOR_ID= '" . mysql_real_escape_string($vendor_id) . "'
+            ORDER 
+                BY VENDOR_NAME DESC";
+        $result = $this->db->queryUniqueObject($query);
+        return ($result ? $result : false);
+    }
+
     function saveNewVendor($vendor) {
         $primaryKey = $this->primaryKeyGenarator('tbl_vendor', 'VENDOR_ID');
         if ($primaryKey) {
@@ -50,6 +66,22 @@ class vendorModel extends model {
             }
         }
         return false;
+    }
+
+    function modifyVendor($vendor_id = null, $vendor) {
+        if (!$vendor_id)
+            return false;
+        $query = "UPDATE tbl_vendor SET
+                        VENDOR_NAME= '" . mysql_real_escape_string($vendor[0]) . "',
+                        VENDOR_EMAIL= '" . mysql_real_escape_string($vendor[1]) . "',
+                        VENDOR_ADDRESS= '" . mysql_real_escape_string($vendor[2]) . "',
+                        VENDOR_CONTACT_NO= '" . mysql_real_escape_string($vendor[3]) . "',
+                        VENDOR_TYPE= '" . mysql_real_escape_string($vendor[4]) . "',
+                        VENDOR_REMARK= '" . mysql_real_escape_string($vendor[6]) . "',
+                        VENDOR_STATUS= '" . mysql_real_escape_string($vendor[5]) . "'
+                 WHERE VENDOR_ID='" . mysql_real_escape_string($vendor_id) . "'";
+        $result = $this->db->execute($query);
+        return $result ? true : false;
     }
 
 }

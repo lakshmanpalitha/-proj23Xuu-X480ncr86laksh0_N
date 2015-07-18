@@ -37,4 +37,13 @@ define("FEEDBACK_PASSWORD_MISSMATCH", "Confirm password not match to password");
  * product category
  */
 define("FEEDBACK_CATEGORY_EXIST", "Category allredy exist");
+
+define("FEEDBACK_GRN_UPDATE_FAILED", "GRN allredy confirm.You haven't modify permission");
+define("FEEDBACK_BATCH_UPDATE_FAILED", "Batch allredy confirm.You haven't modify permission");
+define("FEEDBACK_PRODUCT_UPDATE_FAILED", "Product allredy confirm.You haven't modify permission");
+define("FEEDBACK_RECIPE_UPDATE_FAILED", "Recipe allredy confirm.You haven't modify permission");
+define("FEEDBACK_ITEM_UPDATE_FAILED", "Item allredy confirm.You haven't modify permission");
+
+define("FEEDBACK_EMPTY_VENDOR_ID", "Vendoris not longer in system");
+define("FEEDBACK_EMPTY_ROLE_ID", "Role not longer in system");
 ?>

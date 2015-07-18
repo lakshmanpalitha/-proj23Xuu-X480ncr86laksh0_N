@@ -27,7 +27,7 @@
             <h2>View GRN</h2>
             <br />
             <?php if (!empty($this->grn)) { ?>
-                <form role="form" id="form1" method="post"  action="<?php echo MOD_ADMIN_URL ?>grn/editGrn"  class="validate_sp_form">
+                <form role="form" id="form1" method="post"  action="<?php echo MOD_ADMIN_URL ?>grn/addNewGrn"  class="validate_sp_form">
                     <div class="row">
                         <div class="col-md-12">
                             <div style="border:none !important;text-align:right;" class="panel panel-primary">
@@ -35,9 +35,10 @@
                                     Pending
                                     <i class="entypo-info"></i>
                                 </button>
-                                <button class="btn btn-green btn-sm" type="submit" type="button">Save</button>          
+                                <button class="btn btn-green btn-sm" type="submit" type="button">Modify</button>          
                                 <button class="btn btn-blue btn-sm" type="button">Submit</button>
-                                <button class="btn btn-danger btn-sm" type="button">Cancel</button>
+                                <button class="btn btn-danger btn-sm" type="button">Accept</button>
+                                <input type="hidden" name="old_grn_id" value="<?php echo ($this->grn->GRN_ID) ?>" name=""/>
                             </div>
                         </div>
                     </div>
@@ -45,13 +46,6 @@
 
                         <div class="panel-heading">
                             <div class="panel-title">Add New GRN</div>
-
-                            <div class="panel-options">
-                                <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a>
-                                <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                                <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
-                                <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>
-                            </div>
                         </div>
 
                         <div class="panel-body">
@@ -285,6 +279,7 @@
                                 <div class="form-group">
                                     <label class="control-label">Item Name</label>
                                     <select onchange="getItemStockUnit(this)" name="item_id" id="item_id" class="select2" data-allow-clear="true" data-placeholder="Select item">                        
+                                        <option></option>
                                         <?php
                                         if (!empty($this->items)) {
                                             foreach ($this->items as $item) {
@@ -337,7 +332,7 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer">
+                    <div class="modal-footer">                      
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-success">Save changes</button>
                     </div>
@@ -373,29 +368,26 @@
 
                                                                         try {
                                                                             var item_id = jQuery('#item_id').val();
-                                                                            if (typeof grn_items[item_id] === 'undefined') {
-                                                                                grn_items[item_id] = new Array();
-                                                                                grn_items[item_id] = {
-                                                                                    item_id: item_id,
-                                                                                    item_qty: jQuery('#item_qty').val(),
-                                                                                    item_amt: jQuery('#item_amt').val(),
-                                                                                    item_exp: jQuery('#item_exp').val(),
-                                                                                    item_remark: jQuery('#item_remark').val()
-                                                                                };
-                                                                                var row = '<tr id="' + item_id + '">';
-                                                                                row = row + '<td>' + jQuery('#item_id option:selected').text() + '</td>';
-                                                                                row = row + '<td>' + jQuery('#item_qty').val() + '</td>';
-                                                                                row = row + '<td>' + jQuery('#item_amt').val() + '</td>';
-                                                                                row = row + '<td>' + jQuery('#item_exp').val() + '</td>';
-                                                                                row = row + '<td><a href="javascript:;" onclick=viewItem("' + item_id + '",this) class="btn btn-gold btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>View</a> &nbsp <a href="javascript:;" onclick=deleteItemRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
-                                                                                row = row + '</tr>';
-                                                                                jQuery("#table-1 tbody").prepend(row);
-                                                                                jQuery('#modal-6').modal('hide');
+                                                                            if (typeof grn_items[item_id] === 'defined') {
 
                                                                             }
-                                                                            else {
-                                                                                alert("Item is allredy exist!");
-                                                                            }
+                                                                            grn_items[item_id] = new Array();
+                                                                            grn_items[item_id] = {
+                                                                                item_id: item_id,
+                                                                                item_qty: jQuery('#item_qty').val(),
+                                                                                item_amt: jQuery('#item_amt').val(),
+                                                                                item_exp: jQuery('#item_exp').val(),
+                                                                                item_remark: jQuery('#item_remark').val()
+                                                                            };
+                                                                            var row = '<tr id="' + item_id + '">';
+                                                                            row = row + '<td>' + jQuery('#item_id option:selected').text() + '</td>';
+                                                                            row = row + '<td>' + jQuery('#item_qty').val() + '</td>';
+                                                                            row = row + '<td>' + jQuery('#item_amt').val() + '</td>';
+                                                                            row = row + '<td>' + jQuery('#item_exp').val() + '</td>';
+                                                                            row = row + '<td><a href="javascript:;" onclick=viewItem("' + item_id + '",this) class="btn btn-gold btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>View</a> &nbsp <a href="javascript:;" onclick=deleteItemRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
+                                                                            row = row + '</tr>';
+                                                                            jQuery("#table-1 tbody").prepend(row);
+                                                                            jQuery('#modal-6').modal('hide');
                                                                         }
                                                                         catch (err) {
                                                                             alert(err.message);
@@ -422,6 +414,12 @@
                                                                     }
                                                                     function viewItem(val) {
                                                                         try {
+
+                                                                            jQuery('#item_id').val(grn_items[val]['item_id']);
+                                                                            jQuery('#item_qty').val(grn_items[val]['item_qty']);
+                                                                            jQuery('#item_amt').val(grn_items[val]['item_amt']);
+                                                                            jQuery('#item_remark').val(grn_items[val]['item_remark']);
+                                                                            jQuery('#item_exp').val(grn_items[val]['item_exp']);
                                                                             jQuery('#modal-6').modal('show', {backdrop: 'static'});
                                                                         }
                                                                         catch (err) {

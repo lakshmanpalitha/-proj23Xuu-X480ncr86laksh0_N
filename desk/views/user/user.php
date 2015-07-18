@@ -21,7 +21,7 @@
             <br />
             <div class="row">
                 <div class="col-md-6 col-sm-8 clearfix">
-                    <a class="btn btn-blue" href="javascript:;" onclick="jQuery('#modal-6').modal('show', {backdrop: 'static'});">
+                    <a class="btn btn-blue" href="javascript:;" onclick="showAjaxAddModal()">
                         <i class="entypo-plus"></i>
                         Add New
                     </a>
@@ -58,7 +58,7 @@
                                     ?></td>
                                 <td><?php echo $users->USER_LAST_LOG ?></td>
                                 <td class="center">
-                                    <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-xs btn-icon icon-left">
+                                    <a href="javascript:;" onclick="showAjaxViewModal('<?php echo $users->USER_ID ?>');" class="btn btn-default btn-xs btn-icon icon-left">
                                         <i class="entypo-pencil"></i>
                                         View
                                     </a>
@@ -109,18 +109,46 @@
                         });
             </script>
             <script type="text/javascript">
-                function showAjaxModal()
+                function showAjaxViewModal(val)
                 {
-                    jQuery('#modal-6').modal('show', {backdrop: 'static'});
-
-                    jQuery.ajax({
-                        url: "data/ajax-content.txt",
-                        success: function(response)
-                        {
-                            jQuery('#modal-7 .modal-body').html(response);
-                        }
-                    });
+                    try {
+                        document.getElementById("form1").reset();
+                        jQuery('#user_id').val(val);
+                        jQuery('#modal-6').modal('show', {backdrop: 'static'});
+                        ajaxRequest('<?php echo MOD_ADMIN_URL ?>user/jsonUsers/' + val + '/', '', function(jsonData) {
+                            if (jsonData) {
+                                if (jsonData.success == true) {
+                                    jQuery('#user_name').val(jsonData.data.USER_NAME);
+                                    jQuery('#user_email').val(jsonData.data.USER_EMAIL);
+                                    jQuery('#status').val(jsonData.data.USER_STATUS);
+                                    var user_role = jsonData.data.user_role.split(",")
+                                    if (user_role) {
+//                                        for (var i = 0; i < user_role.length; i++) {
+//                                            var role = user_role[i].replace(/\s/g, '');
+//                                            jQuery("#" + role + "-selectable").css("display", "none");
+//                                            jQuery("#" + role + "-selection").css("display", "");
+//                                            jQuery("#" + role + "-selection").addClass(" ms-selected");
+//                                            jQuery("#" + role + "-selectable").addClass(" ms-selected");
+//                                        }
+                                    }
+                                }
+                            }
+                        });
+                    } catch (err) {
+                        alert(err.message);
+                    }
                 }
+                function showAjaxAddModal()
+                {
+                    try {
+                        document.getElementById("form1").reset();
+                        jQuery('#user_id').val('');
+                        jQuery('#modal-6').modal('show', {backdrop: 'static'});
+                    } catch (err) {
+                        alert(err.message);
+                    }
+                }
+
             </script>
             <!--Add footer-->
             <?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
@@ -146,7 +174,7 @@
                                 <div class="form-group">
                                     <label class="control-label">User Name</label>
 
-                                    <input type="text" class="form-control" name="user_name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
+                                    <input type="text" class="form-control" id="user_name" name="user_name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
                                 </div>	
 
                             </div>
@@ -156,7 +184,7 @@
                                 <div class="form-group">
                                     <label class="control-label">Email</label>
 
-                                    <input type="text" class="form-control" name="user_email" data-validate="required,email" placeholder="Email Field" />
+                                    <input type="text" class="form-control" id="user_email" name="user_email" data-validate="required,email" placeholder="Email Field" />
                                 </div>	
 
                             </div>
@@ -168,13 +196,13 @@
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Password</label>
 
-                                    <input type="password" class="form-control" name="pwd" data-validate="required" placeholder="Numeric Field" />
+                                    <input type="password" class="form-control" id="pwd" name="pwd" data-validate="required" placeholder="Numeric Field" />
                                 </div>	
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Re-Password</label>
-                                    <input type="password" class="form-control" name="re_pwd" data-validate="required" placeholder="Numeric Field" />
+                                    <input type="password" class="form-control" id="re_pwd" name="re_pwd" data-validate="required" placeholder="Numeric Field" />
                                 </div>	
                             </div>
 
@@ -183,7 +211,7 @@
                                     <label class="col-sm-0 control-label">Status</label>
 
                                     <div>
-                                        <select name="status" class="form-control">
+                                        <select id="status" name="status" class="form-control">
                                             <option value="A">Active</option>
                                             <option value="I">Inactive</option>
                                         </select>
@@ -196,7 +224,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label">Role</label>
-                                    <select multiple="multiple" name="user_role[]" class="form-control multi-select">
+                                    <select id="user_role" multiple="multiple" name="user_role[]" class="form-control multi-select">
                                         <?php
                                         if (!empty($this->role)) {
                                             foreach ($this->role as $rol) {
@@ -216,6 +244,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-success">Save changes</button>
+                        <input type="hidden" id="user_id" name="user_id" value=""/>
                     </div>
                 </form>
             </div>
@@ -241,34 +270,34 @@
             }
         }
     </script>
-<!-- Imported styles on this page -->
-<link rel="stylesheet" href="<?php echo JS_PATH ?>datatables/responsive/css/datatables.responsive.css">
-<link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">
-<link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2.css">
+    <!-- Imported styles on this page -->
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>datatables/responsive/css/datatables.responsive.css">
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2.css">
 
-<!-- Bottom scripts (common) -->
-<script src="<?php echo JS_PATH ?>gsap/main-gsap.js"></script>
-<script src="<?php echo JS_PATH ?>jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>
-<script src="<?php echo JS_PATH ?>bootstrap.js"></script>
-<script src="<?php echo JS_PATH ?>joinable.js"></script>
-<script src="<?php echo JS_PATH ?>resizeable.js"></script>
-<script src="<?php echo JS_PATH ?>neon-api.js"></script>
-<script src="<?php echo JS_PATH ?>jquery.dataTables.min.js"></script>
-<script src="<?php echo JS_PATH ?>datatables/TableTools.min.js"></script>
+    <!-- Bottom scripts (common) -->
+    <script src="<?php echo JS_PATH ?>gsap/main-gsap.js"></script>
+    <script src="<?php echo JS_PATH ?>jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>
+    <script src="<?php echo JS_PATH ?>bootstrap.js"></script>
+    <script src="<?php echo JS_PATH ?>joinable.js"></script>
+    <script src="<?php echo JS_PATH ?>resizeable.js"></script>
+    <script src="<?php echo JS_PATH ?>neon-api.js"></script>
+    <script src="<?php echo JS_PATH ?>jquery.dataTables.min.js"></script>
+    <script src="<?php echo JS_PATH ?>datatables/TableTools.min.js"></script>
 
-<!-- Imported scripts on this page -->
-<script src="<?php echo JS_PATH ?>jquery.validate.min.js"></script>
-<script src="<?php echo JS_PATH ?>neon-chat.js"></script>
-<script src="<?php echo JS_PATH ?>dataTables.bootstrap.js"></script>
-<script src="<?php echo JS_PATH ?>datatables/jquery.dataTables.columnFilter.js"></script>
-<script src="<?php echo JS_PATH ?>datatables/lodash.min.js"></script>
-<script src="<?php echo JS_PATH ?>datatables/responsive/js/datatables.responsive.js"></script>
-<script src="<?php echo JS_PATH ?>select2/select2.min.js"></script>
-<script src="<?php echo JS_PATH ?>selectboxit/jquery.selectBoxIt.min.js"></script>
-<script src="<?php echo JS_PATH ?>jquery.multi-select.js"></script>
+    <!-- Imported scripts on this page -->
+    <script src="<?php echo JS_PATH ?>jquery.validate.min.js"></script>
+    <script src="<?php echo JS_PATH ?>neon-chat.js"></script>
+    <script src="<?php echo JS_PATH ?>dataTables.bootstrap.js"></script>
+    <script src="<?php echo JS_PATH ?>datatables/jquery.dataTables.columnFilter.js"></script>
+    <script src="<?php echo JS_PATH ?>datatables/lodash.min.js"></script>
+    <script src="<?php echo JS_PATH ?>datatables/responsive/js/datatables.responsive.js"></script>
+    <script src="<?php echo JS_PATH ?>select2/select2.min.js"></script>
+    <script src="<?php echo JS_PATH ?>selectboxit/jquery.selectBoxIt.min.js"></script>
+    <script src="<?php echo JS_PATH ?>jquery.multi-select.js"></script>
 
-<!-- JavaScripts initializations and stuff -->
-<script src="<?php echo JS_PATH ?>neon-custom.js"></script>
+    <!-- JavaScripts initializations and stuff -->
+    <script src="<?php echo JS_PATH ?>neon-custom.js"></script>
 
-<!-- Demo Settings -->
-<script src="<?php echo JS_PATH ?>neon-demo.js"></script>
+    <!-- Demo Settings -->
+    <script src="<?php echo JS_PATH ?>neon-demo.js"></script>

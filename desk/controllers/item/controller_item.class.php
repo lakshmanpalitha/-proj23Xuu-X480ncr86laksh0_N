@@ -30,7 +30,7 @@ class item extends controller {
         $this->view->cat = $login_model_setting->getAllActiveCat();
         $this->view->sub_cat = $login_model_setting->getAllSubCat();
         $this->view->unit = $login_model->getAllActiveUnit();
-        $this->view->item=$login_model->getSelectItem(base64_decode($item_id));
+        $this->view->item = $login_model->getSelectItem(base64_decode($item_id));
         $this->view->render('item/view_item', true, true, $this->module);
     }
 
@@ -65,28 +65,42 @@ class item extends controller {
             $valid = false;
         if (!$item_remark = $this->read->get("item_remark", "POST", '', 1500, false))
             $valid = false;
+        if (!$old_item_id = $this->read->get("old_item_id", "POST", '', '', false))
+            $valid = false;
+
+        $old_item_id = (is_bool($old_item_id) ? '' : ($old_item_id));
+
         if ($valid) {
             array_push($item, $item_code);
             array_push($item, $item_name);
             array_push($item, $item_cat);
-            array_push($item, $item_sub_cat);
+            array_push($item, (is_bool($item_sub_cat) ? '' : $item_sub_cat));
             array_push($item, $item_stock_unit);
             array_push($item, $item_ratio);
             array_push($item, $item_issue_unit);
             array_push($item, $item_ord_lvl);
             array_push($item, $item_n_ord_lvl);
             array_push($item, $item_loc);
-            array_push($item, $item_remark);
+            array_push($item, (is_bool($item_remark) ? '' : $item_remark));
             array_push($item, $item_status);
-
-            $res = $login_model->saveNewItem($item);
+            if ($old_item_id) {
+                $status = $login_model->getSelectItem($old_item_id);
+                if ($status->ITEM_MODE == 'S' OR $status->ITEM_MODE == 'P') {//Status save  or submit 
+                    $res = $login_model->modifyItem($old_item_id, $item);
+                } else {
+                    $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_ITEM_UPDATE_FAILED);
+                    exit(json_encode($data));
+                }
+            } else {
+                $res = $login_model->saveNewItem($item);
+            }
             if ($res) {
                 $data = array('success' => true, 'data' => '', 'error' => '');
             } else {
                 $data = array('success' => false, 'data' => '', 'error' => $this->view->renderFeedbackMessagesForJson());
             }
         } else {
-            $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_REQUIRED_FIELDS);
+            $data = array('success' => false, 'data' => '', 'error' => $this->view->renderFeedbackMessagesForJson());
         }
         echo json_encode($data);
     }

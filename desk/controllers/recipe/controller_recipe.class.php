@@ -45,6 +45,10 @@ class recipe extends controller {
             $valid = false;
         if (!$recipe_items = $this->read->get("items", "POST", '', '', true))
             $valid = false;
+        if (!$old_recipe_id = $this->read->get("old_recipe_id", "POST", '', '', false))
+            $valid = false;
+        $old_recipe_id = (is_bool($old_recipe_id) ? '' : ($old_recipe_id));
+
         $item_array = (array) json_decode($recipe_items);
         if ($valid) {
             if (!empty($item_array)) {
@@ -52,8 +56,17 @@ class recipe extends controller {
                 array_push($recipe, $recipe_status);
                 array_push($recipe, $recipe_remark);
                 array_push($recipe, $item_array);
-
-                $res = $login_model->saveNewRecipe($recipe);
+                if ($old_recipe_id) {
+                    $status = $login_model->getSpecificRecipe($old_recipe_id);
+                    if ($status->RECIPE_MODE == 'S' OR $status->RECIPE_MODE == 'P') {//Status save  or submit 
+                        $res = $login_model->modifyRecipe($old_recipe_id, $recipe);
+                    } else {
+                        $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_RECIPE_UPDATE_FAILED);
+                        exit(json_encode($data));
+                    }
+                } else {
+                    $res = $login_model->saveNewRecipe($recipe);
+                }
                 if ($res) {
                     $data = array('success' => true, 'data' => '', 'error' => '');
                 } else {

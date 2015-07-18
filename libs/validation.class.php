@@ -53,7 +53,7 @@ class validation {
     public static function isDecimal($value) {
         if (empty($value))
             return false;
-        if (!preg_match('/^[0-9]+(\.[0-9]{1,2})?$/', $value)) {
+        if (!preg_match('/^[0-9]+(\.[0-9]{1,5})?$/', $value)) {
             return false;
         }
         return true;

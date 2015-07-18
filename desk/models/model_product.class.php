@@ -65,6 +65,7 @@ class productModel extends model {
         $result = $this->db->queryMultipleObjects($query);
         return ($result ? $result : false);
     }
+
     function getRecipeSelectMaterial($product_id) {
         $query = "
             SELECT 
@@ -140,6 +141,69 @@ class productModel extends model {
                 foreach ($product[4] as $recipe) {
                     $values_2.= "(
                         '" . $primaryKey . "',
+                            '" . $recipe->recipe_id . "',
+                             '" . $recipe->recipe_remark . "'
+                         ),";
+                }
+                $result_3 = false;
+                if ($values_2) {
+                    $query_3 = "
+                            INSERT INTO 
+                            tbl_product_recipe
+                                 VALUES " . rtrim($values_2, ',');
+                    $result_3 = $this->db->execute($query_3);
+                }
+
+                return ($result_2 && $result_3) ? true : false;
+            }
+        }
+        return false;
+    }
+
+    function modifyProduct($product_id = null, $product) {
+        if (!$product_id)
+            return false;
+        $query = "UPDATE tbl_product_master SET
+                        PRODUCT_NAME= '" . mysql_real_escape_string($product[0]) . "',
+                        PRODUCT_CREATE_DATE= NOW(),
+                        PRODUCT_REMARK= '" . mysql_real_escape_string($product[2]) . "',  
+                        PRODUCT_CREATE_BY= '" . mysql_real_escape_string(session::get('user_email')) . "',  
+                        PRODUCT_QUANTITY= '" . mysql_real_escape_string($product[5]) . "',  
+                        UNIT_CODE= '" . mysql_real_escape_string($product[6]) . "'
+                 WHERE PRODUCT_ID='" . mysql_real_escape_string($product_id) . "'";
+        $result = $this->db->execute($query);
+        if ($result) {
+            $del_query = "DELETE FROM tbl_product_mat_item WHERE PRODUCT_ID='" . mysql_real_escape_string($product_id) . "'";
+            $del_result = $this->db->execute($del_query);
+
+            $del_query_rec = "DELETE FROM tbl_product_recipe WHERE PRODUCT_ID='" . mysql_real_escape_string($product_id) . "'";
+            $del_result_rec = $this->db->execute($del_query_rec);
+            if ($del_result && $del_result_rec) {
+                $result_2 = true;
+                if (!empty($product[3])) {
+                    $values = null;
+                    foreach ($product[3] as $items) {
+                        $values.= "(
+                        '" . $product_id . "',
+                            '" . $items->item_id . "',
+                             '" . $items->item_qty . "',
+                                  '" . $items->item_remark . "'
+                         ),";
+                    }
+                    $result_2 = false;
+                    if ($values) {
+                        $query_2 = "
+                            INSERT INTO 
+                            tbl_product_mat_item
+                                 VALUES " . rtrim($values, ',');
+                        $result_2 = $this->db->execute($query_2);
+                    }
+                }
+
+                $values_2 = null;
+                foreach ($product[4] as $recipe) {
+                    $values_2.= "(
+                        '" . $product_id . "',
                             '" . $recipe->recipe_id . "',
                              '" . $recipe->recipe_remark . "'
                          ),";

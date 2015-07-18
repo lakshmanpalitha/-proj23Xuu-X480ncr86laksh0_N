@@ -34,8 +34,8 @@ class product extends controller {
             $this->view->items = $login_model_item->getAllActiveItem();
             $this->view->product_recipes = $login_model->getRecipeSelectProduct(base64_decode($product_id));
             $this->view->product = $login_model->getSelectProduct(base64_decode($product_id));
-            $this->view->product_mats=$login_model->getRecipeSelectMaterial(base64_decode($product_id));
-             $this->view->recipes = $login_model_recipe->getAllActiveRecipe();
+            $this->view->product_mats = $login_model->getRecipeSelectMaterial(base64_decode($product_id));
+            $this->view->recipes = $login_model_recipe->getAllActiveRecipe();
             $this->view->units = $login_model_item->getAllUnit();
             $this->view->render('product/view_product', true, true, $this->module);
         } else {
@@ -77,19 +77,32 @@ class product extends controller {
             $valid = false;
         if (!$product_quantity_unit = $this->read->get("product_unit", "POST", 'NUMERIC', 6, true))
             $valid = false;
+        if (!$old_product_id = $this->read->get("old_product_id", "POST", '', '', false))
+            $valid = false;
+        $old_product_id = (is_bool($old_product_id) ? '' : ($old_product_id));
+
         $item_array = (array) json_decode($product_items);
         $recipe_array = (array) json_decode($product_recipe);
         if ($valid) {
             if (!empty($recipe_array)) {
                 array_push($product, $product_name);
                 array_push($product, $product_status);
-                array_push($product, $product_remark);
+                array_push($product, is_bool($product_remark) ? '' : $product_remark);
                 array_push($product, $item_array);
                 array_push($product, $recipe_array);
                 array_push($product, $product_unit_quantity);
                 array_push($product, $product_quantity_unit);
-
-                $res = $login_model->saveNewProduct($product);
+                if ($old_product_id) {
+                    $status = $login_model->getSelectProduct($old_product_id);
+                    if ($status->PRODUCT_MODE == 'S' OR $status->PRODUCT_MODE == 'P') {//Status save  or submit 
+                        $res = $login_model->modifyProduct($old_product_id, $product);
+                    } else {
+                        $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_PRODUCT_UPDATE_FAILED);
+                        exit(json_encode($data));
+                    }
+                } else {
+                    $res = $login_model->saveNewProduct($product);
+                }
                 if ($res) {
                     $data = array('success' => true, 'data' => '', 'error' => '');
                 } else {

@@ -32,9 +32,10 @@
                                     Pending
                                     <i class="entypo-info"></i>
                                 </button>
-                                <button name="item_save" value="itm_save" class="btn btn-green btn-sm" type="submit">Save</button>           
+                                <button name="item_save" value="itm_save" class="btn btn-green btn-sm" type="submit">Modify</button>           
                                 <button name="item_submit" value="itm_submit" class="btn btn-blue btn-sm" type="button">Submit</button>
-                                <button name="item_cancel" value="item_cancel" class="btn btn-danger btn-sm" type="button">Cancel</button>
+                                <button name="item_cancel" value="item_cancel" class="btn btn-danger btn-sm" type="button">Accept</button>
+                                <input type="hidden" name="old_item_id" value="<?php echo ($this->item->ITEM_ID) ?>" name=""/>
                             </div>
                         </div>
                     </div>
@@ -82,6 +83,7 @@
                                     <div class="form-group">
                                         <label for="field-6" class="control-label">Category</label>
                                         <select name="item_cat" onchange="getSubCat(this)" class="select2" data-allow-clear="true" data-placeholder="Select category">
+                                            <option></option>
                                             <?php
                                             if (!empty($this->cat)) {
                                                 foreach ($this->cat as $cat) {
@@ -98,6 +100,7 @@
                                     <div class="form-group">
                                         <label for="field-6" class="control-label">Sub category</label>
                                         <select name="item_sub_cat" id="sub_category" class="select2" data-allow-clear="true" data-placeholder="Select sub category">
+                                            <option></option>
                                             <?php
                                             if (!empty($this->sub_cat)) {
                                                 foreach ($this->sub_cat as $sub_cat) {
@@ -169,7 +172,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="field-6" class="control-label">Location</label>
-                                        <input value="<?php echo $this->item->ITEM_LOCATION ?>" type="text" class="form-control" name="item_loc" data-validate="required,number" placeholder="Numeric Field" />
+                                        <input value="<?php echo $this->item->ITEM_LOCATION ?>" type="text" class="form-control" name="item_loc" data-validate="required" placeholder="" />
                                     </div>	
                                 </div>
                             </div>
