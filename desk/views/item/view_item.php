@@ -17,7 +17,7 @@
                 </li>
                 <li>
 
-                    <a href="<?php echo MOD_ADMIN_URL ?>item/viewItem/"> View item</a>
+                    <a href="<?php echo MOD_ADMIN_URL ?>item/viewItem/<?php echo (isset($this->item->ITEM_ID) ? base64_encode($this->item->ITEM_ID) : '') ?>"> View item</a>
                 </li>
             </ol>
 
@@ -28,26 +28,35 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div style="border:none !important;text-align:right;" class="panel panel-primary">
-                                <button type="button" class="btn btn-gold btn-icon icon-left disabled">
-                                    Pending
-                                    <i class="entypo-info"></i>
-                                </button>
-                                <button name="item_save" value="itm_save" class="btn btn-green btn-sm" type="submit">Modify</button>           
-                                <button name="item_submit" value="itm_submit" class="btn btn-blue btn-sm" type="button">Submit</button>
-                                <button name="item_cancel" value="item_cancel" class="btn btn-danger btn-sm" type="button">Accept</button>
+                                <?php echo (($this->item->ITEM_MODE == 'S' OR $this->item->ITEM_MODE == 'P') ? '<button class="btn btn-green btn-sm" type="submit" type="button">Modify</button>' : '') ?>
+                                <?php echo ($this->item->ITEM_MODE == 'S' ? '<button onclick=modifytItemMode("' . $this->item->ITEM_ID . '","P") class="btn btn-gold btn-sm"  type="button">Submit</button>' : '') ?>
+                                <?php echo ($this->item->ITEM_MODE == 'P' ? '<button onclick=modifytItemMode("' . $this->item->ITEM_ID . '","A") class="btn btn-blue btn-sm"  type="button">Accept</button>' : '') ?>
                                 <input type="hidden" name="old_item_id" value="<?php echo ($this->item->ITEM_ID) ?>" name=""/>
                             </div>
                         </div>
                     </div>
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <div class="panel-title">Add New Item</div>
-
-                            <div class="panel-options">
-                                <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a>
-                                <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                                <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
-                                <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>
+                            <div class="panel-title">
+                                Add New Item&nbsp; &nbsp;
+                                <?php
+                                if ($this->item->ITEM_MODE == 'S') {
+                                    echo '
+                                            <button class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">
+                                            Draft<i class="entypo-info"></i>
+                                            </button>';
+                                } else if ($this->item->ITEM_MODE == 'P') {
+                                    echo '
+                                            <button class="btn btn-blue btn-icon icon-left  btn-xs" type="button">
+                                                Submit<i class="entypo-info"></i>
+                                            </button>';
+                                } else if ($this->item->ITEM_MODE == 'A') {
+                                    echo '
+                                            <button class="btn btn-green  btn-icon icon-left  btn-xs" type="button">
+                                                Accept<i class="entypo-info"></i>
+                                            </button>';
+                                }
+                                ?>
                             </div>
                         </div>
 
@@ -64,17 +73,6 @@
                                         <label class="control-label">Name</label>
                                         <input value="<?php echo $this->item->ITEM_NAME ?>" type="text" class="form-control" name="item_name" data-validate="required" placeholder="Item name" />
                                     </div>	
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="col-sm-0 control-label">Status</label>
-                                        <div>
-                                            <select name="item_status" class="form-control">
-                                                <option <?php echo ($this->item->ITEM_STATUS == 'A' ? 'selected' : '') ?> value="A">Active</option>
-                                                <option <?php echo ($this->item->ITEM_STATUS == 'I' ? 'selected' : '') ?> value="I">Inactive</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
@@ -131,13 +129,7 @@
                                             ?>
                                         </select>
                                     </div>	
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="field-6" class="control-label">Ratio</label>
-                                        <input value="<?php echo $this->item->ITEM_RATIO ?>" type="text" class="form-control" name="item_ratio" data-validate="required,number" placeholder="Numeric Field" />
-                                    </div>	
-                                </div>  
+                                </div> 
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="field-6" class="control-label">Issue Unit</label>
@@ -155,6 +147,17 @@
                                         </select>
                                     </div>	
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="field-6" class="control-label">Ratio (Stock unit to Issue unit)</label>
+                                        <select name="item_ratio"  class="form-control">
+                                            <option value="">-Select-</option>
+                                            <option <?php echo ($this->item->ITEM_RATIO == '1' ? 'selected' : '') ?> value="1">1X</option> 
+                                            <option <?php echo ($this->item->ITEM_RATIO == '1000' ? 'selected' : '') ?> value="1000">1000X</option>
+                                             <option <?php echo ($this->item->ITEM_RATIO == '1000000' ? 'selected' : '') ?> value="1000000">1000000X</option>
+                                        </select>                                   
+                                    </div>	
+                                </div> 
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
@@ -180,13 +183,52 @@
                                 <div class="col-md-12">
                                     <div class="form-group no-margin">
                                         <label for="field-7" class="control-label">Remark</label>
-                                        <textarea name="item_remark" class="form-control autogrow" id="field-7" placeholder="Write something about item"><?php echo $this->item->ITEM_REMARK ?></textarea>
+                                        <textarea name="item_remark" class="form-control autogrow" id="field-7" placeholder="Item Remark"><?php echo $this->item->ITEM_REMARK ?></textarea>
                                     </div>	
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-gray" data-collapsed="0">
+                            <!-- panel head -->
+                            <div class="panel-heading">
+                                <div class="panel-title">Item History</div>
+                            </div>
+                            <!-- panel body -->
+                            <div class="panel-body">
+                                <ul class="cbp_tmtimeline">
+                                    <ul class="cbp_tmtimeline">
+                                        <?php
+                                        if (!empty($this->history)) {
+                                            foreach ($this->history as $his) {
+                                                $dateTime = explode(" ", $his->LOG_DATE);
+                                                $time = date('h:i:s A', strtotime($dateTime[1]));
+                                                $date = date('Y-M-d', strtotime($dateTime[0]));
+                                                ?>
+                                                <li>
+                                                    <time class="cbp_tmtime" datetime="2014-12-09T03:45"><span><?php echo $time ?></span> <span><?php echo $date ?></span></time>
+                                                    <div class="cbp_tmicon">
+                                                        <i class="entypo-user"></i>
+                                                    </div>
+
+                                                    <div class="cbp_tmlabel">
+                                                        <h2><a href="#"><?php echo $his->LOG_USER ?></a></h2>
+                                                        <p><?php echo $his->LOG_TASK ?></p>
+                                                    </div>
+                                                </li>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                    </ul>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <?php } else { ?>
                 <div class="row">
                     <div class="col-md-12">
@@ -200,49 +242,70 @@
         </div>
     </div>
     <script type="text/javascript">
-                                            function getSubCat(e)
-                                            {
-                                                try {
-                                                    var param = "cat=" + e.value;
-                                                    ajaxRequest('<?php echo MOD_ADMIN_URL ?>setting/jsonGetSubCatByCat', param, function(jsonData) {
-                                                        var option = '<option value="">-Select-</option>';
-                                                        if (jsonData) {
-                                                            if (jsonData.success == true) {
-                                                                for (var i in jsonData.data) {
-                                                                    option = option + "<option value='" + jsonData.data[i]['ITEM_SUB_CAT_ID'] + "'>" + jsonData.data[i]['ITEM_SUB_CAT_NAME'] + "</option>";
-                                                                }
-                                                                document.getElementById('sub_category').innerHTML = option;
-                                                            } else {
-                                                                alert(jsonData.error)
-                                                                return false;
+                                        function getSubCat(e)
+                                        {
+                                            try {
+                                                var param = "cat=" + e.value;
+                                                ajaxRequest('<?php echo MOD_ADMIN_URL ?>setting/jsonGetSubCatByCat', param, function(jsonData) {
+                                                    var option = '<option value="">-Select-</option>';
+                                                    if (jsonData) {
+                                                        if (jsonData.success == true) {
+                                                            for (var i in jsonData.data) {
+                                                                option = option + "<option value='" + jsonData.data[i]['ITEM_SUB_CAT_ID'] + "'>" + jsonData.data[i]['ITEM_SUB_CAT_NAME'] + "</option>";
                                                             }
+                                                            document.getElementById('sub_category').innerHTML = option;
+                                                        } else {
+                                                            errorModal(jsonData.error);
+                                                            return false;
                                                         }
-                                                    });
-                                                } catch (err) {
-                                                    alert(err.message);
-                                                    return false;
-                                                }
+                                                    }
+                                                });
+                                            } catch (err) {
+                                                alert(err.message);
+                                                return false;
                                             }
-                                            function submitFrom(form) {
-                                                try {
-                                                    ajaxRequest(form.action, jQuery('#' + form.id).serialize(), function(jsonData) {
+                                        }
+                                        function submitFrom(form) {
+                                            try {
+                                                ajaxRequest(form.action, jQuery('#' + form.id).serialize(), function(jsonData) {
+                                                    if (jsonData) {
+                                                        if (jsonData.success == true) {
+                                                            jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>item');
+                                                        } else {
+                                                            errorModal(jsonData.error);
+                                                            return false;
+                                                        }
+                                                    }
+                                                });
+                                            } catch (err) {
+                                                alert(err.message);
+                                                return false;
+                                            }
+                                        }
+                                        function modifytItemMode(val, ststus) {
+                                            try {
+                                                if (doConfirm('Are you confirm to ' + (ststus == 'P' ? 'submit' : 'accept') + ' item?')) {
+                                                    ajaxRequest('<?php echo MOD_ADMIN_URL ?>item/jsonMode/' + val + '/' + ststus + '/', '', function(jsonData) {
                                                         if (jsonData) {
                                                             if (jsonData.success == true) {
                                                                 jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>item');
                                                             } else {
-                                                                alert(jsonData.error)
+                                                                errorModal(jsonData.error);
                                                                 return false;
                                                             }
                                                         }
                                                     });
-                                                } catch (err) {
-                                                    alert(err.message);
-                                                    return false;
                                                 }
                                             }
+                                            catch (err) {
+                                                alert(err.message);
+                                                return false;
+                                            }
+                                        }
     </script>
     <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">
     <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2.css">
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>vertical-timeline/css/component.css">
     <!-- Bottom scripts (common) -->
     <script src="<?php echo JS_PATH ?>gsap/main-gsap.js"></script>
     <script src="<?php echo JS_PATH ?>jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>

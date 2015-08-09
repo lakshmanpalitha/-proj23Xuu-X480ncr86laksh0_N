@@ -42,6 +42,7 @@ function xmlRequest(URL, param, returnFunc)
 
 function ajaxRequest(URL, param, returnFunc)
 {
+    overlayEnable();
     jQuery.ajax({
         url: URL,
         data: param,
@@ -59,17 +60,46 @@ function ajaxRequest(URL, param, returnFunc)
                 }
             }
             catch (err) {
+                overlayDisable();
                 alert(err.message);
                 return false;
             }
+            overlayDisable();
         },
         error: function(request, status, error) {
+            overlayDisable();
             alert(request.responseText);
         }
 
     })
 }
+function overlayEnable() {
+    if (document.getElementById("overlay")) {
+        document.getElementById("overlay").style.display = "block";
+    }
+    if (document.getElementById("waitingDiv")) {
+        document.getElementById("waitingDiv").style.display = "block";
+    }
+    return true;
+}
+function overlayDisable() {
+    if (document.getElementById("overlay")) {
+        document.getElementById("overlay").style.display = "none";
+    }
+    if (document.getElementById("waitingDiv")) {
+        document.getElementById("waitingDiv").style.display = "none";
+    }
+    return true;
+}
 
-
-
+function errorModal(error) {
+    try {
+        jQuery('#error_display_container').html(error);
+        jQuery('#error_display').modal('show', {backdrop: 'static'});
+    }
+    catch (err) {
+        alert(err.message);
+        return false;
+    }
+}
 

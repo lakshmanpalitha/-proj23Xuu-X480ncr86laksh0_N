@@ -7,12 +7,15 @@ class settingModel extends model {
             SELECT 
                 * 
             FROM 
-                tbl_item_category 
+                tbl_item_category
+            WHERE
+                ITEM_CAT_STATUS NOT IN('D')
             ORDER 
                 BY ITEM_CAT_NAME DESC";
         $result = $this->db->queryMultipleObjects($query);
         return ($result ? $result : false);
     }
+
     function getAllActiveCat() {
         $query = "
             SELECT 
@@ -20,7 +23,7 @@ class settingModel extends model {
             FROM 
                 tbl_item_category 
             WHERE
-                ITEM_CAT_STATUS='A'
+                ITEM_CAT_STATUS IN('A')
             ORDER 
                 BY ITEM_CAT_NAME DESC";
         $result = $this->db->queryMultipleObjects($query);
@@ -36,13 +39,14 @@ class settingModel extends model {
                 tbl_item_sub_category sub 
             WHERE 
                 sub.ITEM_CAT_ID = cat.ITEM_CAT_ID
-                AND cat.ITEM_CAT_STATUS='A'
-                AND sub.ITEM_SUB_CAT_STATUS='A'
+                AND cat.ITEM_CAT_STATUS NOT IN('D')
+                AND sub.ITEM_SUB_CAT_STATUS NOT IN('D')
             ORDER 
                 BY sub.ITEM_SUB_CAT_NAME DESC";
         $result = $this->db->queryMultipleObjects($query);
         return ($result ? $result : false);
     }
+
     function getAllActiveSubCat() {
         $query = "
             SELECT 
@@ -107,6 +111,86 @@ class settingModel extends model {
             )";
             $result = $this->db->execute($query);
             return $result ? true : false;
+        }
+        return false;
+    }
+
+    function editCategory($category, $cat_id) {
+        if ($cat_id) {
+            $query = "
+                UPDATE 
+                    tbl_item_category 
+                SET 
+                    ITEM_CAT_NAME='" . mysql_real_escape_string($category[0]) . "' 
+                WHERE 
+                    ITEM_CAT_ID='" . mysql_real_escape_string($cat_id) . "'";
+            $result = $this->db->execute($query);
+            return $result ? true : false;
+        }
+        return false;
+    }
+
+    function editSubCategory($sub_category, $sub_cat_id) {
+        if ($sub_cat_id) {
+            $query = "
+                UPDATE 
+                    tbl_item_sub_category 
+                SET 
+                    ITEM_CAT_ID='" . mysql_real_escape_string($sub_category[0]) . "',
+                    ITEM_SUB_CAT_NAME='" . mysql_real_escape_string($sub_category[1]) . "' 
+                WHERE 
+                    ITEM_SUB_CAT_ID='" . mysql_real_escape_string($sub_cat_id) . "'";
+
+            $result = $this->db->execute($query);
+            return $result ? true : false;
+        }
+        return false;
+    }
+
+    function modifyCatStatus($cat_id = null, $ststus = null) {
+        if (!$cat_id OR !$ststus)
+            return false;
+        $query = "UPDATE tbl_item_category SET
+                        ITEM_CAT_STATUS= '" . mysql_real_escape_string($ststus) . "'
+                 WHERE ITEM_CAT_ID='" . mysql_real_escape_string($cat_id) . "'";
+        $result = $this->db->execute($query);
+        return $result ? true : false;
+    }
+
+    function modifySubCatStatus($sub_cat_id = null, $ststus = null) {
+        if (!$sub_cat_id OR !$ststus)
+            return false;
+        $query = "UPDATE tbl_item_sub_category SET
+                        ITEM_SUB_CAT_STATUS= '" . mysql_real_escape_string($ststus) . "'
+                 WHERE ITEM_SUB_CAT_ID='" . mysql_real_escape_string($sub_cat_id) . "'";
+        $result = $this->db->execute($query);
+        return $result ? true : false;
+    }
+
+    function checkCatUsed($cat_id) {
+        if ($cat_id) {
+            $query = "SELECT 
+                        COUNT(ITEM_ID) 
+                      FROM 
+                        tbl_item_master 
+                      WHERE 
+                        ITEM_CATEGORY_ID IN ('" . mysql_real_escape_string($cat_id) . "')";
+            $result = $this->db->queryUniqueValue($query);
+            return $result ? $result : false;
+        }
+        return false;
+    }
+
+    function checkSubCatUsed($sub_cat_id) {
+        if ($sub_cat_id) {
+            $query = "SELECT 
+                        COUNT(ITEM_ID) 
+                      FROM 
+                        tbl_item_master 
+                      WHERE 
+                        ITEM_SUB_CATEGORY_ID IN ('" . mysql_real_escape_string($sub_cat_id) . "')";
+            $result = $this->db->queryUniqueValue($query);
+            return $result ? $result : false;
         }
         return false;
     }

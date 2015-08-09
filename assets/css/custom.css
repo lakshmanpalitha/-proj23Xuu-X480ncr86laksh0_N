@@ -1,9 +1,31 @@
-/**
- *
- * Apply Here your Custom CSS
- *
-*/
 
 #panel_privileges{
     background-color: silver;
+}
+
+#waitingDiv{
+    background-color: #FFFFFF;
+    border: medium solid #000000;
+    bottom: 45%;
+    height: 65px;
+    left: 48%;
+    position: absolute;
+    text-align: center;
+    width: 190px;
+    z-index: 1100;
+}
+#waitingText{
+    float: left;
+    margin: 4px 0 0 7px;
+    width: 100%;
+}
+#overlay {
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1070;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
 }

@@ -35,7 +35,7 @@
                             <div class="tab-pane active" id="v-home">
                                 <div class="row">
                                     <div class="col-md-6 col-sm-8 clearfix">
-                                        <a class="btn btn-blue" href="javascript:;" onclick="jQuery('#modal-1').modal('show', {backdrop: 'static'});">
+                                        <a class="btn btn-blue" href="javascript:;" onclick="jQuery('#modal-1').modal('show', {backdrop: 'static'}, jQuery('#cat_id').val(''));">
                                             <i class="entypo-plus"></i>
                                             Add Category
                                         </a>
@@ -47,7 +47,6 @@
                                     <thead>
                                         <tr>
                                             <th data-hide="phone">Category</th>
-                                            <th data-hide="phone">Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -56,21 +55,19 @@
                                         if (!empty($this->cat)) {
                                             foreach ($this->cat as $cat) {
                                                 ?>
-                                                <tr class="odd gradeX">
+                                                <tr style="<?php echo ($cat->ITEM_CAT_STATUS == 'I' ? 'background-color: mistyrose;' : '') ?>" class="odd gradeX">
                                                     <td><?php echo $cat->ITEM_CAT_NAME ?></td>
-                                                    <td><?php
-                                                        echo ($cat->ITEM_CAT_STATUS == 'A' ? '
-                                        <button class="btn btn-green btn-icon icon-left  btn-xs" type="button">
-                                            Active<i class="entypo-check"></i>
-                                        </button>' :
-                                                                '<button class="btn btn-gold btn-icon icon-left  btn-xs" type="button">
-                                                Inactive<i class="entypo-cancel"></i>
-                                         </button>')
-                                                        ?></td>
                                                     <td class="center">
-                                                        <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-xs btn-icon icon-left">
+                                                        <a href="javascript:;" onclick="showAjaxModalCat('<?php echo base64_encode($cat->ITEM_CAT_ID) ?>', '<?php echo $cat->ITEM_CAT_NAME ?>');" class="btn btn-default btn-xs btn-icon icon-left">
                                                             <i class="entypo-pencil"></i>
                                                             View
+                                                        </a>
+                                                        <a href="javascript:;" onclick="modifyCatStatus('<?php echo ($cat->ITEM_CAT_ID) ?>', '<?php echo ($cat->ITEM_CAT_STATUS == 'A') ? 'I' : 'A' ?>')" class="btn btn-<?php echo ($cat->ITEM_CAT_STATUS == 'A') ? 'green' : 'gold' ?> btn-xs btn-icon icon-left">
+                                                            <i class="entypo-pencil"></i><?php echo ($cat->ITEM_CAT_STATUS == 'A') ? 'Active' : 'Inactive' ?>
+                                                        </a>
+                                                        <a href="javascript:;" onclick="modifyCatStatus('<?php echo ($cat->ITEM_CAT_ID) ?>', 'D')" class="btn btn-danger btn-xs btn-icon icon-left">
+                                                            <i class="entypo-cancel"></i>
+                                                            Delete
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -79,27 +76,12 @@
                                         }
                                         ?>
                                     </tbody>
-                                </table>
-
-                                <script type="text/javascript">
-                                            function showAjaxModal()
-                                            {
-                                                jQuery('#modal-1').modal('show', {backdrop: 'static'});
-
-                                                jQuery.ajax({
-                                                    url: "data/ajax-content.txt",
-                                                    success: function(response)
-                                                    {
-                                                        jQuery('#modal-7 .modal-body').html(response);
-                                                    }
-                                                });
-                                            }
-                                </script>
+                                </table>           
                             </div>
                             <div class="tab-pane" id="v-profile">
                                 <div class="row">
                                     <div class="col-md-6 col-sm-8 clearfix">
-                                        <a class="btn btn-blue" href="javascript:;" onclick="jQuery('#modal-2').modal('show', {backdrop: 'static'});">
+                                        <a class="btn btn-blue" href="javascript:;" onclick="jQuery('#modal-2').modal('show', {backdrop: 'static'}, jQuery('#sub_cat_id').val(''));">
                                             <i class="entypo-plus"></i>
                                             Add Sub Category
                                         </a>
@@ -112,7 +94,6 @@
                                         <tr>
                                             <th data-hide="phone">Category</th>
                                             <th data-hide="phone">Sub Category</th>
-                                            <th data-hide="phone">Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -121,28 +102,22 @@
                                         if (!empty($this->sub_cat)) {
                                             foreach ($this->sub_cat as $sub_cat) {
                                                 ?>
-                                                <tr class="odd gradeX">
+                                                <tr style="<?php echo ($sub_cat->ITEM_SUB_CAT_STATUS == 'I' ? 'background-color: mistyrose;' : '') ?>" class="odd gradeX">
                                                     <td><?php echo $sub_cat->ITEM_CAT_NAME ?></td>
-                                                    <td><?php echo $sub_cat->ITEM_SUB_CAT_NAME ?></td>
-                                                    <td><?php
-                                                        echo ($sub_cat->ITEM_SUB_CAT_STATUS == 'A' ? '
-                                        <button class="btn btn-green btn-icon icon-left  btn-xs" type="button">
-                                            Active<i class="entypo-check"></i>
-                                        </button>' :
-                                                                '<button class="btn btn-gold btn-icon icon-left  btn-xs" type="button">
-                                                Inactive<i class="entypo-cancel"></i>
-                                         </button>')
-                                                        ?></td>
+                                                    <td><?php echo $sub_cat->ITEM_SUB_CAT_NAME ?></td>                                                  
                                                     <td class="center">
-                                                        <a href="javascript:;" onclick="showAjaxModal();" class="btn btn-default btn-xs btn-icon icon-left">
+                                                        <a href="javascript:;" onclick="showAjaxModalSubCat('<?php echo base64_encode($sub_cat->ITEM_SUB_CAT_ID) ?>', '<?php echo $sub_cat->ITEM_CAT_ID ?>', '<?php echo $sub_cat->ITEM_SUB_CAT_NAME ?>');" class="btn btn-default btn-xs btn-icon icon-left">
                                                             <i class="entypo-pencil"></i>
-                                                            Edit
+                                                            View
                                                         </a>
-
-                                                        <a href="#" class="btn btn-danger btn-xs btn-icon icon-left">
+                                                        <a href="javascript:;" onclick="modifySubCatStatus('<?php echo ($sub_cat->ITEM_SUB_CAT_ID) ?>', '<?php echo ($sub_cat->ITEM_SUB_CAT_STATUS == 'A') ? 'I' : 'A' ?>')" class="btn btn-<?php echo ($sub_cat->ITEM_SUB_CAT_STATUS == 'A') ? 'green' : 'gold' ?> btn-xs btn-icon icon-left">
+                                                            <i class="entypo-pencil"></i><?php echo ($sub_cat->ITEM_SUB_CAT_STATUS == 'A') ? 'Active' : 'Inactive' ?>
+                                                        </a>
+                                                        <a href="javascript:;" onclick="modifySubCatStatus('<?php echo ($sub_cat->ITEM_SUB_CAT_ID) ?>', 'D')" class="btn btn-danger btn-xs btn-icon icon-left">
                                                             <i class="entypo-cancel"></i>
                                                             Delete
                                                         </a>
+
                                                     </td>
                                                 </tr>
                                                 <?php
@@ -191,17 +166,74 @@
                                             });
                                 </script>
                                 <script type="text/javascript">
-                                    function showAjaxModal()
+                                    function showAjaxModalSubCat(sub_cat_id, cat_id, name)
                                     {
                                         jQuery('#modal-2').modal('show', {backdrop: 'static'});
-
-                                        jQuery.ajax({
-                                            url: "data/ajax-content.txt",
-                                            success: function(response)
-                                            {
-                                                jQuery('#modal-7 .modal-body').html(response);
+                                        jQuery('#cat').val(cat_id);
+                                        jQuery('#sub_cat_name').val(name);
+                                        jQuery('#sub_cat_id').val(sub_cat_id);
+                                    }
+                                    function showAjaxModalCat(id, name)
+                                    {
+                                        jQuery('#modal-1').modal('show', {backdrop: 'static'});
+                                        jQuery('#cat_id').val(id);
+                                        jQuery('#cat_name').val(name);
+                                    }
+                                    function modifyCatStatus(val, ststus) {
+                                        try {
+                                            var str = '';
+                                            if (ststus == 'A') {
+                                                str = 'active';
+                                            } else if (ststus == 'I') {
+                                                str = 'inactive';
+                                            } else if (ststus == 'D') {
+                                                str = 'delete';
                                             }
-                                        });
+                                            if (doConfirm('Are you confirm to ' + str + ' category?')) {
+                                                ajaxRequest('<?php echo MOD_ADMIN_URL ?>setting/jsonCatStatus/' + val + '/' + ststus + '/', '', function(jsonData) {
+                                                    if (jsonData) {
+                                                        if (jsonData.success == true) {
+                                                            jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>setting');
+                                                        } else {
+                                                            errorModal(jsonData.error);
+                                                            return false;
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                        catch (err) {
+                                            alert(err.message);
+                                            return false;
+                                        }
+                                    }
+                                    function modifySubCatStatus(val, ststus) {
+                                        try {
+                                            var str = '';
+                                            if (ststus == 'A') {
+                                                str = 'active';
+                                            } else if (ststus == 'I') {
+                                                str = 'inactive';
+                                            } else if (ststus == 'D') {
+                                                str = 'delete';
+                                            }
+                                            if (doConfirm('Are you confirm to ' + str + ' sub category ?')) {
+                                                ajaxRequest('<?php echo MOD_ADMIN_URL ?>setting/jsonSubCatStatus/' + val + '/' + ststus + '/', '', function(jsonData) {
+                                                    if (jsonData) {
+                                                        if (jsonData.success == true) {
+                                                            jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>setting');
+                                                        } else {
+                                                            errorModal(jsonData.error);
+                                                            return false;
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                        catch (err) {
+                                            alert(err.message);
+                                            return false;
+                                        }
                                     }
                                 </script>
                             </div>
@@ -229,24 +261,14 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label">Name</label>
-                                            <input type="text" class="form-control" name="cat_name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
+                                            <input type="text" class="form-control" name="cat_name" id="cat_name" data-validate="required" data-message-required="" placeholder="Required Field" />
                                         </div>	
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="col-sm-0 control-label">Status</label>
-                                            <div>
-                                                <select name="cat_status" class="form-control">
-                                                    <option value="A">Active</option>
-                                                    <option value="I">Inactive</option>
-                                                </select>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="modal-footer">
+                                <input type="hidden" name="cat_id" id="cat_id" value=""/>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-success">Save changes</button>                              
                             </div>
@@ -272,7 +294,7 @@
                                         <div class="form-group">
                                             <label class="col-sm-0 control-label">Category</label>
                                             <div>
-                                                <select name="cat" class="form-control">
+                                                <select name="cat" id="cat" class="form-control">
                                                     <option value="">-Select-</option>
                                                     <?php
                                                     if (!empty($this->cat)) {
@@ -290,23 +312,13 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Name</label>
-                                            <input type="text" class="form-control" name="sub_cat_name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
-                                        </div>	
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="col-sm-0 control-label">Status</label>
-                                            <div>
-                                                <select name="sub_cat_status" class="form-control">
-                                                    <option value="A">Active</option>
-                                                    <option value="I">Inactive</option>
-                                                </select>
-                                            </div>
+                                            <input type="text" class="form-control" id="sub_cat_name" name="sub_cat_name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
                                         </div>	
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
+                                <input type="hidden" name="sub_cat_id" id="sub_cat_id" value=""/>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-success">Save changes</button>                                
                             </div>
@@ -327,7 +339,7 @@
                         if (jsonData.success == true) {
                             jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>setting');
                         } else {
-                            alert(jsonData.error)
+                            errorModal(jsonData.error);
                             return false;
                         }
                     }

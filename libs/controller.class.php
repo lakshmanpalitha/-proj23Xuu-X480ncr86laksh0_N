@@ -27,6 +27,7 @@ class controller extends common {
         $this->model = new model();
 
         $this->userActiveModule();
+        $this->splitUrl();
     }
 
     /**
@@ -66,12 +67,23 @@ class controller extends common {
                     $i = 0;
                     $m++;
                 }
-                $mod_arrange_array[$n]['DOC'][$i] = $mod->DOC_TYPE_NAME;
+                $mod_arrange_array[$n]['DOC'][$i]['NAME'] = $mod->DOC_TYPE_NAME;
+                $mod_arrange_array[$n]['DOC'][$i]['URL'] = $mod->DOC_TYPE_URL;
                 $i++;
             }
         }
-
         $this->view->display_user_module_array = $mod_arrange_array;
+    }
+
+    function splitUrl() {
+        if (isset($_GET['url'])) {
+            // split URL
+            $url = rtrim($_GET['url'], '/');
+            $url = filter_var($url, FILTER_SANITIZE_URL);
+            $url = explode('/', $url);
+            $controller=(isset($url[2])?$url[2]:((isset($url[1]) ? $url[1] : null)));
+            $this->view->controller = $controller;
+        }
     }
 
 }

@@ -29,6 +29,7 @@ class recipe extends controller {
         $this->view->recipe = $login_model->getSpecificRecipe(base64_decode($recipe_id));
         $this->view->recipe_items = $login_model->getItemsSpecificrecipe(base64_decode($recipe_id));
         $this->view->items = $login_model_item->getAllActiveItem();
+        $this->view->history = $login_model->history(base64_decode($recipe_id));
         $this->view->render('recipe/view_recipe', true, true, $this->module);
     }
 
@@ -38,8 +39,6 @@ class recipe extends controller {
         $recipe = array();
         $login_model = $this->loadModel('recipe');
         if (!$recipe_name = $this->read->get("recipe_name", "POST", 'NUMERIC', 250, false))
-            $valid = false;
-        if (!$recipe_status = $this->read->get("recipe_status", "POST", 'STRING', 1, true))
             $valid = false;
         if (!$recipe_remark = $this->read->get("recipe_remark", "POST", '', 1500, false))
             $valid = false;
@@ -53,7 +52,7 @@ class recipe extends controller {
         if ($valid) {
             if (!empty($item_array)) {
                 array_push($recipe, $recipe_name);
-                array_push($recipe, $recipe_status);
+                array_push($recipe, 'A');
                 array_push($recipe, $recipe_remark);
                 array_push($recipe, $item_array);
                 if ($old_recipe_id) {
@@ -95,6 +94,49 @@ class recipe extends controller {
         } else {
             header('Location: ' . MOD_ADMIN_URL . "recipe");
         }
+    }
+
+    function jsonStatus($recipe_id = null, $stsus = null) {
+        $data = '';
+        if ($recipe_id && ($stsus == 'D' OR $stsus == 'A' OR $stsus == 'I')) {
+            $login_model = $this->loadModel('recipe');
+            $count = $login_model->recipeUsed($recipe_id);
+            if ($count > 0 && $stsus == 'D') {
+                 $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_RECIPE_DELETE_FAILED);
+            } else {
+                $item = $login_model->modifyStatus($recipe_id, $stsus);
+                if ($item) {
+                    $data = array('success' => true, 'data' => $item, 'error' => '');
+                } else {
+                    $data = array('success' => false, 'data' => '', 'error' => $this->view->renderFeedbackMessagesForJson());
+                }
+            }
+        } else {
+            $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_EMPTY_RECIPE_ID);
+        }
+        echo json_encode($data);
+    }
+
+    function jsonMode($recipe_id = null, $stsus = null) {
+        $data = '';
+        $login_model = $this->loadModel('recipe');
+        $mode = $login_model->getSpecificRecipe($recipe_id);
+        if ($mode->RECIPE_MODE == 'A' && $stsus == 'P') {
+            $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_INVALID_ACTION);
+        } else {
+            if ($recipe_id && ($stsus == 'P' OR $stsus == 'A')) {
+                $item = $login_model->modifyMode($recipe_id, $stsus);
+                if ($item) {
+                    $data = array('success' => true, 'data' => $item, 'error' => '');
+                } else {
+                    $data = array('success' => false, 'data' => '', 'error' => $this->view->renderFeedbackMessagesForJson());
+                }
+            } else {
+                $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_EMPTY_RECIPE_ID);
+            }
+        }
+
+        echo json_encode($data);
     }
 
 }

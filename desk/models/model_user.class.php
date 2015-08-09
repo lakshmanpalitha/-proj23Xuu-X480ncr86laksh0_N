@@ -7,7 +7,11 @@ class userModel extends model {
             SELECT 
                 * 
             FROM 
-                tbl_user ORDER BY USER_NAME DESC";
+                tbl_user 
+            WHERE 
+                USER_STATUS NOT IN ('D')
+            ORDER BY 
+                USER_NAME DESC";
         $result = $this->db->queryMultipleObjects($query);
         return ($result ? $result : false);
     }
@@ -22,7 +26,7 @@ class userModel extends model {
                 user.USER_EMAIL,
                 user.USER_STATUS,
                 (select 
-                    GROUP_CONCAT(ur.ROLE_ID SEPARATOR ', ')
+                    GROUP_CONCAT((SELECT ROLE_NAME FROM tbl_role WHERE ROLE_ID=ur.ROLE_ID) SEPARATOR ', ')
                  FROM 
                     tbl_user_role_mapping ur 
                  WHERE 
@@ -97,6 +101,16 @@ class userModel extends model {
             return $result_2 ? true : false;
         }
         return false;
+    }
+
+    function modifyStatus($user_id = null, $ststus = null) {
+        if (!$user_id OR !$ststus)
+            return false;
+        $query = "UPDATE tbl_user SET
+                        USER_STATUS= '" . mysql_real_escape_string($ststus) . "'
+                 WHERE USER_ID='" . mysql_real_escape_string($user_id) . "'";
+        $result = $this->db->execute($query);
+        return $result ? true : false;
     }
 
 }

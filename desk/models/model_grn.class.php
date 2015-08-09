@@ -50,6 +50,7 @@ class grnModel extends model {
                 gi.ITEM_ID, 
                 gi.ITEM_QUANTITY, 
                 gi.ITEM_AMOUNT,
+                gi.ITEM_TOTAL_AMOUNT,
                 gi.ITEM_EXP_DATE,
                 gi.ITEM_REMARK,
                 (SELECT UNIT_NAME FROM tbl_unit WHERE UNIT_CODE=im.ITEM_STOCK_UNIT) AS UNIT_NAME
@@ -77,12 +78,17 @@ class grnModel extends model {
                         '" . mysql_real_escape_string($grn[2]) . "',
                             '" . mysql_real_escape_string($grn[4]) . "',
                             '" . mysql_real_escape_string($grn[3]) . "',
-                        'S',
+                        'A',
                         NOW(),
+                        'S',
                         '" . session::get('user_email') . "'
             )";
             $result = $this->db->execute($query);
             if ($result) {
+                $history['log_ref_id'] = $primaryKey;
+                $history['log_user'] = session::get('user_email');
+                $history['log_task'] = 'Add new GRN';
+                $this->logHistory($history);
                 $values = null;
                 foreach ($grn[5] as $items) {
                     $values.= "(
@@ -90,8 +96,9 @@ class grnModel extends model {
                             '" . $items->item_id . "',
                                 '" . $items->item_qty . "',
                                  '" . $items->item_amt . "',
-                                '" . $items->item_exp . "',
-                         '" . $items->item_remark . "'),";
+                                '" . $items->item_exp . "',                            
+                         '" . $items->item_remark . "',
+                        '" . $items->item_tot . "'),";
                 }
                 $query_2 = "
                             INSERT INTO 
@@ -118,6 +125,10 @@ class grnModel extends model {
                  WHERE GRN_ID='" . mysql_real_escape_string($grn_id) . "'";
         $result = $this->db->execute($query);
         if ($result) {
+            $history['log_ref_id'] = $grn_id;
+            $history['log_user'] = session::get('user_email');
+            $history['log_task'] = 'Modify GRN';
+            $this->logHistory($history);
             $del_query = "DELETE FROM tbl_grn_item WHERE GRN_ID='" . mysql_real_escape_string($grn_id) . "'";
             $del_result = $this->db->execute($del_query);
             if ($del_result) {
@@ -128,8 +139,9 @@ class grnModel extends model {
                             '" . $items->item_id . "',
                                 '" . $items->item_qty . "',
                                  '" . $items->item_amt . "',
-                                '" . $items->item_exp . "',
-                         '" . $items->item_remark . "'),";
+                                '" . $items->item_exp . "',                              
+                         '" . $items->item_remark . "',
+                        '" . $items->item_tot . "'),";
                 }
                 $mod_query = "
                             INSERT INTO 
@@ -138,6 +150,56 @@ class grnModel extends model {
                 $mod_result = $this->db->execute($mod_query);
                 return $mod_result ? true : false;
             }
+        }
+        return false;
+    }
+
+    function modifyStatus($grn_id = null, $ststus = null) {
+        if (!$grn_id OR !$ststus)
+            return false;
+        $query = "UPDATE tbl_grn_master SET
+                        GRN_STATUS= '" . mysql_real_escape_string($ststus) . "'
+                 WHERE GRN_ID='" . mysql_real_escape_string($grn_id) . "'";
+        $result = $this->db->execute($query);
+        if ($result) {
+            $history['log_ref_id'] = $grn_id;
+            $history['log_user'] = session::get('user_email');
+            $history['log_task'] = 'GRN ' . ($ststus == 'A' ? 'Activated' : ($ststus == 'I' ? 'Inactivated' : 'Deleted'));
+            $this->logHistory($history);
+            return true;
+        }
+        return false;
+    }
+
+    function modifyMode($grn_id = null, $ststus = null) {
+        if (!$grn_id OR !$ststus)
+            return false;
+//        $query = "UPDATE tbl_grn_master SET
+//                        GRN_MODE= '" . mysql_real_escape_string($ststus) . "'
+//                 WHERE GRN_ID='" . mysql_real_escape_string($grn_id) . "'";
+
+        $query = " CALL  
+            PR_MODIFY_GRN_STATUS('" . mysql_real_escape_string($grn_id) . "','" . mysql_real_escape_string($ststus) . "',@RESPONSE)";
+        $this->db->execute($query);
+        $result = $this->db->queryUniqueValue("SELECT @RESPONSE");
+        if ($result) {
+            $history['log_ref_id'] = $grn_id;
+            $history['log_user'] = session::get('user_email');
+            $history['log_task'] = 'GRN ' . ($ststus == 'P' ? 'submited' : ($ststus == 'A' ? 'accepted' : ''));
+            $this->logHistory($history);
+            return true;
+        }
+        return false;
+    }
+
+    function history($grn_id) {
+        $res = $this->getLogHistory($grn_id);
+        return $res ? $res : false;
+    }
+
+    function addGrnStock($grn_id) {
+        if ($grn_id) {
+            
         }
         return false;
     }

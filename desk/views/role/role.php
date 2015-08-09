@@ -48,6 +48,9 @@
                                         <i class="entypo-pencil"></i>
                                         View
                                     </a>
+                                    <a href="javascript:;" onclick="deleteRole('<?php echo ($rol->ROLE_ID) ?>')" class="btn btn-danger btn-xs btn-icon icon-left">
+                                        <i class="entypo-pencil"></i>Delete
+                                    </a>
                                 </td>
                             </tr>
                             <?php
@@ -133,6 +136,26 @@
                         jQuery('#modal-6').modal('show', {backdrop: 'static'});
                     } catch (err) {
                         alert(err.message);
+                    }
+                }
+                function deleteRole(val) {
+                    try {
+                        if (doConfirm('Are you confirm to delete role?')) {
+                            ajaxRequest('<?php echo MOD_ADMIN_URL ?>role/jsonStatus/' + val + '/D/', '', function(jsonData) {
+                                if (jsonData) {
+                                    if (jsonData.success == true) {
+                                        jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>role');
+                                    } else {
+                                        errorModal(jsonData.error);
+                                        return false;
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    catch (err) {
+                        alert(err.message);
+                        return false;
                     }
                 }
 
@@ -264,7 +287,7 @@
                                 if (jsonData.success == true) {
                                     jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>role');
                                 } else {
-                                    alert(jsonData.error)
+                                    errorModal(jsonData.error);
                                     return false;
                                 }
                             }

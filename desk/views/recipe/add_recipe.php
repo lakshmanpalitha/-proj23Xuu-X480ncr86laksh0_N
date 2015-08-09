@@ -27,24 +27,15 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div style="border:none !important;text-align:right;" class="panel panel-primary">
-                            <button type="button" class="btn btn-gold btn-icon icon-left disabled">
-                                Pending
-                                <i class="entypo-info"></i>
-                            </button>
                             <button class="btn btn-green btn-sm" type="submit" type="button">Save</button>         
-                            <button class="btn btn-blue btn-sm" type="button">Submit</button>
-                            <button class="btn btn-danger btn-sm" type="button">Cancel</button>
                         </div>
                     </div>
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <div class="panel-title">Add New Recipe</div>
-                        <div class="panel-options">
-                            <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a>
-                            <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                            <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
-                            <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>
+                        <div class="panel-title">
+                            Add New Recipe &nbsp; &nbsp;
+                            <button class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">New<i class="entypo-info"></i></button>
                         </div>
                     </div>
                     <div class="panel-body">
@@ -52,18 +43,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="control-label">Name</label>
-                                    <input type="text" class="form-control" name="recipe_name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="col-sm-0 control-label">Status</label>
-                                    <div>
-                                        <select name="recipe_status" class="form-control">
-                                            <option value="A">Active</option>
-                                            <option value="I">Inactive</option>
-                                        </select>
-                                    </div>
+                                    <input type="text" class="form-control" name="recipe_name" data-validate="required" data-message-required="Product name is required field." placeholder="Required Field" />
                                 </div>
                             </div>
                         </div>  
@@ -78,12 +58,6 @@
                                     <!-- panel head -->
                                     <div class="panel-heading">
                                         <div class="panel-title">Recipe Items</div>
-                                        <div class="panel-options">
-                                            <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a>
-                                            <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                                            <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
-                                            <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>
-                                        </div>
                                     </div>
                                     <!-- panel body -->
                                     <div class="panel-body">
@@ -94,6 +68,7 @@
                                                         <tr>
                                                             <th>Item Name</th>
                                                             <th>Quantity</th>
+                                                            <th>Remark</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
@@ -123,7 +98,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label" for="about">Recipe Remark</label>
-                                    <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="recipe_remark" id="about" data-validate="minlength[10]" rows="5" placeholder="Could be used also as Motivation Letter"></textarea>
+                                    <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="recipe_remark" id="about" data-validate="" rows="5" placeholder="Product Remark"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -135,40 +110,6 @@
                     </div>
                 </div>
             </form>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-gray" data-collapsed="0">
-                        <!-- panel head -->
-                        <div class="panel-heading">
-                            <div class="panel-title">Recipe Comments</div>
-                            <div class="panel-options">
-                                <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a>
-                                <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                                <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
-                                <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>
-                            </div>
-                        </div>
-                        <!-- panel body -->
-                        <div class="panel-body">
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label" for="about">New Comment</label>
-                                        <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="about" id="about" data-validate="minlength[10]" rows="5" placeholder="Could be used also as Motivation Letter"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <button class="btn btn-blue btn-sm" type="button">Publish</button>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <!--Add footer-->
             <?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
             <!--############-->
@@ -191,12 +132,12 @@
 
                                 <div class="form-group">
                                     <label class="control-label">Item Code</label>
-                                    <select name="recipe_item" id="recipe_item" onchange="getItemStockUnit(this)" class="select2" data-allow-clear="true" data-placeholder="Select item">
+                                    <select name="recipe_item" id="recipe_item" onchange="getItemIssueUnit(this)" class="select2" data-allow-clear="true" data-placeholder="Select item">
                                         <?php
                                         if (!empty($this->items)) {
                                             foreach ($this->items as $item) {
                                                 ?>
-                                                <option value="<?php echo $item->ITEM_ID ?>" ><?php echo $item->ITEM_NAME ?></option>
+                                                <option myTag='<?php echo base64_encode( $item->ITEM_ID) ?>' value="<?php echo $item->ITEM_ID ?>" ><?php echo $item->ITEM_NAME ?></option>
                                                 <?php
                                             }
                                         }
@@ -208,7 +149,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Quantity (<span id="stock_unit"></span>)</label>
-                                    <input name="recipe_item_qty" id="recipe_item_qty" type="text" class="form-control"  data-validate="required,number" placeholder="Numeric Field" />
+                                    <input name="recipe_item_qty" id="recipe_item_qty" type="text" class="form-control"  data-validate="required,number" placeholder="Required Numeric Field" />
                                 </div>	
                             </div>  
                         </div>
@@ -216,7 +157,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label" for="about">Recipe Item Remark</label>
-                                    <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="recipe_item_remark" id="recipe_item_remark"  rows="5" placeholder="Could be used also as Motivation Letter"></textarea>
+                                    <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="recipe_item_remark" id="recipe_item_remark"  rows="5" placeholder="Item Remark"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -231,18 +172,18 @@
         </div>
     </div>
     <script type="text/javascript">
-    function getItemStockUnit(e)
+    function getItemIssueUnit(e)
     {
         try {
             var param = "item_id=" + e.value;
-            ajaxRequest('<?php echo MOD_ADMIN_URL ?>item/jsonGetItemStockUnit', param, function(jsonData) {
+            ajaxRequest('<?php echo MOD_ADMIN_URL ?>item/jsonGetItemIssueUnit', param, function(jsonData) {
 
                 if (jsonData) {
                     if (jsonData.success == true) {
                         document.getElementById('stock_unit').innerHTML = "<b>" + jsonData.data + "</b>";
 
                     } else {
-                        alert(jsonData.error)
+                        errorModal(jsonData.error);
                         return false;
                     }
                 }
@@ -258,6 +199,7 @@
 
         try {
             var item_id = jQuery('#recipe_item').val();
+            var myTag = jQuery('#recipe_item option:selected').attr('myTag');
             if (typeof recipe_items[item_id] === 'undefined') {
                 recipe_items[item_id] = new Array();
                 recipe_items[item_id] = {
@@ -266,9 +208,11 @@
                     item_remark: jQuery('#recipe_item_remark').val()
                 };
                 var row = '<tr>';
-                row = row + '<td>' + jQuery('#recipe_item option:selected').text() + '</td>';
-                row = row + '<td>' + jQuery('#recipe_item_qty').val() + '</td>';
-                row = row + '<td><a href="javascript:;" onclick=viewItem("' + item_id + '",this) class="btn btn-gold btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>View</a> &nbsp <a href="javascript:;" onclick=deleteItemRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
+                row = row + '<td><a target="_blank" href="<?php echo MOD_ADMIN_URL ?>item/viewItem/' + myTag + '"><u>' + jQuery('#recipe_item option:selected').text() + '</u></a></td>';
+                row = row + '<td>' + jQuery('#recipe_item_qty').val() + '&nbsp (' + jQuery('#stock_unit').html() + ')</td>';
+                row = row + '<td>' + jQuery('#recipe_item_remark').val() + '</td>';
+                //<a href="javascript:;" onclick=viewItem("' + item_id + '",this) class="btn btn-gold btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>View</a> &nbsp 
+                row = row + '<td><a href="javascript:;" onclick=deleteItemRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
                 row = row + '</tr>';
                 jQuery("#table-1 tbody").prepend(row);
                 jQuery('#modal-6').modal('hide');
@@ -324,7 +268,7 @@
                     if (jsonData.success == true) {
                         jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>recipe');
                     } else {
-                        alert(jsonData.error)
+                        errorModal(jsonData.error);
                         return false;
                     }
                 }

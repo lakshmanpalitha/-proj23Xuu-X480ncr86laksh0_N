@@ -51,7 +51,7 @@ class recipeModel extends model {
                 ri.ITEM_ID, 
                 ri.RECIPE_ITEM_QUANTITY, 
                 ri.RECIPE_ITEM_REMARK,
-                (SELECT UNIT_NAME FROM tbl_unit WHERE UNIT_CODE=im.ITEM_ISSUE_UNIT) AS UNIT_NAME
+                (SELECT UNIT_NAME FROM tbl_unit WHERE UNIT_CODE=im.ITEM_STOCK_UNIT) AS UNIT_NAME
             FROM 
                 tbl_recipe_item ri, 
                 tbl_item_master im 

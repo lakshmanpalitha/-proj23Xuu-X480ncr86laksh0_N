@@ -10,7 +10,7 @@ class productModel extends model {
                 tbl_product_master pm,
                 tbl_unit u
              WHERE
-                pm.PRODUCT_MODE NOT IN ('D')
+                pm.PRODUCT_STATUS NOT IN ('D')
                 AND u.UNIT_CODE=pm.UNIT_CODE";
 
         $result = $this->db->queryMultipleObjects($query);
@@ -25,7 +25,7 @@ class productModel extends model {
                 tbl_product_master pm,
                 tbl_unit u
              WHERE
-                pm.PRODUCT_MODE NOT IN ('D')
+                pm.PRODUCT_MODE IN ('A')
                 AND pm.PRODUCT_STATUS IN ('A')
                 AND u.UNIT_CODE=pm.UNIT_CODE";
         $result = $this->db->queryMultipleObjects($query);
@@ -44,7 +44,6 @@ class productModel extends model {
              WHERE
                 pm.PRODUCT_ID='" . mysql_real_escape_string($product_id) . "'
                 AND pm.PRODUCT_MODE NOT IN ('D')
-                AND pm.PRODUCT_STATUS IN ('A')
                 AND u.UNIT_CODE=pm.UNIT_CODE";
         $result = $this->db->queryUniqueObject($query);
         return ($result ? $result : false);
@@ -71,7 +70,8 @@ class productModel extends model {
             SELECT 
                 pm.ITEM_ID,
                 im.ITEM_NAME,
-                pm.PRODUCT_ITEM_QUANTITY
+                pm.PRODUCT_ITEM_QUANTITY,
+                (SELECT UNIT_NAME FROM tbl_unit WHERE UNIT_CODE=im.ITEM_ISSUE_UNIT) AS UNIT_NAME
             FROM 
                 tbl_product_mat_item pm,
                 tbl_item_master im
@@ -117,6 +117,10 @@ class productModel extends model {
             )";
             $result = $this->db->execute($query);
             if ($result) {
+                $history['log_ref_id'] = $primaryKey;
+                $history['log_user'] = session::get('user_email');
+                $history['log_task'] = 'Add new product';
+                $this->logHistory($history);
                 $result_2 = true;
                 if (!empty($product[3])) {
                     $values = null;
@@ -173,6 +177,10 @@ class productModel extends model {
                  WHERE PRODUCT_ID='" . mysql_real_escape_string($product_id) . "'";
         $result = $this->db->execute($query);
         if ($result) {
+            $history['log_ref_id'] = $product_id;
+            $history['log_user'] = session::get('user_email');
+            $history['log_task'] = 'Modify product';
+            $this->logHistory($history);
             $del_query = "DELETE FROM tbl_product_mat_item WHERE PRODUCT_ID='" . mysql_real_escape_string($product_id) . "'";
             $del_result = $this->db->execute($del_query);
 
@@ -221,6 +229,60 @@ class productModel extends model {
             }
         }
         return false;
+    }
+
+    function modifyStatus($product_id = null, $ststus = null) {
+        if (!$product_id OR !$ststus)
+            return false;
+        $query = "UPDATE tbl_product_master SET
+                        PRODUCT_STATUS= '" . mysql_real_escape_string($ststus) . "'
+                 WHERE PRODUCT_ID='" . mysql_real_escape_string($product_id) . "'";
+        $result = $this->db->execute($query);
+        if ($result) {
+            $history['log_ref_id'] = $product_id;
+            $history['log_user'] = session::get('user_email');
+            $history['log_task'] = 'Product ' . ($ststus == 'A' ? 'Activated' : ($ststus == 'I' ? 'Inactivated' : 'Deleted'));
+            $this->logHistory($history);
+            return true;
+        }
+        return false;
+    }
+
+    function modifyMode($product_id = null, $ststus = null) {
+        if (!$product_id OR !$ststus)
+            return false;
+        $query = "UPDATE tbl_product_master SET
+                        PRODUCT_MODE= '" . mysql_real_escape_string($ststus) . "'
+                 WHERE PRODUCT_ID='" . mysql_real_escape_string($product_id) . "'";
+        $result = $this->db->execute($query);
+        if ($result) {
+            $history['log_ref_id'] = $product_id;
+            $history['log_user'] = session::get('user_email');
+            $history['log_task'] = 'Product ' . ($ststus == 'P' ? 'submited' : ($ststus == 'A' ? 'accepted' : ''));
+            $this->logHistory($history);
+            return true;
+        }
+        return false;
+    }
+
+    function history($product_id) {
+        $res = $this->getLogHistory($product_id);
+        return $res ? $res : false;
+    }
+
+    function productUsed($product_id) {
+        if ($product_id) {
+            $query = "
+            SELECT 
+                COUNT(PRODUCT_ID) 
+            FROM 
+                tbl_batch
+             WHERE
+                PRODUCT_ID='" . mysql_real_escape_string($product_id) . "'
+                AND BATCH_STATUS NOT IN ('D')";
+            $result = $this->db->queryUniqueValue($query);
+            return ($result ? $result : false);
+        }
     }
 
 }

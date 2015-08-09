@@ -1,4 +1,4 @@
-
+<div style="display: none;" id="overlay"></div>
 <div class="sidebar-menu">
 
     <div class="sidebar-menu-inner">
@@ -38,29 +38,32 @@
             <?php
             if (!empty($this->display_user_module_array)) {
                 foreach ($this->display_user_module_array as $mod) {
-                    
-                    ?>
-
+                    if (is_array($mod['DOC'])) {
+                        $html = '';
+                        $ul_active = '';
+                        foreach ($mod['DOC'] as $doc) {
+                            $li_active = false;
+                            $str=explode("/",$doc['URL']);
+                            $controller=(isset($str[1])?$str[1]:$str[0]);
+                            if (strtolower($this->controller) == strtolower($controller)) {
+                                $li_active = true;
+                                $ul_active = $mod['MOD'];
+                            }
+                            $html.='<li class="' . ($li_active ? "active" : "") . '">
+                                <a href="' . MOD_ADMIN_URL . $doc['URL'] . '">
+                                    <span class="title">' . ($li_active ? "<b>" . $doc['NAME'] . "</b>" : $doc['NAME']) . '</span>
+                                </a>
+                            </li>';
+                        }
+                    }
+                    ?>    
                     <li>
                         <a href="index.html">
                             <i class="<?php echo $mod['MOD_ICON'] ?>"></i>
                             <span class="title"><?php echo $mod['MOD'] ?></span>
                         </a>
-
-                        <ul>
-                            <?php
-                            if (is_array($mod['DOC'])) {
-                                foreach ($mod['DOC'] as $doc) {
-                                    ?>
-                                    <li class="active">
-                                        <a href="<?php echo MOD_ADMIN_URL . strtolower($doc) ?>">
-                                            <span class="title"><?php echo $doc ?></span>
-                                        </a>
-                                    </li>
-                                <?php
-                                }
-                            }
-                            ?>
+                        <ul class="<?php echo ($mod['MOD'] == $ul_active ? "visible" : "") ?>">
+                            <?php echo $html; ?>
                         </ul>
                     </li>
                     <?php

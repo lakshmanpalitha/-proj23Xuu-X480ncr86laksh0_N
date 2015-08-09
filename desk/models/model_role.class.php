@@ -105,6 +105,16 @@ class roleModel extends model {
         return ($result ? $result : false);
     }
 
+    function modifyStatus($role_id = null, $ststus = null) {
+        if (!$role_id OR !$ststus)
+            return false;
+        $query = "UPDATE tbl_role SET
+                        ROLE_STATUS= '" . mysql_real_escape_string($ststus) . "'
+                 WHERE ROLE_ID='" . mysql_real_escape_string($role_id) . "'";
+        $result = $this->db->execute($query);
+        return $result ? true : false;
+    }
+
 }
 
 ?>

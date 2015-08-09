@@ -29,8 +29,6 @@ class user extends controller {
             $valid = false;
         if (!$user_re_pwd = $this->read->get("re_pwd", "POST", '', '', true))
             $valid = false;
-        if (!$user_status = $this->read->get("status", "POST", 'STRING', 1, true))
-            $valid = false;
         if (!$user_id = $this->read->get("user_id", "POST", '', 20, false))
             $valid = false;
         $user_id = (is_bool($user_id) ? '' : ($user_id));
@@ -45,7 +43,7 @@ class user extends controller {
                 array_push($user, $user_name);
                 array_push($user, $user_email);
                 array_push($user, $user_pwd);
-                array_push($user, $user_status);
+                array_push($user, 'A');
                 array_push($user, $user_role);
                 if ($user_id) {
                     $res = $login_model->modifyUser($user_id, $user);
@@ -76,6 +74,22 @@ class user extends controller {
             }
         } else {
             $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_EMPTY_VENDOR_ID);
+        }
+        echo json_encode($data);
+    }
+
+    function jsonStatus($user_id = null, $stsus = null) {
+        $data = '';
+        if ($user_id && ($stsus == 'D' OR $stsus == 'A' OR $stsus == 'I')) {
+            $login_model = $this->loadModel('user');
+            $item = $login_model->modifyStatus($user_id, $stsus);
+            if ($item) {
+                $data = array('success' => true, 'data' => $item, 'error' => '');
+            } else {
+                $data = array('success' => false, 'data' => '', 'error' => $this->view->renderFeedbackMessagesForJson());
+            }
+        } else {
+            $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_EMPTY_USER_ID);
         }
         echo json_encode($data);
     }

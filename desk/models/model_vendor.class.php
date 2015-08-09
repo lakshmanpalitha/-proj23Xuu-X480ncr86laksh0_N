@@ -7,7 +7,11 @@ class vendorModel extends model {
             SELECT 
                 * 
             FROM 
-                tbl_vendor ORDER BY VENDOR_NAME DESC";
+                tbl_vendor 
+            WHERE
+             VENDOR_STATUS NOT IN ('D')
+            ORDER 
+            BY VENDOR_NAME DESC";
         $result = $this->db->queryMultipleObjects($query);
         return ($result ? $result : false);
     }
@@ -82,6 +86,31 @@ class vendorModel extends model {
                  WHERE VENDOR_ID='" . mysql_real_escape_string($vendor_id) . "'";
         $result = $this->db->execute($query);
         return $result ? true : false;
+    }
+
+    function modifyStatus($vendor_id = null, $ststus = null) {
+        if (!$vendor_id OR !$ststus)
+            return false;
+        $query = "UPDATE tbl_vendor SET
+                        VENDOR_STATUS= '" . mysql_real_escape_string($ststus) . "'
+                 WHERE VENDOR_ID='" . mysql_real_escape_string($vendor_id) . "'";
+        $result = $this->db->execute($query);
+        return $result ? true : false;
+    }
+
+    function vendorUsed($vendor_id) {
+        if ($vendor_id) {
+            $query = "
+            SELECT 
+                COUNT(VENDOR_ID) 
+            FROM 
+                tbl_grn_master
+             WHERE
+                VENDOR_ID='" . mysql_real_escape_string($vendor_id) . "'
+                AND GRN_STATUS NOT IN ('D')";
+            $result = $this->db->queryUniqueValue($query);
+            return ($result ? $result : false);
+        }
     }
 
 }

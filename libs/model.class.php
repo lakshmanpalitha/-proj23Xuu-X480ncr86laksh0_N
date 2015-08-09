@@ -25,7 +25,8 @@ class model extends common {
                 MD.MODULE_NAME,
                 DT.DOC_TYPE_NAME,
                 RDM.PERMISSION_LEVEL,
-                MD.MODULE_ICON
+                MD.MODULE_ICON,
+                DT.DOC_TYPE_URL
             FROM 
                 tbl_user_role_mapping RM,
                 tbl_role_document_type_mapping RDM, 
@@ -67,6 +68,41 @@ class model extends common {
             return $key ? $key : false;
         }
         return false;
+    }
+
+    function logHistory($history = array()) {
+        if (is_array($history) && !empty($history)) {
+            $primaryKey = $this->primaryKeyGenarator('tbl_logs', 'LOG_ID');
+            if ($primaryKey) {
+                $primaryKey = 'LOG' . $primaryKey;
+                $query = "
+            INSERT INTO 
+            tbl_logs
+            VALUES(
+            '" . mysql_real_escape_string($primaryKey) . "',
+                 '" . mysql_real_escape_string($history['log_ref_id']) . "',
+                     '" . mysql_real_escape_string($history['log_user']) . "',
+                        '" . mysql_real_escape_string($history['log_task']) . "',
+                        NOW()
+            )";
+                $result = $this->db->execute($query);
+                return ($result ? true : false);
+            }
+        }
+    }
+
+    function getLogHistory($ref_id) {
+        if (empty($ref_id))
+            return false;
+        $query = "
+            SELECT 
+                * 
+            FROM 
+                tbl_logs
+             WHERE
+                LOG_REF_ID='" . mysql_real_escape_string($ref_id) . "'";
+        $result = $this->db->queryMultipleObjects($query);
+        return ($result ? $result : false);
     }
 
 }

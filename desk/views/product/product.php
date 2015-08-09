@@ -37,7 +37,6 @@
                         <th>Product Quantity</th>
                         <th>Product Quantity Unit</th>
                         <th>Product Created Date</th>
-                        <th>Product Status</th>
                         <th>Product Mode</th>
                         <th>Action</th>
                     </tr>
@@ -47,7 +46,7 @@
                     if (!empty($this->products)) {
                         foreach ($this->products as $product) {
                             ?>
-                            <tr class="odd gradeX">
+                            <tr style="<?php echo ($product->PRODUCT_STATUS == 'I' ? 'background-color: mistyrose;' : '') ?>" class="odd gradeX">
                                 <td><?php echo $product->PRODUCT_ID ?></td>
                                 <td><?php echo $product->PRODUCT_NAME ?></td>
                                 <td><?php echo $product->PRODUCT_QUANTITY ?></td>
@@ -55,23 +54,12 @@
                                 <td><?php echo $product->PRODUCT_CREATE_DATE ?></td>
                                 <td>
                                     <?php
-                                    echo ($product->PRODUCT_STATUS == 'A' ? '
-                                        <button class="btn btn-green btn-icon icon-left  btn-xs" type="button">
-                                            Active<i class="entypo-check"></i>
-                                        </button>' :
-                                            '<button class="btn btn-gold btn-icon icon-left  btn-xs" type="button">
-                                                Inactive<i class="entypo-cancel"></i>
-                                         </button>')
-                                    ?>
-                                </td>
-                                <td>
-                                    <?php
                                     if ($product->PRODUCT_MODE == 'S') {
                                         echo '
                                             <button class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">
                                             Draft<i class="entypo-check"></i>
                                             </button>';
-                                    } else if ($product->PRODUCT_MODE == 'o') {
+                                    } else if ($product->PRODUCT_MODE == 'P') {
                                         echo '
                                             <button class="btn btn-blue btn-icon icon-left  btn-xs" type="button">
                                                 Submit<i class="entypo-cancel"></i>
@@ -89,9 +77,18 @@
                                         <i class="entypo-pencil"></i>
                                         View
                                     </a>
+                                    <a href="javascript:;" onclick="modifyStatus('<?php echo ($product->PRODUCT_ID) ?>', 'D')" class="btn btn-danger btn-xs btn-icon icon-left">
+                                        <i class="entypo-pencil"></i>Delete
+                                    </a>
+                                    <?php if ($product->PRODUCT_MODE == 'A') { ?>
+                                        <a href="javascript:;" onclick="modifyStatus('<?php echo ($product->PRODUCT_ID) ?>', '<?php echo ($product->PRODUCT_STATUS == 'A') ? 'I' : 'A' ?>')" class="btn btn-<?php echo ($product->PRODUCT_STATUS == 'A') ? 'green' : 'gold' ?> btn-xs btn-icon icon-left">
+                                            <i class="entypo-pencil"></i><?php echo ($product->PRODUCT_STATUS == 'A') ? 'Active' : 'Inactive' ?>
+                                        </a>
+                                    <?php } ?>
                                 </td>
                             </tr>
-                        <?php }
+                            <?php
+                        }
                     }
                     ?>
                 </tbody>
@@ -138,18 +135,38 @@
                 function showAjaxModal()
                 {
                     jQuery('#modal-6').modal('show', {backdrop: 'static'});
-
-                    jQuery.ajax({
-                        url: "data/ajax-content.txt",
-                        success: function(response)
-                        {
-                            jQuery('#modal-7 .modal-body').html(response);
+                }
+                function modifyStatus(val, ststus) {
+                    try {
+                        var str = '';
+                        if (ststus == 'A') {
+                            str = 'active';
+                        } else if (ststus == 'I') {
+                            str = 'inactive';
+                        } else if (ststus == 'D') {
+                            str = 'delete';
                         }
-                    });
+                        if (doConfirm('Are you confirm to ' + str + ' product?')) {
+                            ajaxRequest('<?php echo MOD_ADMIN_URL ?>product/jsonStatus/' + val + '/' + ststus + '/', '', function(jsonData) {
+                                if (jsonData) {
+                                    if (jsonData.success == true) {
+                                        jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>product');
+                                    } else {
+                                        errorModal(jsonData.error);
+                                        return false;
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    catch (err) {
+                        alert(err.message);
+                        return false;
+                    }
                 }
             </script>
             <!--Add footer-->
-<?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
+            <?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
             <!--############-->
         </div>
     </div>

@@ -32,10 +32,9 @@
             <table class="table table-bordered datatable" id="table-1">
                 <thead>
                     <tr>
-                        <th data-hide="phone">Name</th>
+                        <th>Name</th>
                         <th>Email</th>
-                        <th data-hide="phone">Status</th>
-                        <th data-hide="phone,tablet">Last Login</th>
+                        <th>Last Login</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -44,24 +43,22 @@
                     if (!empty($this->users)) {
                         foreach ($this->users as $users) {
                             ?>
-                            <tr class="odd gradeX">
+                            <tr style="<?php echo ($users->USER_STATUS == 'I' ? 'background-color: mistyrose;' : '') ?>" class="odd gradeX">
                                 <td><?php echo $users->USER_NAME ?></td>
                                 <td><?php echo $users->USER_EMAIL ?></td>
-                                <td><?php
-                                    echo ($users->USER_STATUS == 'A' ? '
-                                        <button class="btn btn-green btn-icon icon-left  btn-xs" type="button">
-                                            Active<i class="entypo-check"></i>
-                                        </button>' :
-                                            '<button class="btn btn-gold btn-icon icon-left  btn-xs" type="button">
-                                                Inactive<i class="entypo-cancel"></i>
-                                         </button>')
-                                    ?></td>
                                 <td><?php echo $users->USER_LAST_LOG ?></td>
                                 <td class="center">
                                     <a href="javascript:;" onclick="showAjaxViewModal('<?php echo $users->USER_ID ?>');" class="btn btn-default btn-xs btn-icon icon-left">
                                         <i class="entypo-pencil"></i>
                                         View
                                     </a>
+                                    <a href="javascript:;" onclick="modifyStatus('<?php echo ($users->USER_ID) ?>', 'D')" class="btn btn-danger btn-xs btn-icon icon-left">
+                                        <i class="entypo-pencil"></i>Delete
+                                    </a>
+                                    <a href="javascript:;" onclick="modifyStatus('<?php echo ($users->USER_ID) ?>', '<?php echo ($users->USER_STATUS == 'A') ? 'I' : 'A' ?>')" class="btn btn-<?php echo ($users->USER_STATUS == 'A') ? 'green' : 'gold' ?> btn-xs btn-icon icon-left">
+                                        <i class="entypo-pencil"></i><?php echo ($users->USER_STATUS == 'A') ? 'Active' : 'Inactive' ?>
+                                    </a>
+
                                 </td>
                             </tr>
                             <?php
@@ -121,16 +118,16 @@
                                     jQuery('#user_name').val(jsonData.data.USER_NAME);
                                     jQuery('#user_email').val(jsonData.data.USER_EMAIL);
                                     jQuery('#status').val(jsonData.data.USER_STATUS);
-                                    var user_role = jsonData.data.user_role.split(",")
+                                    var user_role = jsonData.data.user_role.split(",");
+                                    var role = '';
                                     if (user_role) {
-//                                        for (var i = 0; i < user_role.length; i++) {
-//                                            var role = user_role[i].replace(/\s/g, '');
-//                                            jQuery("#" + role + "-selectable").css("display", "none");
-//                                            jQuery("#" + role + "-selection").css("display", "");
-//                                            jQuery("#" + role + "-selection").addClass(" ms-selected");
-//                                            jQuery("#" + role + "-selectable").addClass(" ms-selected");
-//                                        }
+                                        role = "<ul>";
+                                        for (var i = 0; i < user_role.length; i++) {
+                                            role = role + "<li>" + user_role[i] + "</li>";
+                                        }
+                                        var role = role + "</ul>";
                                     }
+                                    jQuery('#usersRoles').html(role);
                                 }
                             }
                         });
@@ -146,6 +143,35 @@
                         jQuery('#modal-6').modal('show', {backdrop: 'static'});
                     } catch (err) {
                         alert(err.message);
+                    }
+                }
+
+                function modifyStatus(val, ststus) {
+                    try {
+                        var str = '';
+                        if (ststus == 'A') {
+                            str = 'active';
+                        } else if (ststus == 'I') {
+                            str = 'inactive';
+                        } else if (ststus == 'D') {
+                            str = 'delete';
+                        }
+                        if (doConfirm('Are you confirm to ' + str + ' user?')) {
+                            ajaxRequest('<?php echo MOD_ADMIN_URL ?>user/jsonStatus/' + val + '/' + ststus + '/', '', function(jsonData) {
+                                if (jsonData) {
+                                    if (jsonData.success == true) {
+                                        jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>user');
+                                    } else {
+                                        errorModal(jsonData.error);
+                                        return false;
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    catch (err) {
+                        alert(err.message);
+                        return false;
                     }
                 }
 
@@ -205,25 +231,11 @@
                                     <input type="password" class="form-control" id="re_pwd" name="re_pwd" data-validate="required" placeholder="Numeric Field" />
                                 </div>	
                             </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-sm-0 control-label">Status</label>
-
-                                    <div>
-                                        <select id="status" name="status" class="form-control">
-                                            <option value="A">Active</option>
-                                            <option value="I">Inactive</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-8">
                                 <div class="form-group">
-                                    <label class="control-label">Role</label>
+                                    <label class="control-label">Add / Modify Role(s)</label>
                                     <select id="user_role" multiple="multiple" name="user_role[]" class="form-control multi-select">
                                         <?php
                                         if (!empty($this->role)) {
@@ -235,6 +247,12 @@
                                         }
                                         ?>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">User's assigned role(s)</label>
+                                    <span id='usersRoles'></span>
                                 </div>
                             </div>
                         </div>
@@ -258,7 +276,7 @@
                         if (jsonData.success == true) {
                             jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>user');
                         } else {
-                            alert(jsonData.error)
+                            errorModal(jsonData.error);
                             return false;
                         }
                     }

@@ -19,7 +19,7 @@
                     <a href="<?php echo MOD_ADMIN_URL ?>product">Product</a>
                 </li>
                 <li>
-                    <a href="<?php echo MOD_ADMIN_URL ?>product/viewProduct">View Product</a>
+                    <a href="<?php echo MOD_ADMIN_URL ?>product/viewProduct/<?php echo (isset($this->product->PRODUCT_ID) ? base64_encode($this->product->PRODUCT_ID) : '') ?>">View Product</a>
                 </li>
             </ol>
 
@@ -30,13 +30,9 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div style="border:none !important;text-align:right;" class="panel panel-primary">
-                                <button type="button" class="btn btn-gold btn-icon icon-left disabled">
-                                    Pending
-                                    <i class="entypo-info"></i>
-                                </button>
-                                <button class="btn btn-green btn-sm" type="submit" type="button">Modify</button>     
-                                <button class="btn btn-blue btn-sm" type="button">Submit</button>
-                                <button class="btn btn-danger btn-sm" type="button">Accept</button>
+                                <?php echo (($this->product->PRODUCT_MODE == 'S' OR $this->product->PRODUCT_MODE == 'P') ? '<button class="btn btn-green btn-sm" type="submit" type="button">Modify</button>' : '') ?>
+                                <?php echo ($this->product->PRODUCT_MODE == 'S' ? '<button onclick=modifytProductMode("' . $this->product->PRODUCT_ID . '","P") class="btn btn-gold btn-sm"  type="button">Submit</button>' : '') ?>
+                                <?php echo ($this->product->PRODUCT_MODE == 'P' ? '<button onclick=modifytProductMode("' . $this->product->PRODUCT_ID . '","A") class="btn btn-blue btn-sm"  type="button">Accept</button>' : '') ?>
                                 <input type="hidden" name="old_product_id" value="<?php echo ($this->product->PRODUCT_ID) ?>" name=""/>
                             </div>
                         </div>
@@ -44,13 +40,25 @@
                     <div class="panel panel-info">
 
                         <div class="panel-heading">
-                            <div class="panel-title">Add New Product</div>
-
-                            <div class="panel-options">
-                                <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a>
-                                <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                                <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
-                                <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>
+                            <div class="panel-title">Add New Product&nbsp; &nbsp;
+                                <?php
+                                if ($this->product->PRODUCT_MODE == 'S') {
+                                    echo '
+                                            <button class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">
+                                            Draft<i class="entypo-info"></i>
+                                            </button>';
+                                } else if ($this->product->PRODUCT_MODE == 'P') {
+                                    echo '
+                                            <button class="btn btn-blue btn-icon icon-left  btn-xs" type="button">
+                                                Submit<i class="entypo-info"></i>
+                                            </button>';
+                                } else if ($this->product->PRODUCT_MODE == 'A') {
+                                    echo '
+                                            <button class="btn btn-green  btn-icon icon-left  btn-xs" type="button">
+                                                Accept<i class="entypo-info"></i>
+                                            </button>';
+                                }
+                                ?>
                             </div>
                         </div>
 
@@ -59,18 +67,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Name</label>
-                                        <input value="<?php echo $this->product->PRODUCT_NAME ?>" type="text" class="form-control" name="product_name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="col-sm-0 control-label">Status</label>
-                                        <div>
-                                            <select name="product_status" class="form-control">
-                                                <option  <?php echo ($this->product->PRODUCT_STATUS == 'A' ? 'selected' : '') ?> value="A">Active</option>
-                                                <option  <?php echo ($this->product->PRODUCT_STATUS == 'I' ? 'selected' : '') ?> value="I">Inactive</option>
-                                            </select>
-                                        </div>
+                                        <input value="<?php echo $this->product->PRODUCT_NAME ?>" type="text" class="form-control" name="product_name" data-validate="required" data-message-required="Product name is required field." placeholder="Required Field" />
                                     </div>
                                 </div>
                             </div>   
@@ -78,7 +75,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Product Unit Quantity</label>
-                                        <input value="<?php echo $this->product->PRODUCT_QUANTITY ?>" type="text" class="form-control" name="product_quantity" data-validate="required,number" data-message-required="" placeholder="Product Quantity" />
+                                        <input value="<?php echo $this->product->PRODUCT_QUANTITY ?>" type="text" class="form-control" name="product_quantity" data-validate="required,number" data-message-required="" placeholder="Required Numeric Field" />
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -111,13 +108,6 @@
                                         <!-- panel head -->
                                         <div class="panel-heading">
                                             <div class="panel-title">Product Recipe</div>
-
-                                            <div class="panel-options">
-                                                <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a>
-                                                <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                                                <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
-                                                <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>
-                                            </div>
                                         </div>
 
                                         <!-- panel body -->
@@ -129,6 +119,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>Recipe Name</th>
+                                                                <th>Remark</th>
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
@@ -151,11 +142,12 @@
                                                                     }
                                                                 </script>
                                                                 <tr>
-                                                                    <td><?php echo $product_recipe->RECIPE_NAME ?></td>
+                                                                    <td><a target="_blank" href="<?php echo MOD_ADMIN_URL ?>recipe/viewRecipe/<?php echo base64_encode($product_recipe->RECIPE_ID) ?>"><u><?php echo $product_recipe->RECIPE_NAME ?></u></a></td>
+                                                                    <td><?php echo $product_recipe->PRODUCT_RECIPE_REMARK ?></td>
                                                                     <td>
-                                                                        <a href="javascript:;" onclick="viewRecipe('<?php echo $product_recipe->RECIPE_ID ?>', this)" class="btn btn-gold btn-xs btn-icon icon-left">
+            <!--                                                                        <a href="javascript:;" onclick="viewRecipe('<?php echo $product_recipe->RECIPE_ID ?>', this)" class="btn btn-gold btn-xs btn-icon icon-left">
                                                                             <i class="entypo-pencil"></i>View
-                                                                        </a>  
+                                                                        </a>  -->
                                                                         <a href="javascript:;" onclick="deleteRecipeRow('<?php echo $product_recipe->RECIPE_ID ?>', this)" class="btn btn-danger btn-xs btn-icon icon-left">
                                                                             <i class="entypo-pencil"></i>Delete
                                                                         </a>
@@ -196,13 +188,6 @@
                                         <!-- panel head -->
                                         <div class="panel-heading">
                                             <div class="panel-title">Product Material</div>
-
-                                            <div class="panel-options">
-                                                <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a>
-                                                <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                                                <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
-                                                <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>
-                                            </div>
                                         </div>
 
                                         <!-- panel body -->
@@ -215,6 +200,7 @@
                                                             <tr>
                                                                 <th>Material Name</th>
                                                                 <th>Quantity</th>
+                                                                <th>Remark</th>
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
@@ -238,12 +224,13 @@
                                                                     }
                                                                 </script>
                                                                 <tr>
-                                                                    <td><?php echo $product_mat->ITEM_NAME ?></td>
-                                                                    <td><?php echo $product_mat->PRODUCT_ITEM_QUANTITY ?></td>
+                                                                    <td><a target="_blank" href="<?php echo MOD_ADMIN_URL ?>item/viewItem/<?php echo base64_encode($product_mat->ITEM_ID) ?>"><u><?php echo $product_mat->ITEM_NAME ?></u></a></td>
+                                                                    <td><?php echo $product_mat->PRODUCT_ITEM_QUANTITY ?>&nbsp(<?php echo $product_mat->UNIT_NAME ?>)</td>
+                                                                    <td><?php echo $product_mat->PRODUCT_ITEM_REMARK ?></td>
                                                                     <td>
-                                                                        <a href="javascript:;" onclick="viewItem('<?php echo $product_mat->ITEM_ID ?>', this)" class="btn btn-gold btn-xs btn-icon icon-left">
+            <!--                                                                        <a href="javascript:;" onclick="viewItem('<?php echo $product_mat->ITEM_ID ?>', this)" class="btn btn-gold btn-xs btn-icon icon-left">
                                                                             <i class="entypo-pencil"></i>View
-                                                                        </a>  
+                                                                        </a>  -->
                                                                         <a href="javascript:;" onclick="deleteItemRow('<?php echo $product_mat->ITEM_ID ?>', this)" class="btn btn-danger btn-xs btn-icon icon-left">
                                                                             <i class="entypo-pencil"></i>Delete
                                                                         </a>
@@ -283,7 +270,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="control-label" for="about">Product Remark</label>
-                                        <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="product_remark" id="about" data-validate="minlength[10]" rows="5" placeholder="Could be used also as Motivation Letter"><?php echo $this->product->PRODUCT_REMARK ?></textarea>
+                                        <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="product_remark" id="about" data-validate="" rows="5" placeholder="Product Remark"><?php echo $this->product->PRODUCT_REMARK ?></textarea>
                                     </div>
                                 </div>
 
@@ -302,35 +289,38 @@
 
                             <!-- panel head -->
                             <div class="panel-heading">
-                                <div class="panel-title">Product Comments</div>
-
-                                <div class="panel-options">
-                                    <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a>
-                                    <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                                    <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
-                                    <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>
-                                </div>
+                                <div class="panel-title">Product History</div>
                             </div>
 
                             <!-- panel body -->
                             <div class="panel-body">
+                                <ul class="cbp_tmtimeline">
+                                    <ul class="cbp_tmtimeline">
+                                        <?php
+                                        if (!empty($this->history)) {
+                                            foreach ($this->history as $his) {
+                                                $dateTime = explode(" ", $his->LOG_DATE);
+                                                $time = date('h:i:s A', strtotime($dateTime[1]));
+                                                $date = date('Y-M-d', strtotime($dateTime[0]));
+                                                ?>
+                                                <li>
+                                                    <time class="cbp_tmtime" datetime="2014-12-09T03:45"><span><?php echo $time ?></span> <span><?php echo $date ?></span></time>
+                                                    <div class="cbp_tmicon">
+                                                        <i class="entypo-user"></i>
+                                                    </div>
 
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="about">New Comment</label>
-                                            <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="about" id="about" data-validate="minlength[10]" rows="5" placeholder="Could be used also as Motivation Letter"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <button class="btn btn-blue btn-sm" type="button">Publish</button>
-
-                                    </div>
-                                </div>
+                                                    <div class="cbp_tmlabel">
+                                                        <h2><a href="#"><?php echo $his->LOG_USER ?></a></h2>
+                                                        <p><?php echo $his->LOG_TASK ?></p>
+                                                    </div>
+                                                </li>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                    </ul>
+                                </ul>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -366,7 +356,7 @@
                                         if (!empty($this->recipes)) {
                                             foreach ($this->recipes as $recipe) {
                                                 ?>
-                                                <option value="<?php echo $recipe->RECIPE_ID ?>" ><?php echo $recipe->RECIPE_NAME ?></option>
+                                                <option myTag='<?php echo base64_encode($recipe->RECIPE_ID) ?>' value="<?php echo $recipe->RECIPE_ID ?>" ><?php echo $recipe->RECIPE_NAME ?></option>
                                                 <?php
                                             }
                                         }
@@ -379,7 +369,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label" for="about">Recipe Remark</label>
-                                    <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="recipe_remark" id="recipe_remark"  rows="5" placeholder="Could be used also as Motivation Letter"></textarea>
+                                    <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="recipe_remark" id="recipe_remark"  rows="5" placeholder="Recipe Remark"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -408,12 +398,12 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="control-label">Material Name</label>
-                                    <select onchange="getItemStockUnit(this)" name="mat_id" id="mat_id" class="select2" data-allow-clear="true" data-placeholder="Select material">
+                                    <select onchange="getItemIssueUnit(this)" name="mat_id" id="mat_id" class="select2" data-allow-clear="true" data-placeholder="Select material">
                                         <?php
                                         if (!empty($this->items)) {
                                             foreach ($this->items as $item) {
                                                 ?>
-                                                <option value="<?php echo $item->ITEM_ID ?>" ><?php echo $item->ITEM_NAME ?></option>
+                                                <option myTag='<?php echo base64_encode( $item->ITEM_ID) ?>' value="<?php echo $item->ITEM_ID ?>" ><?php echo $item->ITEM_NAME ?></option>
                                                 <?php
                                             }
                                         }
@@ -424,7 +414,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Quantity (<span id="stock_unit"></span>)</label>
-                                    <input type="text" class="form-control" id="mat_qty" name="mat_qty" data-validate="required,number" placeholder="Numeric Field" />
+                                    <input type="text" class="form-control" id="mat_qty" name="mat_qty" data-validate="required,number" placeholder="Required Numeric Field" />
                                 </div>	
                             </div>  
                         </div>
@@ -432,7 +422,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label" for="about">Material Remark</label>
-                                    <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="mat_remark" id="mat_remark"  rows="5" placeholder="Could be used also as Motivation Letter"></textarea>
+                                    <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="mat_remark" id="mat_remark"  rows="5" placeholder="Material Remark"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -447,18 +437,18 @@
         </div>
     </div>
     <script type="text/javascript">
-                                                                    function getItemStockUnit(e)
+                                                                    function getItemIssueUnit(e)
                                                                     {
                                                                         try {
                                                                             var param = "item_id=" + e.value;
-                                                                            ajaxRequest('<?php echo MOD_ADMIN_URL ?>item/jsonGetItemStockUnit', param, function(jsonData) {
+                                                                            ajaxRequest('<?php echo MOD_ADMIN_URL ?>item/jsonGetItemIssueUnit', param, function(jsonData) {
 
                                                                                 if (jsonData) {
                                                                                     if (jsonData.success == true) {
                                                                                         document.getElementById('stock_unit').innerHTML = "<b>" + jsonData.data + "</b>";
 
                                                                                     } else {
-                                                                                        alert(jsonData.error)
+                                                                                        errorModal(jsonData.error);
                                                                                         return false;
                                                                                     }
                                                                                 }
@@ -475,6 +465,7 @@
                                                                         try {
                                                                             if (form.id === 'form_recipe') {
                                                                                 var item_id = jQuery('#recipe_id').val();
+                                                                                var myTag = jQuery('#recipe_id option:selected').attr('myTag');
                                                                                 if (typeof product_recipes[item_id] === 'undefined') {
                                                                                     product_recipes[item_id] = new Array();
                                                                                     product_recipes[item_id] = {
@@ -482,8 +473,10 @@
                                                                                         recipe_remark: jQuery('#recipe_remark').val()
                                                                                     };
                                                                                     var row = '<tr>';
-                                                                                    row = row + '<td>' + jQuery('#recipe_id option:selected').text() + '</td>';
-                                                                                    row = row + '<td><a href="javascript:;" onclick=viewRecipe("' + item_id + '",this) class="btn btn-gold btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>View</a> &nbsp <a href="javascript:;" onclick=deleteRecipeRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
+                                                                                    row = row + '<td><a target="_blank" href="<?php echo MOD_ADMIN_URL ?>recipe/viewRecipe/' + myTag + '"><u>' + jQuery('#recipe_id option:selected').text() + '</u></a></td>';
+                                                                                    row = row + '<td>' + jQuery('#recipe_remark').text() + '</td>';
+                                                                                    //<a href="javascript:;" onclick=viewRecipe("' + item_id + '",this) class="btn btn-gold btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>View</a> &nbsp 
+                                                                                    row = row + '<td><a href="javascript:;" onclick=deleteRecipeRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
                                                                                     row = row + '</tr>';
                                                                                     jQuery("#table-recipe tbody").prepend(row);
                                                                                 }
@@ -492,6 +485,7 @@
                                                                                 }
                                                                             } else {
                                                                                 var item_id = jQuery('#mat_id').val();
+                                                                                var myTag = jQuery('#mat_id option:selected').attr('myTag');
                                                                                 if (typeof product_items[item_id] === 'undefined') {
                                                                                     product_items[item_id] = new Array();
                                                                                     product_items[item_id] = {
@@ -500,9 +494,10 @@
                                                                                         item_remark: jQuery('#mat_remark').val()
                                                                                     };
                                                                                     var row = '<tr>';
-                                                                                    row = row + '<td>' + jQuery('#mat_id option:selected').text() + '</td>';
+                                                                                    row = row + '<td><a target="_blank" href="<?php echo MOD_ADMIN_URL ?>item/viewItem/' + myTag + '"><u>' + jQuery('#mat_id option:selected').text() + '</u></a></td>';
                                                                                     row = row + '<td>' + jQuery('#mat_qty').val() + '</td>';
-                                                                                    row = row + '<td><a href="javascript:;" onclick=viewItem("' + item_id + '",this) class="btn btn-gold btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>View</a> &nbsp <a href="javascript:;" onclick=deleteItemRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
+                                                                                    row = row + '<td>' + jQuery('#mat_remark').val() + '</td>';
+                                                                                    row = row + '<td><a href="javascript:;" onclick=deleteItemRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
                                                                                     row = row + '</tr>';
                                                                                     jQuery("#table-item tbody").prepend(row);
                                                                                 }
@@ -587,7 +582,7 @@
                                                                                     if (jsonData.success == true) {
                                                                                         jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>product');
                                                                                     } else {
-                                                                                        alert(jsonData.error)
+                                                                                        errorModal(jsonData.error);
                                                                                         return false;
                                                                                     }
                                                                                 }
@@ -599,9 +594,30 @@
                                                                         }
                                                                         return false;
                                                                     }
+                                                                    function modifytProductMode(val, ststus) {
+                                                                        try {
+                                                                            if (doConfirm('Are you confirm to ' + (ststus == 'P' ? 'submit' : 'accept') + ' product?')) {
+                                                                                ajaxRequest('<?php echo MOD_ADMIN_URL ?>product/jsonMode/' + val + '/' + ststus + '/', '', function(jsonData) {
+                                                                                    if (jsonData) {
+                                                                                        if (jsonData.success == true) {
+                                                                                            jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>product');
+                                                                                        } else {
+                                                                                            errorModal(jsonData.error);
+                                                                                            return false;
+                                                                                        }
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        }
+                                                                        catch (err) {
+                                                                            alert(err.message);
+                                                                            return false;
+                                                                        }
+                                                                    }
     </script>
     <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2-bootstrap.css">
     <link rel="stylesheet" href="<?php echo JS_PATH ?>select2/select2.css">
+    <link rel="stylesheet" href="<?php echo JS_PATH ?>vertical-timeline/css/component.css">
     <!-- Bottom scripts (common) -->
     <script src="<?php echo JS_PATH ?>gsap/main-gsap.js"></script>
     <script src="<?php echo JS_PATH ?>jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>

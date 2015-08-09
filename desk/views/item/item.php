@@ -35,7 +35,6 @@
                         <th>Item name</th>
                         <th>Item location</th>
                         <th>Item date</th>
-                        <th>Item status</th>
                         <th>Item mode</th>
                         <th>Action</th>
                     </tr>
@@ -45,37 +44,26 @@
                     if (!empty($this->items)) {
                         foreach ($this->items as $item) {
                             ?>
-                            <tr class="odd gradeX">
+                            <tr style="<?php echo ($item->ITEM_STATUS == 'I' ? 'background-color: mistyrose;' : '') ?>" class="odd gradeX">
                                 <td><?php echo $item->ITEM_CODE ?></td>
                                 <td><?php echo $item->ITEM_NAME ?></td>
                                 <td><?php echo $item->ITEM_LOCATION ?></td>
                                 <td><?php echo $item->ITEM_ADD_DATE ?></td>
                                 <td>
                                     <?php
-                                    echo ($item->ITEM_STATUS == 'A' ? '
-                                        <button class="btn btn-green btn-icon icon-left  btn-xs" type="button">
-                                            Active<i class="entypo-check"></i>
-                                        </button>' :
-                                            '<button class="btn btn-gold btn-icon icon-left  btn-xs" type="button">
-                                                Inactive<i class="entypo-cancel"></i>
-                                         </button>')
-                                    ?>
-                                </td>
-                                <td>
-                                    <?php
                                     if ($item->ITEM_MODE == 'S') {
                                         echo '
-                                            <button class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">
+                                            <button disabled class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">
                                             Draft<i class="entypo-check"></i>
                                             </button>';
-                                    } else if ($item->ITEM_MODE == 'o') {
+                                    } else if ($item->ITEM_MODE == 'P') {
                                         echo '
-                                            <button class="btn btn-blue btn-icon icon-left  btn-xs" type="button">
+                                            <button disabled class="btn btn-blue btn-icon icon-left  btn-xs" type="button">
                                                 Submit<i class="entypo-cancel"></i>
                                             </button>';
                                     } else {
                                         echo '
-                                            <button class="btn btn-green  btn-icon icon-left  btn-xs" type="button">
+                                            <button disabled class="btn btn-green  btn-icon icon-left  btn-xs" type="button">
                                                 Accept<i class="entypo-cancel"></i>
                                             </button>';
                                     }
@@ -86,6 +74,14 @@
                                         <i class="entypo-pencil"></i>
                                         View
                                     </a>
+                                    <a href="javascript:;" onclick="modifyStatus('<?php echo ($item->ITEM_ID) ?>', 'D')" class="btn btn-danger btn-xs btn-icon icon-left">
+                                        <i class="entypo-pencil"></i>Delete
+                                    </a>
+                                    <?php if ($item->ITEM_MODE == 'A') { ?>
+                                        <a href="javascript:;" onclick="modifyStatus('<?php echo ($item->ITEM_ID) ?>', '<?php echo ($item->ITEM_STATUS == 'A') ? 'I' : 'A' ?>')" class="btn btn-<?php echo ($item->ITEM_STATUS == 'A') ? 'green' : 'gold' ?> btn-xs btn-icon icon-left">
+                                            <i class="entypo-pencil"></i><?php echo ($item->ITEM_STATUS == 'A') ? 'Active' : 'Inactive' ?>
+                                        </a>
+                                    <?php } ?>
                                 </td>
                             </tr>
                             <?php
@@ -131,6 +127,35 @@
                                         minimumResultsForSearch: -1
                                     });
                                 });
+
+                                function modifyStatus(val, ststus) {
+                                    try {
+                                        var str = '';
+                                        if (ststus == 'A') {
+                                            str = 'active';
+                                        } else if (ststus == 'I') {
+                                            str = 'inactive';
+                                        } else if (ststus == 'D') {
+                                            str = 'delete';
+                                        }
+                                        if (doConfirm('Are you confirm to ' + str + ' item?')) {
+                                            ajaxRequest('<?php echo MOD_ADMIN_URL ?>item/jsonStatus/' + val + '/' + ststus + '/', '', function(jsonData) {
+                                                if (jsonData) {
+                                                    if (jsonData.success == true) {
+                                                        jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>item');
+                                                    } else {
+                                                        errorModal(jsonData.error);
+                                                        return false;
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                    catch (err) {
+                                        alert(err.message);
+                                        return false;
+                                    }
+                                }
             </script>
             <!--Add footer-->
             <?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>

@@ -27,25 +27,15 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div style="border:none !important;text-align:right;" class="panel panel-primary">
-                            <button type="button" class="btn btn-gold btn-icon icon-left disabled">
-                                Pending
-                                <i class="entypo-info"></i>
-                            </button>
                             <button name="item_save" value="itm_save" class="btn btn-green btn-sm" type="submit">Save</button>           
-                            <button name="item_submit" value="itm_submit" class="btn btn-blue btn-sm" type="button">Submit</button>
-                            <button name="item_cancel" value="item_cancel" class="btn btn-danger btn-sm" type="button">Cancel</button>
                         </div>
                     </div>
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <div class="panel-title">Add New Item</div>
-
-                        <div class="panel-options">
-                            <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a>
-                            <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                            <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
-                            <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>
+                        <div class="panel-title">
+                            Add New Item&nbsp; &nbsp;
+                            <button class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">New<i class="entypo-info"></i></button>
                         </div>
                     </div>
 
@@ -54,25 +44,14 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Item Reference No</label>
-                                    <input type="text" class="form-control" name="itm_code"  placeholder="Item reference no" />
+                                    <input type="text" class="form-control" name="itm_code"  placeholder="Require Field" />
                                 </div>	
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="control-label">Name</label>
-                                    <input type="text" class="form-control" name="item_name" data-validate="required" placeholder="Item name" />
+                                    <input type="text" class="form-control" name="item_name" data-validate="required" placeholder="Require Field" />
                                 </div>	
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="col-sm-0 control-label">Status</label>
-                                    <div>
-                                        <select name="item_status" class="form-control">
-                                            <option value="A">Active</option>
-                                            <option value="I">Inactive</option>
-                                        </select>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -140,8 +119,13 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="field-6" class="control-label">Ratio</label>
-                                    <input type="text" class="form-control" name="item_ratio" data-validate="required,number" placeholder="Numeric Field" />
+                                    <label for="field-6" class="control-label">Ratio (Stock unit to Issue unit)</label>
+                                    <select name="item_ratio"  class="form-control">
+                                        <option value="">-Select-</option>
+                                        <option value="1">1X</option> 
+                                        <option  value="1000">1000X</option>
+                                        <option  value="1000000">1000000X</option>
+                                    </select>                                   
                                 </div>	
                             </div>              
                         </div>
@@ -149,19 +133,19 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Order Level</label>
-                                    <input type="text" class="form-control" name="item_ord_lvl" data-validate="required,number" placeholder="Numeric Field" />
+                                    <input type="text" class="form-control" name="item_ord_lvl" data-validate="required,number" placeholder="Required Numeric Field" />
                                 </div>	
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Near Order Level</label>
-                                    <input type="text" class="form-control" name="item_n_ord_lvl" data-validate="required,number" placeholder="Numeric Field" />
+                                    <input type="text" class="form-control" name="item_n_ord_lvl" data-validate="required,number" placeholder="Required Numeric Field" />
                                 </div>	
                             </div>  
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Location</label>
-                                    <input type="text" class="form-control" name="item_loc" data-validate="required" placeholder="" />
+                                    <input type="text" class="form-control" name="item_loc" data-validate="required" placeholder="Required Field" />
                                 </div>	
                             </div>
                         </div>
@@ -169,7 +153,7 @@
                             <div class="col-md-12">
                                 <div class="form-group no-margin">
                                     <label for="field-7" class="control-label">Remark</label>
-                                    <textarea name="item_remark" class="form-control autogrow" id="field-7" placeholder="Write something about item"></textarea>
+                                    <textarea name="item_remark" class="form-control autogrow" id="field-7" placeholder="Item Remark"></textarea>
                                 </div>	
                             </div>
                         </div>
@@ -195,7 +179,7 @@
                                                             }
                                                             document.getElementById('sub_category').innerHTML = option;
                                                         } else {
-                                                            alert(jsonData.error)
+                                                            errorModal(jsonData.error);
                                                             return false;
                                                         }
                                                     }
@@ -212,7 +196,7 @@
                                                         if (jsonData.success == true) {
                                                             jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>item');
                                                         } else {
-                                                            alert(jsonData.error)
+                                                            errorModal(jsonData.error);
                                                             return false;
                                                         }
                                                     }

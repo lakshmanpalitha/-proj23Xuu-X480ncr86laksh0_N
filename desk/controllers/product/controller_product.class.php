@@ -37,6 +37,7 @@ class product extends controller {
             $this->view->product_mats = $login_model->getRecipeSelectMaterial(base64_decode($product_id));
             $this->view->recipes = $login_model_recipe->getAllActiveRecipe();
             $this->view->units = $login_model_item->getAllUnit();
+            $this->view->history = $login_model->history(base64_decode($product_id));
             $this->view->render('product/view_product', true, true, $this->module);
         } else {
             header('Location: ' . MOD_ADMIN_URL . "product");
@@ -65,8 +66,6 @@ class product extends controller {
         $login_model = $this->loadModel('product');
         if (!$product_name = $this->read->get("product_name", "POST", 'NUMERIC', 250, true))
             $valid = false;
-        if (!$product_status = $this->read->get("product_status", "POST", 'STRING', 1, true))
-            $valid = false;
         if (!$product_remark = $this->read->get("product_remark", "POST", '', 1500, false))
             $valid = false;
         if (!$product_items = $this->read->get("items", "POST", '', '', false))
@@ -86,7 +85,7 @@ class product extends controller {
         if ($valid) {
             if (!empty($recipe_array)) {
                 array_push($product, $product_name);
-                array_push($product, $product_status);
+                array_push($product, 'A');
                 array_push($product, is_bool($product_remark) ? '' : $product_remark);
                 array_push($product, $item_array);
                 array_push($product, $recipe_array);
@@ -114,6 +113,49 @@ class product extends controller {
         } else {
             $data = array('success' => false, 'data' => '', 'error' => $this->view->renderFeedbackMessagesForJson());
         }
+        echo json_encode($data);
+    }
+
+    function jsonStatus($product_id = null, $stsus = null) {
+        $data = '';
+        if ($product_id && ($stsus == 'D' OR $stsus == 'A' OR $stsus == 'I')) {
+            $login_model = $this->loadModel('product');
+            $count = $login_model->productUsed($product_id);
+            if ($count > 0 && $stsus == 'D') {
+                $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_PRODUCT_DELETE_FAILED);
+            } else {
+                $item = $login_model->modifyStatus($product_id, $stsus);
+                if ($item) {
+                    $data = array('success' => true, 'data' => $item, 'error' => '');
+                } else {
+                    $data = array('success' => false, 'data' => '', 'error' => $this->view->renderFeedbackMessagesForJson());
+                }
+            }
+        } else {
+            $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_EMPTY_PRODUCT_ID);
+        }
+        echo json_encode($data);
+    }
+
+    function jsonMode($product_id = null, $stsus = null) {
+        $data = '';
+        $login_model = $this->loadModel('product');
+        $mode = $login_model->getSelectProduct($product_id);
+        if ($mode->PRODUCT_MODE == 'A' && $stsus == 'P') {
+            $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_INVALID_ACTION);
+        } else {
+            if ($product_id && ($stsus == 'P' OR $stsus == 'A')) {
+                $item = $login_model->modifyMode($product_id, $stsus);
+                if ($item) {
+                    $data = array('success' => true, 'data' => $item, 'error' => '');
+                } else {
+                    $data = array('success' => false, 'data' => '', 'error' => $this->view->renderFeedbackMessagesForJson());
+                }
+            } else {
+                $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_EMPTY_PRODUCT_ID);
+            }
+        }
+
         echo json_encode($data);
     }
 

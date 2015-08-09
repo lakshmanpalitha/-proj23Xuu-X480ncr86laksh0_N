@@ -30,26 +30,16 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div style="border:none !important;text-align:right;" class="panel panel-primary">
-                            <button type="button" class="btn btn-gold btn-icon icon-left disabled">
-                                Pending
-                                <i class="entypo-info"></i>
-                            </button>
                             <button class="btn btn-green btn-sm" type="submit" type="button">Save</button>          
-                            <button class="btn btn-blue btn-sm" type="button">Submit</button>
-                            <button class="btn btn-danger btn-sm" type="button">Cancel</button>
                         </div>
                     </div>
                 </div>
                 <div class="panel panel-info">
 
                     <div class="panel-heading">
-                        <div class="panel-title">Add New Batch</div>
-
-                        <div class="panel-options">
-                            <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a>
-                            <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                            <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
-                            <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>
+                        <div class="panel-title">
+                            Add New Batch&nbsp; &nbsp;  
+                            <button class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">New<i class="entypo-info"></i></button>
                         </div>
                     </div>
 
@@ -60,23 +50,23 @@
                                 <div class="form-group">
                                     <label class="control-label">Batch Code</label>
 
-                                    <input type="text" class="form-control" name="batch_code" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
+                                    <input type="text" class="form-control" name="batch_code" data-validate="required" data-message-required="Batch code is required field." placeholder="Required Field" />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Batch Name</label>
-                                    <input type="text" class="form-control" name="batch_name" data-validate="required" data-message-required="This is custom message for required field." placeholder="Required Field" />
+                                    <input type="text" class="form-control" name="batch_name" data-validate="required" data-message-required="Batch name required field." placeholder="Required Field" />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="col-sm-0 control-label">Status</label>
-                                    <div>
-                                        <select name="batch_status" class="form-control">
-                                            <option value="A">Active</option>
-                                            <option value="I">Inactive</option>
-                                        </select>
+                                    <label class="control-label">Expire Date</label>
+                                    <div class="input-group">
+                                        <input name="exp_date" id="exp_date" type="text" class="form-control datepicker" placeholder="Required Field" data-format="yyyy-mm-dd">
+                                        <div class="input-group-addon">
+                                            <a href="#"><i class="entypo-calendar"></i></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -86,17 +76,18 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Product</label>
-                                    <select onchange="getProductUnit(this)" name="batch_product" class="select2" data-allow-clear="true" data-placeholder="Select product">
+                                    <select onchange="getProductUnit(this)" id="batch_product" name="batch_product" class="select2" data-allow-clear="true" data-placeholder="Select product">
                                         <?php
                                         if (!empty($this->products)) {
                                             foreach ($this->products as $product) {
                                                 ?>
-                                                <option value="<?php echo $product->PRODUCT_ID ?>" ><?php echo $product->PRODUCT_NAME ?></option>
+                                                <option myTag='<?php echo base64_encode($product->PRODUCT_ID) ?>' value="<?php echo $product->PRODUCT_ID ?>" ><?php echo $product->PRODUCT_NAME ?></option>
                                                 <?php
                                             }
                                         }
                                         ?>
                                     </select>
+                                    <span id='product_url' style=" float: right;margin: 10px 0 0;"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -118,13 +109,6 @@
                                     <!-- panel head -->
                                     <div class="panel-heading">
                                         <div class="panel-title">Batch Material</div>
-
-                                        <div class="panel-options">
-                                            <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a>
-                                            <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                                            <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
-                                            <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>
-                                        </div>
                                     </div>
 
                                     <!-- panel body -->
@@ -168,7 +152,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label" for="about">Batch Remark</label>
-                                    <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="batch_remark" id="batch_remark" data-validate="minlength[10]" rows="5" placeholder="Could be used also as Motivation Letter"></textarea>
+                                    <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="batch_remark" id="batch_remark" data-validate="" rows="5" placeholder="Batch Remark"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -180,44 +164,6 @@
                     </div>
                 </div>
             </form>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-gray" data-collapsed="0">
-
-                        <!-- panel head -->
-                        <div class="panel-heading">
-                            <div class="panel-title">Batch Comments</div>
-
-                            <div class="panel-options">
-                                <a href="#sample-modal" data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a>
-                                <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                                <a href="#" data-rel="reload"><i class="entypo-arrows-ccw"></i></a>
-                                <a href="#" data-rel="close"><i class="entypo-cancel"></i></a>
-                            </div>
-                        </div>
-
-                        <!-- panel body -->
-                        <div class="panel-body">
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label" for="about">New Comment</label>
-                                        <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="about" id="about" data-validate="minlength[10]" rows="5" placeholder="Could be used also as Motivation Letter"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <button class="btn btn-blue btn-sm" type="button">Publish</button>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
             <!--Add footer-->
             <?php require_once MOD_ADMIN_DOC . 'views/_templates/sub_footer.php'; ?>
             <!--############-->
@@ -240,12 +186,12 @@
 
                                 <div class="form-group">
                                     <label class="control-label">Item Code</label>
-                                    <select name="batch_item" id="batch_item" onchange="getItemStockUnit(this)" class="select2" data-allow-clear="true" data-placeholder="Select item">
+                                    <select name="batch_item" id="batch_item" onchange="getItemIssueUnit(this)" class="select2" data-allow-clear="true" data-placeholder="Select item">
                                         <?php
                                         if (!empty($this->items)) {
                                             foreach ($this->items as $item) {
                                                 ?>
-                                                <option value="<?php echo $item->ITEM_ID ?>" ><?php echo $item->ITEM_NAME ?></option>
+                                                <option myTag='<?php echo base64_encode($item->ITEM_ID) ?>' value="<?php echo $item->ITEM_ID ?>" ><?php echo $item->ITEM_NAME ?></option>
                                                 <?php
                                             }
                                         }
@@ -257,7 +203,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="field-6" class="control-label">Quantity (<span id="stock_unit"></span>)</label>
-                                    <input name="batch_item_qty" id="batch_item_qty" type="text" class="form-control"  data-validate="required,number" placeholder="Numeric Field" />
+                                    <input name="batch_item_qty" id="batch_item_qty" type="text" class="form-control"  data-validate="required,number" placeholder="Required Numeric Field" />
                                 </div>	
                             </div>  
                         </div>
@@ -265,7 +211,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label" for="about">Recipe Item Remark</label>
-                                    <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="batch_item_remark" id="batch_item_remark"  rows="5" placeholder="Could be used also as Motivation Letter"></textarea>
+                                    <textarea style="border-radius:0 !important;height:70px !important" class="form-control autogrow" name="batch_item_remark" id="batch_item_remark"  rows="5" placeholder="Item Remark"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -280,18 +226,18 @@
         </div>
     </div>
     <script type="text/javascript">
-    function getItemStockUnit(e)
+    function getItemIssueUnit(e)
     {
         try {
             var param = "item_id=" + e.value;
-            ajaxRequest('<?php echo MOD_ADMIN_URL ?>item/jsonGetItemStockUnit', param, function(jsonData) {
+            ajaxRequest('<?php echo MOD_ADMIN_URL ?>item/jsonGetItemIssueUnit', param, function(jsonData) {
 
                 if (jsonData) {
                     if (jsonData.success == true) {
                         document.getElementById('stock_unit').innerHTML = "<b>" + jsonData.data + "</b>";
 
                     } else {
-                        alert(jsonData.error)
+                        errorModal(jsonData.error);
                         return false;
                     }
                 }
@@ -307,6 +253,9 @@
     {
         try {
             var param = "product_id=" + e.value;
+            var myTag = jQuery('#batch_product option:selected').attr('myTag');
+            var html = "<a href='<?php echo MOD_ADMIN_URL ?>product/viewProduct/" + myTag + "' target='_blank'><u>View Product</u></a>";
+            jQuery('#product_url').html(html);
             ajaxRequest('<?php echo MOD_ADMIN_URL ?>product/jsonGetProductUnit', param, function(jsonData) {
 
                 if (jsonData) {
@@ -314,7 +263,7 @@
                         document.getElementById('product_unit').innerHTML = "<b>" + jsonData.data + "</b>";
 
                     } else {
-                        alert(jsonData.error)
+                        errorModal(jsonData.error);
                         return false;
                     }
                 }
@@ -330,6 +279,7 @@
 
         try {
             var item_id = jQuery('#batch_item').val();
+            var myTag = jQuery('#batch_item option:selected').attr('myTag');
             if (typeof batch_items[item_id] === 'undefined') {
                 batch_items[item_id] = new Array();
                 batch_items[item_id] = {
@@ -338,9 +288,10 @@
                     item_remark: jQuery('#batch_item_remark').val()
                 };
                 var row = '<tr id="' + item_id + '">';
-                row = row + '<td>' + jQuery('#batch_item option:selected').text() + '</td>';
-                row = row + '<td>' + jQuery('#batch_item_qty').val() + '</td>';
-                row = row + '<td><a href="javascript:;" onclick=viewItem("' + item_id + '",this) class="btn btn-gold btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>View</a> &nbsp <a href="javascript:;" onclick=deleteItemRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
+                row = row + '<td><a target="_blank" href="<?php echo MOD_ADMIN_URL ?>item/viewItem/' + myTag + '"><u>' + jQuery('#batch_item option:selected').text() + '</u></a></td>';
+                row = row + '<td>' + jQuery('#batch_item_qty').val() + '&nbsp (' + jQuery('#stock_unit').html() + ')</td>';
+                //<a href="javascript:;" onclick=viewItem("' + item_id + '",this) class="btn btn-gold btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>View</a> &nbsp 
+                row = row + '<td><a href="javascript:;" onclick=deleteItemRow("' + item_id + '",this) class="btn btn-danger btn-xs btn-icon icon-left"><i class="entypo-pencil"></i>Delete</a></td>';
                 row = row + '</tr>';
                 jQuery("#table-1 tbody").prepend(row);
 
@@ -396,7 +347,7 @@
                     if (jsonData.success == true) {
                         jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>batch');
                     } else {
-                        alert(jsonData.error)
+                        errorModal(jsonData.error);
                         return false;
                     }
                 }
@@ -421,7 +372,7 @@
 
 
     <!-- Imported scripts on this page -->
-      <script src="<?php echo JS_PATH ?>select2/select2.min.js"></script>
+    <script src="<?php echo JS_PATH ?>select2/select2.min.js"></script>
     <script src="<?php echo JS_PATH ?>jquery.validate.min.js"></script>
     <script src="<?php echo JS_PATH ?>neon-chat.js"></script>
     <script src="<?php echo JS_PATH ?>bootstrap-datepicker.js"></script>

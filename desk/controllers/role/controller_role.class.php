@@ -71,6 +71,22 @@ class role extends controller {
         echo json_encode($data);
     }
 
+    function jsonStatus($role_id = null, $stsus = null) {
+        $data = '';
+        if ($role_id && ($stsus == 'D')) {
+            $login_model = $this->loadModel('role');
+            $item = $login_model->modifyStatus($role_id, $stsus);
+            if ($item) {
+                $data = array('success' => true, 'data' => $item, 'error' => '');
+            } else {
+                $data = array('success' => false, 'data' => '', 'error' => $this->view->renderFeedbackMessagesForJson());
+            }
+        } else {
+            $data = array('success' => false, 'data' => '', 'error' => FEEDBACK_EMPTY_ROLE_ID);
+        }
+        echo json_encode($data);
+    }
+
 }
 
 ?>

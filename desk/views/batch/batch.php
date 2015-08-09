@@ -39,8 +39,9 @@
                         <th>Batch Quantity</th>
                         <th>Quantity Unit</th>
                         <th>Batch Date</th>
-                        <th>Batch Status</th>
-                        <th>Batch Action</th>
+                        <th>Expire Date</th>
+                        <th>Batch Mode</th>
+                        <th width="25%">Batch Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,7 +49,7 @@
                     if (!empty($this->batchs)) {
                         foreach ($this->batchs as $batch) {
                             ?>
-                            <tr class="odd gradeX">
+                            <tr style="<?php echo ($batch->BATCH_STATUS == 'I' ? 'background-color: mistyrose;' : '') ?>" class="odd gradeX">
                                 <td><?php echo $batch->BATCH_ID ?></td>
                                 <td><?php echo $batch->BATCH_CODE ?></td>
                                 <td><?php echo $batch->BATCH_NAME ?></td>
@@ -56,6 +57,7 @@
                                 <td><?php echo $batch->BATCH_QUANTITY ?></td>
                                 <td><?php echo $batch->UNIT_NAME ?></td>
                                 <td><?php echo $batch->BATCH_CREATE_DATE ?></td>
+                                 <td><?php echo $batch->BATCH_EXPIRE_DATE ?></td>
                                 <td>
                                     <?php
                                     if ($batch->BATCH_MODE == 'S') {
@@ -81,6 +83,14 @@
                                         <i class="entypo-pencil"></i>
                                         View
                                     </a>
+                                    <a href="javascript:;" onclick="modifyStatus('<?php echo ($batch->BATCH_ID) ?>', 'D')" class="btn btn-danger btn-xs btn-icon icon-left">
+                                        <i class="entypo-pencil"></i>Delete
+                                    </a>
+                                    <?php if ($batch->BATCH_MODE == 'A') { ?>
+                                        <a href="javascript:;" onclick="modifyStatus('<?php echo ($batch->BATCH_ID) ?>', '<?php echo ($batch->BATCH_STATUS == 'A') ? 'I' : 'A' ?>')" class="btn btn-<?php echo ($batch->BATCH_STATUS == 'A') ? 'green' : 'gold' ?> btn-xs btn-icon icon-left">
+                                            <i class="entypo-pencil"></i><?php echo ($batch->BATCH_STATUS == 'A') ? 'Active' : 'Inactive' ?>
+                                        </a>
+                                    <?php } ?>
                                 </td>
                             </tr>
                             <?php
@@ -91,41 +101,40 @@
             </table>
 
             <script type="text/javascript">
-                var responsiveHelper;
-                var breakpointDefinition = {
-                    tablet: 1024,
-                    phone: 480
-                };
-                var tableContainer;
+                                        var responsiveHelper;
+                                        var breakpointDefinition = {
+                                            tablet: 1024,
+                                            phone: 480
+                                        };
+                                        var tableContainer;
 
-                jQuery(document).ready(function($)
-                {
-                    tableContainer = $("#table-1");
+                                        jQuery(document).ready(function($)
+                                        {
+                                            tableContainer = $("#table-1");
 
-                    tableContainer.dataTable({
-                        "sPaginationType": "bootstrap",
-                        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                        "bStateSave": true,
-                        // Responsive Settings
-                        bAutoWidth: false,
-                        fnPreDrawCallback: function() {
-                            // Initialize the responsive datatables helper once.
-                            if (!responsiveHelper) {
-                                responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
-                            }
-                        },
-                        fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                            responsiveHelper.createExpandIcon(nRow);
-                        },
-                        fnDrawCallback: function(oSettings) {
-                            responsiveHelper.respond();
-                        }
-                    });
+                                            tableContainer.dataTable({
+                                                "sPaginationType": "bootstrap",
+                                                "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                                                "bStateSave": true,
+                                                // Responsive Settings                         bAutoWidth: false,
+                                                fnPreDrawCallback: function() {
+                                                    // Initialize the responsive datatables helper once.
+                                                    if (!responsiveHelper) {
+                                                        responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+                                                    }
+                                                },
+                                                fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                                                    responsiveHelper.createExpandIcon(nRow);
+                                                },
+                                                fnDrawCallback: function(oSettings) {
+                                                    responsiveHelper.respond();
+                                                }
+                                            });
 
-                    $(".dataTables_wrapper select").select2({
-                        minimumResultsForSearch: -1
-                    });
-                });
+                                            $(".dataTables_wrapper select").select2({
+                                                minimumResultsForSearch: -1
+                                            });
+                                        });
             </script>
             <script type="text/javascript">
                 function showAjaxModal()
@@ -139,6 +148,34 @@
                             jQuery('#modal-7 .modal-body').html(response);
                         }
                     });
+                }
+                function modifyStatus(val, ststus) {
+                    try {
+                        var str = '';
+                        if (ststus == 'A') {
+                            str = 'active';
+                        } else if (ststus == 'I') {
+                            str = 'inactive';
+                        } else if (ststus == 'D') {
+                            str = 'delete';
+                        }
+                        if (doConfirm('Are you confirm to ' + str + ' batch?')) {
+                            ajaxRequest('<?php echo MOD_ADMIN_URL ?>batch/jsonStatus/' + val + '/' + ststus + '/', '', function(jsonData) {
+                                if (jsonData) {
+                                    if (jsonData.success == true) {
+                                        jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>batch');
+                                    } else {
+                                        errorModal(jsonData.error);
+                                        return false;
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    catch (err) {
+                        alert(err.message);
+                        return false;
+                    }
                 }
             </script>
             <!--Add footer-->

@@ -38,7 +38,6 @@
                         <th>Recipe Id</th>
                         <th>Recipe Name</th>
                         <th>Recipe Created</th>
-                        <th>Recipe Status</th>
                         <th>Recipe Mode</th>
                         <th>Recipe Action</th>
                     </tr>
@@ -48,36 +47,25 @@
                     if (!empty($this->recipes)) {
                         foreach ($this->recipes as $recipe) {
                             ?>
-                            <tr class="odd gradeX">
+                            <tr style="<?php echo ($recipe->RECIPE_STATUS == 'I' ? 'background-color: mistyrose;' : '') ?>" class="odd gradeX">
                                 <td><?php echo $recipe->RECIPE_ID ?></td>
                                 <td><?php echo $recipe->RECIPE_NAME ?></td>
                                 <td><?php echo $recipe->RECIPE_CREATE_DATE ?></td>
                                 <td>
                                     <?php
-                                    echo ($recipe->RECIPE_STATUS == 'A' ? '
-                                        <button class="btn btn-green btn-icon icon-left  btn-xs" type="button">
-                                            Active<i class="entypo-check"></i>
-                                        </button>' :
-                                            '<button class="btn btn-gold btn-icon icon-left  btn-xs" type="button">
-                                                Inactive<i class="entypo-cancel"></i>
-                                         </button>')
-                                    ?>
-                                </td>
-                                <td>
-                                    <?php
                                     if ($recipe->RECIPE_MODE == 'S') {
                                         echo '
-                                            <button class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">
+                                            <button disabled class="btn btn-gold  btn-icon icon-left  btn-xs" type="button">
                                             Draft<i class="entypo-check"></i>
                                             </button>';
-                                    } else if ($recipe->RECIPE_MODE == 'o') {
+                                    } else if ($recipe->RECIPE_MODE == 'P') {
                                         echo '
-                                            <button class="btn btn-blue btn-icon icon-left  btn-xs" type="button">
+                                            <button disabled class="btn btn-blue btn-icon icon-left  btn-xs" type="button">
                                                 Submit<i class="entypo-cancel"></i>
                                             </button>';
                                     } else {
                                         echo '
-                                            <button class="btn btn-green  btn-icon icon-left  btn-xs" type="button">
+                                            <button disabled class="btn btn-green  btn-icon icon-left  btn-xs" type="button">
                                                 Accept<i class="entypo-cancel"></i>
                                             </button>';
                                     }
@@ -88,6 +76,14 @@
                                         <i class="entypo-pencil"></i>
                                         View
                                     </a>
+                                    <a href="javascript:;" onclick="modifyStatus('<?php echo ($recipe->RECIPE_ID) ?>', 'D')" class="btn btn-danger btn-xs btn-icon icon-left">
+                                        <i class="entypo-pencil"></i>Delete
+                                    </a>
+                                    <?php if ($recipe->RECIPE_MODE == 'A') { ?>
+                                        <a href="javascript:;" onclick="modifyStatus('<?php echo ($recipe->RECIPE_ID) ?>', '<?php echo ($recipe->RECIPE_STATUS == 'A') ? 'I' : 'A' ?>')" class="btn btn-<?php echo ($recipe->RECIPE_STATUS == 'A') ? 'green' : 'gold' ?> btn-xs btn-icon icon-left">
+                                            <i class="entypo-pencil"></i><?php echo ($recipe->RECIPE_STATUS == 'A') ? 'Active' : 'Inactive' ?>
+                                        </a>
+                                    <?php } ?>
                                 </td>
                             </tr>
                             <?php
@@ -104,7 +100,6 @@
                             phone: 480
                         };
                         var tableContainer;
-
                         jQuery(document).ready(function($)
                         {
                             tableContainer = $("#table-1");
@@ -138,14 +133,34 @@
                 function showAjaxModal()
                 {
                     jQuery('#modal-6').modal('show', {backdrop: 'static'});
-
-                    jQuery.ajax({
-                        url: "data/ajax-content.txt",
-                        success: function(response)
-                        {
-                            jQuery('#modal-7 .modal-body').html(response);
+                }
+                function modifyStatus(val, ststus) {
+                    try {
+                        var str = '';
+                        if (ststus == 'A') {
+                            str = 'active';
+                        } else if (ststus == 'I') {
+                            str = 'inactive';
+                        } else if (ststus == 'D') {
+                            str = 'delete';
                         }
-                    });
+                        if (doConfirm('Are you confirm to ' + str + ' recipe?')) {
+                            ajaxRequest('<?php echo MOD_ADMIN_URL ?>recipe/jsonStatus/' + val + '/' + ststus + '/', '', function(jsonData) {
+                                if (jsonData) {
+                                    if (jsonData.success == true) {
+                                        jQuery(location).attr('href', '<?php echo MOD_ADMIN_URL ?>recipe');
+                                    } else {
+                                        errorModal(jsonData.error);
+                                        return false;
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    catch (err) {
+                        alert(err.message);
+                        return false;
+                    }
                 }
             </script>
             <!--Add footer-->
@@ -229,7 +244,7 @@
     <script src="<?php echo JS_PATH ?>datatables/jquery.dataTables.columnFilter.js"></script>
     <script src="<?php echo JS_PATH ?>datatables/lodash.min.js"></script>
     <script src="<?php echo JS_PATH ?>datatables/responsive/js/datatables.responsive.js"></script>
- 
+
 
     <!-- JavaScripts initializations and stuff -->
     <script src="<?php echo JS_PATH ?>neon-custom.js"></script>
